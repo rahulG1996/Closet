@@ -4,10 +4,12 @@ import {Colors} from '../../../../colors';
 import {VText, VView} from '../../../../components';
 import {FONTS_SIZES} from '../../../../fonts';
 
-const Categories = () => {
+const Categories = props => {
   const renderCategory = ({item, index}) => {
     return (
-      <TouchableOpacity style={{backgroundColor: Colors.grey1, marginLeft: 16}}>
+      <TouchableOpacity
+        style={{backgroundColor: Colors.grey1, marginLeft: 16}}
+        onPress={() => props.navigation.navigate('ViewProduct')}>
         <Image
           source={require('../../../../assets/sweatshirt.webp')}
           style={{height: 192, width: 128}}

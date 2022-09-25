@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {VText, VView} from '../../components';
+import {Buttons, VText, VView} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import {
   Image,
@@ -12,7 +12,7 @@ import {
 import {Colors} from '../../colors';
 import Categories from './components/Categories';
 
-const Home = () => {
+const Home = props => {
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
   const onScroll = ({
@@ -30,7 +30,7 @@ const Home = () => {
   const renderItem = item => {
     switch (item) {
       case 1:
-        return <Categories />;
+        return <Categories {...props} />;
       case 2:
         return (
           <VView
@@ -51,18 +51,7 @@ const Home = () => {
                 color: Colors.black60,
               }}
             />
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#000000',
-                paddingVertical: 16,
-                alignItems: 'center',
-                marginTop: 8,
-              }}>
-              <VText
-                text="Set your preferences"
-                style={{color: Colors.white}}
-              />
-            </TouchableOpacity>
+            <Buttons text="Set your preferences" />
           </VView>
         );
       case 3:

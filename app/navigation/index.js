@@ -1,10 +1,13 @@
-import Home from '../Screens/Home';
+import Home from '../screens/Home';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Text, Image} from 'react-native';
 import React from 'react';
 import {VText, VView} from '../components';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ViewProduct from '../screens/ViewProduct';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const renderTab = (route, imgSource) => {
   return (
@@ -22,6 +25,15 @@ const renderTab = (route, imgSource) => {
     </VView>
   );
 };
+
+function StackData() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="ViewProduct" component={ViewProduct} />
+    </Stack.Navigator>
+  );
+}
 
 export function TabData() {
   return (
@@ -49,9 +61,27 @@ export function TabData() {
         tabBarShowLabel: false,
         headerShown: false,
       })}>
-      <Tab.Screen name="Shop" component={Home} />
-      <Tab.Screen name="Closet" component={Home} />
-      <Tab.Screen name="Outfits" component={Home} />
+      <Tab.Screen name="Shop" component={StackData} />
+      <Tab.Screen
+        name="Closet"
+        component={Home}
+        listeners={{
+          tabPress: e => {
+            // Prevent default action
+            e.preventDefault();
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Outfits"
+        component={Home}
+        listeners={{
+          tabPress: e => {
+            // Prevent default action
+            e.preventDefault();
+          },
+        }}
+      />
     </Tab.Navigator>
   );
 }
