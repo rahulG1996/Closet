@@ -6,7 +6,7 @@ import VText from '../Text';
 const Buttons = ({text = '', onPress = () => {}, isInverse = false}) => {
   return (
     <TouchableOpacity style={styles.buttonContainer(isInverse)}>
-      <VText text={text} style={styles.buttontext} />
+      <VText text={text} style={styles.buttontext(isInverse)} />
     </TouchableOpacity>
   );
 };
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 16,
   }),
-  buttontext: {
-    color: Colors.white,
+  buttontext: isInverse => ({
+    color: isInverse ? 'black' : 'white',
     textTransform: 'uppercase',
-  },
+  }),
 });

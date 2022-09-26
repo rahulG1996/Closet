@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {FONTS_SIZES} from '../../fonts';
@@ -49,44 +50,49 @@ export default class LandingPage extends React.Component {
   };
   render() {
     return (
-      <View style={{paddingHorizontal: 16}}>
-        <Carousel
-          loop={true}
-          autoplay={true}
-          layout="stack"
-          layoutCardOffset={9}
-          ref={c => (this._slider1Ref = c)}
-          data={this.state.entries}
-          renderItem={this._renderItem}
-          sliderWidth={SLIDER_WIDTH}
-          itemWidth={ITEM_WIDTH}
-          inactiveSlideShift={0}
-          useScrollView={true}
-          onSnapToItem={index => this.setState({activeIndex: index})}
-        />
-        <Pagination
-          dotsLength={this.state.entries.length}
-          activeDotIndex={this.state.activeIndex}
-          carouselRef={c => (this._slider1Ref = c)}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.92)',
-          }}
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-          tappableDots={true}
-        />
+      <View style={{paddingHorizontal: 16, backgroundColor: 'white', flex: 1}}>
         <View>
+          <Carousel
+            loop={true}
+            autoplay={true}
+            layout="stack"
+            layoutCardOffset={9}
+            ref={c => (this._slider1Ref = c)}
+            data={this.state.entries}
+            renderItem={this._renderItem}
+            sliderWidth={SLIDER_WIDTH}
+            itemWidth={ITEM_WIDTH}
+            inactiveSlideShift={0}
+            useScrollView={true}
+            onSnapToItem={index => this.setState({activeIndex: index})}
+          />
+          <Pagination
+            dotsLength={this.state.entries.length}
+            activeDotIndex={this.state.activeIndex}
+            carouselRef={c => (this._slider1Ref = c)}
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              marginHorizontal: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.92)',
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+            tappableDots={true}
+          />
+        </View>
+        <ScrollView>
           <Buttons text="login" />
           <Buttons text="Create Account" isInverse />
           <TouchableOpacity
+            style={{paddingVertical: 16, marginTop: 16}}
             onPress={() => this.props.navigation.navigate('TabData')}>
-            <Text style={{textAlign: 'center'}}>I want to explore first</Text>
+            <Text style={{textAlign: 'center', textTransform: 'uppercase'}}>
+              I want to explore first
+            </Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -101,7 +107,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: ITEM_WIDTH,
-    height: 200,
+    height: 300,
   },
   header: {
     color: '#222',
