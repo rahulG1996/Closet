@@ -5,7 +5,9 @@ import VText from '../Text';
 
 const Buttons = ({text = '', onPress = () => {}, isInverse = false}) => {
   return (
-    <TouchableOpacity style={styles.buttonContainer(isInverse)}>
+    <TouchableOpacity
+      style={styles.buttonContainer(isInverse)}
+      onPress={onPress}>
       <VText text={text} style={styles.buttontext(isInverse)} />
     </TouchableOpacity>
   );

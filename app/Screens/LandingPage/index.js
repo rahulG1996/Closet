@@ -11,6 +11,7 @@ import {
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {FONTS_SIZES} from '../../fonts';
 import {Buttons} from '../../components';
+import LoginScreen from '../Auth/loginScreen';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
@@ -37,6 +38,7 @@ export default class LandingPage extends React.Component {
         },
       ],
       activeIndex: 0,
+      isLoginVisible: false,
     };
   }
   _renderItem = ({item, index}) => {
@@ -48,7 +50,13 @@ export default class LandingPage extends React.Component {
       </View>
     );
   };
+  handleLogin = () => {
+    this.setState({
+      isLoginVisible: true,
+    });
+  };
   render() {
+    console.log('isLoginVisible', this.state.isLoginVisible);
     return (
       <View style={{paddingHorizontal: 16, backgroundColor: 'white', flex: 1}}>
         <View>
@@ -83,7 +91,7 @@ export default class LandingPage extends React.Component {
           />
         </View>
         <ScrollView>
-          <Buttons text="login" />
+          <Buttons text="login" onPress={() => this.handleLogin()} />
           <Buttons text="Create Account" isInverse />
           <TouchableOpacity
             style={{paddingVertical: 16, marginTop: 16}}
@@ -93,6 +101,7 @@ export default class LandingPage extends React.Component {
             </Text>
           </TouchableOpacity>
         </ScrollView>
+        {this.state.isLoginVisible && <LoginScreen />}
       </View>
     );
   }
