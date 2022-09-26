@@ -6,6 +6,7 @@ import {VText, VView} from '../components';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ViewProduct from '../screens/ViewProduct';
 import CategoryScreen from '../screens/CategoryScreen';
+import LandingPage from '../screens/LandingPage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -37,7 +38,7 @@ function StackData() {
   );
 }
 
-export function TabData() {
+function TabData() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -87,3 +88,14 @@ export function TabData() {
     </Tab.Navigator>
   );
 }
+
+function AppNavigation() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="LandingPage" component={LandingPage} />
+      <Stack.Screen name="TabData" component={TabData} />
+    </Stack.Navigator>
+  );
+}
+
+export default AppNavigation;
