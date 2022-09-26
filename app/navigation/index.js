@@ -5,6 +5,7 @@ import React from 'react';
 import {VText, VView} from '../components';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ViewProduct from '../screens/ViewProduct';
+import CategoryScreen from '../screens/CategoryScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ function StackData() {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ViewProduct" component={ViewProduct} />
+      <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
     </Stack.Navigator>
   );
 }

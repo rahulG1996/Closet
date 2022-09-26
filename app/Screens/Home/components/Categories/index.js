@@ -5,6 +5,7 @@ import {VText, VView} from '../../../../components';
 import {FONTS_SIZES} from '../../../../fonts';
 
 const Categories = props => {
+  const {navigation} = props;
   const renderCategory = ({item, index}) => {
     return (
       <TouchableOpacity
@@ -21,7 +22,7 @@ const Categories = props => {
     <VView sty>
       <VView style={styles.headingContainer}>
         <VText text="Category Name" style={styles.headingLeftText} />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() =>navigation.navigate('CategoryScreen')}>
           <VText text="VIEW ALL" />
         </TouchableOpacity>
       </VView>
