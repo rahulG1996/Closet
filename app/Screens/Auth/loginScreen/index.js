@@ -6,9 +6,12 @@ import {Colors} from '../../../colors';
 import {FONTS_SIZES} from '../../../fonts';
 import VModal from '../../../components/Modal';
 
-export default () => {
+export default (props) => {
   return (
-    <VModal screenName="Login">
+    <VModal 
+    screenName="Login"
+    handleCross={}
+    >
       <VView
         style={{
           backgroundColor: 'green',
