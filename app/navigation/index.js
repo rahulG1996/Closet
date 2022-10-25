@@ -7,6 +7,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ViewProduct from '../screens/ViewProduct';
 import CategoryScreen from '../screens/CategoryScreen';
 import LandingPage from '../screens/LandingPage';
+import ForgotPassword from '../screens/ForgotPassword';
+import VerifyEmail from '../screens/VerifyEmail';
+import ResetPassword from '../screens/ResetPassword';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -93,6 +96,9 @@ function AppNavigation() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="LandingPage" component={LandingPage} />
+      <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="TabData" component={TabData} />
     </Stack.Navigator>
   );

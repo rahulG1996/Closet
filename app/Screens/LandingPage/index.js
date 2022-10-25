@@ -10,7 +10,9 @@ import {
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {FONTS_SIZES} from '../../fonts';
-import {Buttons} from '../../components';
+import {Buttons, OverlayModal, VText, VView} from '../../components';
+import Login from '../Login';
+import CreateAccount from '../CreateAccount';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
@@ -21,22 +23,19 @@ export default class LandingPage extends React.Component {
     this.state = {
       entries: [
         {
-          title: 'Heading will go here',
-          subtitle: 'Description of the first illustration will go here',
+          title: 'Make Your Mark.',
+          subtitle: 'Fashion At Your Fingertip',
           imgSrc: require('../../assets/banner.webp'),
         },
         {
-          title: 'Heading will go here',
-          subtitle: 'Description of the first illustration will go here',
-          imgSrc: require('../../assets/banner.webp'),
-        },
-        {
-          title: 'Heading will go here',
-          subtitle: 'Description of the first illustration will go here',
+          title: 'Create Your Closet.',
+          subtitle: 'Shop Your Style',
           imgSrc: require('../../assets/banner.webp'),
         },
       ],
       activeIndex: 0,
+      showModal: false,
+      modalData: null,
     };
   }
   _renderItem = ({item, index}) => {
@@ -50,7 +49,7 @@ export default class LandingPage extends React.Component {
   };
   render() {
     return (
-      <View style={{paddingHorizontal: 16, backgroundColor: 'white', flex: 1}}>
+      <View style={{backgroundColor: 'white', flex: 1}}>
         <View>
           <Carousel
             loop={true}
@@ -82,9 +81,18 @@ export default class LandingPage extends React.Component {
             tappableDots={true}
           />
         </View>
-        <ScrollView>
-          <Buttons text="login" />
-          <Buttons text="Create Account" isInverse />
+        <ScrollView contentContainerStyle={{paddingHorizontal: 16}}>
+          <Buttons
+            text="login"
+            onPress={() => this.setState({showModal: true, modalData: 'login'})}
+          />
+          <Buttons
+            text="Create Account"
+            isInverse
+            onPress={() =>
+              this.setState({showModal: true, modalData: 'signup'})
+            }
+          />
           <TouchableOpacity
             style={{paddingVertical: 16, marginTop: 16}}
             onPress={() => this.props.navigation.navigate('TabData')}>
@@ -92,6 +100,24 @@ export default class LandingPage extends React.Component {
               I want to explore first
             </Text>
           </TouchableOpacity>
+          <OverlayModal
+            component={
+              this.state.modalData === 'login' ? (
+                <Login
+                  closeModal={() => this.setState({showModal: false})}
+                  forgotPasswordClick={() => {
+                    this.setState({showModal: false});
+                    this.props.navigation.navigate('ResetPassword');
+                  }}
+                />
+              ) : (
+                <CreateAccount
+                  closeModal={() => this.setState({showModal: false})}
+                />
+              )
+            }
+            showModal={this.state.showModal}
+          />
         </ScrollView>
       </View>
     );
