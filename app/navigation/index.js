@@ -5,6 +5,11 @@ import React from 'react';
 import {VText, VView} from '../components';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ViewProduct from '../screens/ViewProduct';
+import CategoryScreen from '../screens/CategoryScreen';
+import LandingPage from '../screens/LandingPage';
+import ForgotPassword from '../screens/ForgotPassword';
+import VerifyEmail from '../screens/VerifyEmail';
+import ResetPassword from '../screens/ResetPassword';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -31,11 +36,12 @@ function StackData() {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ViewProduct" component={ViewProduct} />
+      <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
     </Stack.Navigator>
   );
 }
 
-export function TabData() {
+function TabData() {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -85,3 +91,17 @@ export function TabData() {
     </Tab.Navigator>
   );
 }
+
+function AppNavigation() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="LandingPage" component={LandingPage} />
+      <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+      <Stack.Screen name="ResetPassword" component={ResetPassword} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="TabData" component={TabData} />
+    </Stack.Navigator>
+  );
+}
+
+export default AppNavigation;

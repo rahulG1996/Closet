@@ -3,10 +3,17 @@ import {TouchableOpacity, StyleSheet} from 'react-native';
 import {Colors} from '../../colors';
 import VText from '../Text';
 
-const Buttons = ({text = '', onPress = () => {}}) => {
+const Buttons = ({
+  text = '',
+  onPress = () => {},
+  isInverse = false,
+  noBorder = false,
+}) => {
   return (
-    <TouchableOpacity style={styles.buttonContainer}>
-      <VText text={text} style={styles.buttontext} />
+    <TouchableOpacity
+      style={styles.buttonContainer(isInverse, noBorder)}
+      onPress={onPress}>
+      <VText text={text} style={styles.buttontext(isInverse)} />
     </TouchableOpacity>
   );
 };
@@ -14,14 +21,16 @@ const Buttons = ({text = '', onPress = () => {}}) => {
 export default Buttons;
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    backgroundColor: '#000000',
+  buttonContainer: (isInverse, noBorder) => ({
+    backgroundColor: isInverse ? '#FFFFFF' : '#000000',
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 16,
-  },
-  buttontext: {
-    color: Colors.white,
+    borderWidth: 2,
+    borderColor: noBorder ? 'transparent' : Colors.grey1,
+  }),
+  buttontext: isInverse => ({
+    color: isInverse ? 'black' : 'white',
     textTransform: 'uppercase',
-  },
+  }),
 });
