@@ -1534,6 +1534,11 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/eslint-plugin/-/eslint-plugin-1.2.0.tgz"
   "version" "1.2.0"
 
+"@react-native-google-signin/google-signin@^8.0.1":
+  "integrity" "sha512-ZsHzul3FWM/En3Upx7++KNPVMJxPuzX1H6LWMDiwxlgMmJxpvKpq7UsW4vE3O8x6E6gLfbCFKpjRZXojwXaI+g=="
+  "resolved" "https://registry.npmjs.org/@react-native-google-signin/google-signin/-/google-signin-8.0.1.tgz"
+  "version" "8.0.1"
+
 "@react-native/assets@1.0.0":
   "integrity" "sha512-KrwSpS1tKI70wuKl68DwJZYEvXktDHdZMG0k2AXD/rJVSlB23/X2CB2cutVR0HwNMJIal9HOUOBB2rVfa6UGtQ=="
   "resolved" "https://registry.npmjs.org/@react-native/assets/-/assets-1.0.0.tgz"
