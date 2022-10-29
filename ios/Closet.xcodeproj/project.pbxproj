@@ -45,6 +45,7 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-Closet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Closet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Closet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Closet-ClosetTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closet-ClosetTests.release.xcconfig"; path = "Target Support Files/Pods-Closet-ClosetTests/Pods-Closet-ClosetTests.release.xcconfig"; sourceTree = "<group>"; };
+		B7B20286290B0DEA00B5C99D /* Closet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Closet.entitlements; path = Closet/Closet.entitlements; sourceTree = "<group>"; };
 		B7FE14AB2909B62E00A400FB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -90,6 +91,7 @@
 		13B07FAE1A68108700A75B9A /* Closet */ = {
 			isa = PBXGroup;
 			children = (
+				B7B20286290B0DEA00B5C99D /* Closet.entitlements */,
 				B7FE14AB2909B62E00A400FB /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -497,6 +499,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Closet/Closet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VLSMF7GA58;
 				ENABLE_BITCODE = NO;
@@ -524,6 +527,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Closet/Closet.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = VLSMF7GA58;
 				INFOPLIST_FILE = Closet/Info.plist;
