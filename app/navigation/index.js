@@ -10,6 +10,7 @@ import LandingPage from '../screens/LandingPage';
 import ForgotPassword from '../screens/ForgotPassword';
 import VerifyEmail from '../screens/VerifyEmail';
 import ResetPassword from '../screens/ResetPassword';
+import ProfileSetup from '../screens/ProfileSetup';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -99,6 +100,7 @@ function AppNavigation() {
       <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
       <Stack.Screen name="TabData" component={TabData} />
     </Stack.Navigator>
   );

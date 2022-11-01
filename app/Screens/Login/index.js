@@ -9,23 +9,21 @@ import {
 } from 'react-native';
 import {Buttons, Input} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {
-  appleAuth,
-  AppleButton,
-} from '@invertase/react-native-apple-authentication';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginAction} from '../../redux/actions/authActions';
 
 let user = null;
 
 const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
+  const dispatch = useDispatch();
   const [state, setState] = useState({
-    email: '',
-    password: '',
+    email: 'cc',
+    password: 'cc',
     emailError: '',
     passwordError: '',
   });
@@ -50,7 +48,12 @@ const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
     }
     setState({...state, emailError, passwordError});
     if (email && password) {
-      alert('login');
+      dispatch(
+        loginAction({
+          emailId: 'Rahul@gmail.com',
+          password: 'Rahul@2022',
+        }),
+      );
     }
   };
 
