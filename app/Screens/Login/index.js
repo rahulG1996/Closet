@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, Component} from 'react';
 import {
   Image,
   Text,
@@ -18,6 +18,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {loginAction} from '../../redux/actions/authActions';
 
 let user = null;
+import InstagramLogin from 'react-native-instagram-login';
 
 const Login = ({
   closeModal = () => {},
@@ -212,12 +213,7 @@ const Login = ({
           paddingBottom: 16,
           paddingHorizontal: 70,
         }}>
-        <TouchableOpacity>
-          <Image
-            source={require('../../assets/insta.webp')}
-            style={styles.socialIcon}
-          />
-        </TouchableOpacity>
+        <TestInsta />
         <TouchableOpacity onPress={googleLogin}>
           <Image
             source={require('../../assets/google.webp')}
@@ -262,3 +258,29 @@ const styles = StyleSheet.create({
     height: 44,
   },
 });
+
+export class TestInsta extends Component {
+  render() {
+    return (
+      <>
+        <TouchableOpacity onPress={() => this.instagramLogin.show()}>
+          <Image
+            source={require('../../assets/insta.webp')}
+            style={styles.socialIcon}
+          />
+        </TouchableOpacity>
+        <InstagramLogin
+          ref={ref => (this.instagramLogin = ref)}
+          appId="2136446439890907"
+          appSecret="b18deef2dfada2f0dfca918c0ea4cb7e"
+          redirectUrl="https://www.google.co.in/"
+          incognito={false}
+          scopes={['user_profile', 'user_media']}
+          onLoginSuccess={this.setIgToken}
+          onLoginFailure={data => console.log(data)}
+          language="en" //default is 'en' for english
+        />
+      </>
+    );
+  }
+}
