@@ -1,13 +1,44 @@
-import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {
-  useBlurOnFulfill,
-  useClearByFocusCell,
-} from 'react-native-confirmation-code-field';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Touchable, TouchableOpacity} from 'react-native';
+import Toast from 'react-native-simple-toast';
+import {useDispatch, useSelector} from 'react-redux';
 import {Buttons, Input, VText, VView} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
+import {sendOtp} from '../../redux/actions/sendOtpAction';
 
 const ForgotPassword = props => {
+  const [state, setState] = useState({email: ''});
+  const dispatch = useDispatch();
+  const otpResponse = useSelector(state => state.OtpReducer.otpResponse);
+
+  useEffect(() => {
+    if (Object.keys(otpResponse).length) {
+      if (otpResponse.statusCode === 200) {
+        dispatch({type: 'SEND_OTP', value: ''});
+        Toast.show(otpResponse.statusMessage);
+        props.navigation.navigate('VerifyEmail', {
+          screen: 'forgotPassword',
+          email: state.email,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, otpResponse, props.navigation]);
+
+  const sendOtpHandler = () => {
+    let {errorText = '', email = ''} = state;
+    if (!state.email) {
+      errorText = 'Please enter email';
+    } else {
+      dispatch(
+        sendOtp({
+          emailId: email,
+          status: '2',
+        }),
+      );
+    }
+    setState({...state, errorText});
+  };
   return (
     <VView
       style={{
@@ -16,6 +47,14 @@ const ForgotPassword = props => {
         justifyContent: 'center',
         backgroundColor: 'white',
       }}>
+      <TouchableOpacity
+        style={{position: 'absolute', top: 16, right: 16}}
+        onPress={() => props.navigation.goBack()}>
+        <Image
+          source={require('../../assets/cross.webp')}
+          style={{width: 44, height: 44}}
+        />
+      </TouchableOpacity>
       <VText
         text="Forgot Password?"
         style={{
@@ -34,12 +73,14 @@ const ForgotPassword = props => {
           lineHeight: 24,
         }}
       />
-      <Input placeholder="EmailId" />
+      <Input
+        placeholder="EmailId"
+        value={state.email}
+        onChangeText={e => setState({...state, email: e, errorText: ''})}
+        errorText={state.errorText}
+      />
       <VView style={{marginTop: 48}}>
-        <Buttons
-          text="get otp"
-          onPress={() => props.navigation.navigate('VerifyEmail')}
-        />
+        <Buttons text="get otp" onPress={sendOtpHandler} />
         <Buttons
           text="go back"
           isInverse

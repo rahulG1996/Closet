@@ -13,11 +13,15 @@ import {FONTS_SIZES} from '../../fonts';
 import {Buttons, OverlayModal, VText, VView} from '../../components';
 import Login from '../Login';
 import CreateAccount from '../CreateAccount';
+import {connect} from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {bindActionCreators} from 'redux';
+import {emptyLoginResponse} from '../../redux/actions/authActions';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
 
-export default class LandingPage extends React.Component {
+class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,6 +51,48 @@ export default class LandingPage extends React.Component {
       </View>
     );
   };
+
+  saveLoginData = data => {
+    this.setState({showModal: false});
+    this.props.emptyLoginResponse();
+    if (data.statusCode === 305) {
+      this.props.navigation.navigate('VerifyEmail', {
+        screen: 'signup',
+        status: '1',
+        email: data.email,
+        autoSendOtp: true,
+      });
+    }
+  };
+
+  handleSignup = data => {
+    this.setState({showModal: false});
+    if (data.statusCode === 200) {
+      this.props.navigation.navigate('VerifyEmail', {
+        screen: 'signup',
+        status: '1',
+        email: data.email,
+        autoSendOtp: false,
+      });
+    } else if (data.statusCode === 303) {
+      this.props.navigation.navigate('VerifyEmail', {
+        screen: 'signup',
+        status: '1',
+        email: data.email,
+        autoSendOtp: true,
+      });
+    }
+  };
+
+  openStaticPage = type => {
+    this.setState({showModal: false});
+    if (type === 'tt') {
+      this.props.navigation.navigate('TermConditions');
+    } else {
+      this.props.navigation.navigate('PrivacyPolicy');
+    }
+  };
+
   render() {
     return (
       <View style={{backgroundColor: 'white', flex: 1}}>
@@ -105,14 +151,17 @@ export default class LandingPage extends React.Component {
               this.state.modalData === 'login' ? (
                 <Login
                   closeModal={() => this.setState({showModal: false})}
+                  loginResponseData={this.saveLoginData}
                   forgotPasswordClick={() => {
                     this.setState({showModal: false});
-                    this.props.navigation.navigate('ResetPassword');
+                    this.props.navigation.navigate('ForgotPassword');
                   }}
+                  openStaticPage={this.openStaticPage}
                 />
               ) : (
                 <CreateAccount
                   closeModal={() => this.setState({showModal: false})}
+                  signupData={this.handleSignup}
                 />
               )
             }
@@ -123,6 +172,19 @@ export default class LandingPage extends React.Component {
     );
   }
 }
+
+export default connect(
+  state => ({
+    loginResponse: state.AuthReducer.loginResponse,
+  }),
+  dispatch =>
+    bindActionCreators(
+      {
+        emptyLoginResponse,
+      },
+      dispatch,
+    ),
+)(LandingPage);
 
 const styles = StyleSheet.create({
   container: {

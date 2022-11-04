@@ -1,9 +1,22 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {Buttons, Input} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
+import {useDispatch, useSelector} from 'react-redux';
+import {signupAction} from '../../redux/actions/authActions';
 
-const CreateAccount = ({closeModal = () => {}}) => {
+const CreateAccount = props => {
+  let {closeModal = () => {}, signupData = {}} = props;
+  const dispatch = useDispatch();
+  const signupResponse = useSelector(state => state.AuthReducer.signupResponse);
+
+  useEffect(() => {
+    if (Object.keys(signupResponse).length) {
+      dispatch({type: 'SIGNUP', value: ''});
+      signupData({...signupResponse, email: state.email});
+    }
+  }, [signupResponse]);
+
   const [state, setState] = useState({
     email: '',
     password: '',
@@ -45,7 +58,12 @@ const CreateAccount = ({closeModal = () => {}}) => {
       password.length >= 8 &&
       cPassword === password
     ) {
-      alert('login');
+      dispatch(
+        signupAction({
+          emailId: email,
+          password: password,
+        }),
+      );
     }
   };
 

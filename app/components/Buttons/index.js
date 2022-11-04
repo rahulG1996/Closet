@@ -8,9 +8,11 @@ const Buttons = ({
   onPress = () => {},
   isInverse = false,
   noBorder = false,
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={styles.buttonContainer(isInverse, noBorder)}
       onPress={onPress}>
       <VText text={text} style={styles.buttontext(isInverse)} />

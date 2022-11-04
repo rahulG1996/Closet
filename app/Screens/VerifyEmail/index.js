@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {VView, VText, Buttons} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import {
@@ -8,15 +8,120 @@ import {
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import {useDispatch, useSelector} from 'react-redux';
+import {sendOtp, verifyOtp} from '../../redux/actions/sendOtpAction';
+import Toast from 'react-native-simple-toast';
 
-const VerifyEmail = () => {
+const VerifyEmail = propsData => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState('');
+  const [count, setCount] = useState(59);
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
   const CELL_COUNT = 4;
+
+  const [countDown, setCountDown] = useState(60 * 5);
+  const [runTimer, setRunTimer] = useState(true);
+
+  const otpResponse = useSelector(state => state.OtpReducer.otpResponse);
+
+  const verifyOtpResponse = useSelector(
+    state => state.OtpReducer.verifyOtpResponse,
+  );
+
+  useEffect(() => {
+    if (Object.keys(verifyOtpResponse).length) {
+      dispatch({type: 'VERIFY_OTP', value: ''});
+      if (verifyOtpResponse.statusCode === 200) {
+        dispatch({type: 'USERID', value: verifyOtpResponse.userId});
+      }
+    }
+  }, [dispatch, verifyOtpResponse]);
+
+  useEffect(() => {
+    if (Object.keys(otpResponse).length) {
+      if (otpResponse.statusCode === 200) {
+        setCountDown(300);
+        setRunTimer(true);
+        setCount(59);
+        dispatch({type: 'SEND_OTP', value: ''});
+        Toast.show(otpResponse.statusMessage);
+      }
+    }
+  }, [dispatch, otpResponse]);
+
+  useEffect(() => {
+    let timerId;
+    if (runTimer) {
+      timerId = setInterval(() => {
+        setCountDown(countDown => countDown - 1);
+      }, 1000);
+    } else {
+      clearInterval(timerId);
+    }
+
+    return () => clearInterval(timerId);
+  }, [runTimer]);
+
+  useEffect(() => {
+    if (countDown < 0 && runTimer) {
+      console.log('expired');
+      setRunTimer(false);
+      setCountDown(0);
+    }
+  }, [countDown, runTimer]);
+
+  const seconds = String(countDown % 60).padStart(2, 0);
+  const minutes = String(Math.floor(countDown / 60)).padStart(2, 0);
+
+  useEffect(() => {
+    if (propsData?.route?.params?.autoSendOtp) {
+      dispatch(
+        sendOtp({
+          emailId: propsData?.route?.params?.email,
+          status: '1',
+        }),
+      );
+    }
+  }, [
+    dispatch,
+    propsData?.route?.params?.autoSendOtp,
+    propsData?.route?.params?.email,
+  ]);
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      setCount(prev => {
+        if (prev < 0) clearInterval(interval);
+        return prev - 1;
+      });
+    }, 1000);
+    // interval cleanup on component unmount
+    return () => clearInterval(interval);
+  }, [count]);
+
+  const sendOtpAgain = () => {
+    dispatch(
+      sendOtp({
+        emailId: propsData?.route?.params?.email,
+        status: propsData?.route?.params?.status,
+      }),
+    );
+  };
+
+  const verifyOtpData = () => {
+    dispatch(
+      verifyOtp({
+        emailId: propsData?.route?.params?.email,
+        otp: value,
+        status: propsData?.route?.params?.status,
+      }),
+    );
+  };
+
   return (
     <VView
       style={{
@@ -25,6 +130,14 @@ const VerifyEmail = () => {
         justifyContent: 'center',
         backgroundColor: 'white',
       }}>
+      <TouchableOpacity
+        style={{position: 'absolute', top: 16, right: 16}}
+        onPress={() => propsData.navigation.goBack()}>
+        <Image
+          source={require('../../assets/cross.webp')}
+          style={{width: 44, height: 44}}
+        />
+      </TouchableOpacity>
       <VText
         text="Verify your email"
         style={{
@@ -33,19 +146,29 @@ const VerifyEmail = () => {
           textAlign: 'center',
         }}
       />
-      <VText
-        text="We have sent you a 4 digit OTP to your given email id emailid@gmail.com."
+      <VView
         style={{
-          marginVertical: 8,
-          textAlign: 'center',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
           marginBottom: 56,
-          lineHeight: 24,
-        }}
-      />
+        }}>
+        <VText
+          text="We have sent you a 4 digit OTP to your given email id "
+          style={{
+            marginVertical: 8,
+            textAlign: 'center',
+            lineHeight: 24,
+          }}
+        />
+        <VText
+          text={propsData?.route?.params?.email}
+          style={{fontWeight: '700', textAlign: 'center'}}
+        />
+      </VView>
       <CodeField
         ref={ref}
         {...props}
-        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
         value={value}
         onChangeText={setValue}
         cellCount={CELL_COUNT}
@@ -61,9 +184,21 @@ const VerifyEmail = () => {
           </Text>
         )}
       />
+      {seconds != 0 ? (
+        <VView style={{alignItems: 'flex-end', margin: 8}}>
+          <VText text={`OTP will be expired after ${minutes} : ${seconds}`} />
+        </VView>
+      ) : null}
       <VView style={{marginTop: 56}}>
-        <Buttons text="Verify" />
-        <Buttons text="Send otp again" isInverse />
+        <Buttons text="Verify" onPress={verifyOtpData} />
+        <Buttons
+          disabled={count > 0 ? true : false}
+          onPress={sendOtpAgain}
+          text={
+            count > 0 ? `Send otp again in ${count} secs` : 'Send otp again'
+          }
+          isInverse
+        />
         <Buttons text="change email ID" isInverse noBorder />
       </VView>
     </VView>
@@ -83,9 +218,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     height: 74,
     width: 74,
-    justifyContent: 'center',
   },
   focusCell: {
     borderColor: '#000',
+    justifyContent: 'center',
   },
 });

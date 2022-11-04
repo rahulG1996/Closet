@@ -11,6 +11,9 @@ import ForgotPassword from '../screens/ForgotPassword';
 import VerifyEmail from '../screens/VerifyEmail';
 import ResetPassword from '../screens/ResetPassword';
 import ProfileSetup from '../screens/ProfileSetup';
+import {useSelector} from 'react-redux';
+import TermConditions from '../screens/TermCondition';
+import PrivacyPolicy from '../screens/PrivacyPolicy';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -94,13 +97,20 @@ function TabData() {
 }
 
 function AppNavigation() {
-  return (
+  const userId = useSelector(state => state.AuthReducer.userId);
+  console.log('navigation', userId);
+  return !userId ? (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="LandingPage" component={LandingPage} />
       <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+      <Stack.Screen name="TermConditions" component={TermConditions} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+    </Stack.Navigator>
+  ) : (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="TabData" component={TabData} />
     </Stack.Navigator>
   );

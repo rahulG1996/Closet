@@ -11,8 +11,10 @@ import {
 } from 'react-native';
 import {Colors} from '../../colors';
 import Categories from './components/Categories';
+import {useDispatch} from 'react-redux';
 
 const Home = props => {
+  const dispatch = useDispatch();
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
   const onScroll = ({
@@ -51,7 +53,10 @@ const Home = props => {
                 color: Colors.black60,
               }}
             />
-            <Buttons text="Set your preferences" />
+            <Buttons
+              text="Set your preferences"
+              onPress={() => dispatch({type: 'LOGOUT'})}
+            />
           </VView>
         );
       case 3:

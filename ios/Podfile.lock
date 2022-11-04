@@ -322,6 +322,9 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-simple-toast (1.1.4):
+    - React-Core
+    - Toast (~> 4.0.0)
   - react-native-splash-screen (3.3.0):
     - React-Core
   - React-perflogger (0.70.1)
@@ -410,6 +413,7 @@ PODS:
     - React-Core
     - React-RCTImage
   - SocketRocket (0.6.0)
+  - Toast (4.0.0)
   - TOCropViewController (2.6.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -463,6 +467,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -503,6 +508,7 @@ SPEC REPOS:
     - libevent
     - OpenSSL-Universal
     - SocketRocket
+    - Toast
     - TOCropViewController
     - YogaKit
 
@@ -551,6 +557,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-simple-toast:
+    :path: "../node_modules/react-native-simple-toast"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   React-perflogger:
@@ -630,6 +638,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
   react-native-safe-area-context: dfe5aa13bee37a0c7e8059d14f72ffc076d120e9
+  react-native-simple-toast: 8ee5d23f0b92b935ab7434cdb65159ce12dfb4b7
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: 48c6b363e867d64b682e84f80ca45636bd65e19c
   React-RCTActionSheet: 33c74fe5c754835e3715c300618da9aa2f7203fa
@@ -649,6 +658,7 @@ SPEC CHECKSUMS:
   RNImageCropPicker: 648356d68fbf9911a1016b3e3723885d28373eda
   RNScreens: 0df01424e9e0ed7827200d6ed1087ddd06c493f9
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
   TOCropViewController: edfd4f25713d56905ad1e0b9f5be3fbe0f59c863
   Yoga: 6c8252e38d65aa387daee699eacf027e055e0b31
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

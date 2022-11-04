@@ -19,11 +19,17 @@ import {loginAction} from '../../redux/actions/authActions';
 
 let user = null;
 
-const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
+const Login = ({
+  closeModal = () => {},
+  forgotPasswordClick = () => {},
+  loginResponseData = {},
+  openStaticPage = {},
+}) => {
   const dispatch = useDispatch();
+  const loginResponse = useSelector(state => state.AuthReducer.loginResponse);
   const [state, setState] = useState({
-    email: 'cc',
-    password: 'cc',
+    email: '',
+    password: '',
     emailError: '',
     passwordError: '',
   });
@@ -38,6 +44,12 @@ const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (Object.keys(loginResponse).length) {
+      loginResponseData({...loginResponse, email: state.email});
+    }
+  }, [loginResponse, loginResponseData]);
+
   const doLogin = () => {
     let {email, password, emailError, passwordError} = state;
     if (!email) {
@@ -50,8 +62,8 @@ const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
     if (email && password) {
       dispatch(
         loginAction({
-          emailId: 'Rahul@gmail.com',
-          password: 'Rahul@2022',
+          emailId: email,
+          password: password,
         }),
       );
     }
@@ -197,6 +209,7 @@ const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
           flexDirection: 'row',
           justifyContent: 'center',
           padding: 32,
+          paddingBottom: 16,
           paddingHorizontal: 70,
         }}>
         <TouchableOpacity>
@@ -216,6 +229,25 @@ const Login = ({closeModal = () => {}, forgotPasswordClick = () => {}}) => {
             source={require('../../assets/apple.webp')}
             style={styles.socialIcon}
           />
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          paddingBottom: 50,
+          alignItems: 'center',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+        }}>
+        <Text>By logging in you agree to our </Text>
+        <TouchableOpacity onPress={() => openStaticPage('tt')}>
+          <Text style={{color: 'rgba(33, 122, 255, 1)'}}>
+            Terms and Conditions
+          </Text>
+        </TouchableOpacity>
+        <Text> & </Text>
+        <TouchableOpacity onPress={() => openStaticPage('pp')}>
+          <Text style={{color: 'rgba(33, 122, 255, 1)'}}>Privacy policy</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
