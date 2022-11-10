@@ -69,6 +69,14 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>instagram</string>
+</array>
+<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Application needs permission to write photos...</string>
+<key>NSPhotoLibraryUsageDescription</key>
+	<string>iOS 10 needs permission to write photos...</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>

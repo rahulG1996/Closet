@@ -276,7 +276,7 @@ export class TestInsta extends Component {
           redirectUrl="https://www.google.co.in/"
           incognito={false}
           scopes={['user_profile', 'user_media']}
-          onLoginSuccess={this.setIgToken}
+          onLoginSuccess={res => console.log('test insta response', res)}
           onLoginFailure={data => console.log(data)}
           language="en" //default is 'en' for english
         />
