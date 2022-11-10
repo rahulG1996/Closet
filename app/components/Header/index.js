@@ -3,6 +3,7 @@ import {Image, TouchableOpacity} from 'react-native';
 import {FONTS_SIZES} from '../../fonts';
 import VText from '../Text';
 import VView from '../View';
+import {Images} from '../../assets';
 
 const Header = ({
   showshare = false,
@@ -10,6 +11,7 @@ const Header = ({
   navigation = () => {},
   showFilter = false,
   showBack = false,
+  showMenu = false,
 }) => {
   return (
     <VView
@@ -69,6 +71,15 @@ const Header = ({
           <Image
             resizeMode="stretch"
             source={require('../../assets/iFilter.webp')}
+            style={{width: 24, height: 24}}
+          />
+        </TouchableOpacity>
+      )}
+      {showMenu && (
+        <TouchableOpacity>
+          <Image
+            resizeMode="stretch"
+            source={Images.menuBar}
             style={{width: 24, height: 24}}
           />
         </TouchableOpacity>

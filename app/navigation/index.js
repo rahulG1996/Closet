@@ -14,6 +14,8 @@ import ProfileSetup from '../screens/ProfileSetup';
 import {useSelector} from 'react-redux';
 import TermConditions from '../screens/TermCondition';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
+import ClosetScreen from '../screens/Closet';
+import ClosetDetailsFrom from '../screens/Closet/component/closetDetailForm';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,15 +37,26 @@ const renderTab = (route, imgSource) => {
   );
 };
 
-function StackData() {
+function ShopStack() {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ViewProduct" component={ViewProduct} />
       <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+      {/* <Stack.Screen name="ClosetDetailsFrom" component={ClosetDetailsFrom} /> */}
     </Stack.Navigator>
   );
 }
+
+const ClosetStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="ClosetScreen" component={ClosetScreen} />
+      <Stack.Screen name="ClosetDetailsFrom" component={ClosetDetailsFrom} />
+      <Stack.Screen name="ViewProduct" component={ViewProduct} />
+    </Stack.Navigator>
+  );
+};
 
 function TabData() {
   return (
@@ -71,17 +84,8 @@ function TabData() {
         tabBarShowLabel: false,
         headerShown: false,
       })}>
-      <Tab.Screen name="Shop" component={StackData} />
-      <Tab.Screen
-        name="Closet"
-        component={Home}
-        listeners={{
-          tabPress: e => {
-            // Prevent default action
-            e.preventDefault();
-          },
-        }}
-      />
+      <Tab.Screen name="Shop" component={ShopStack} />
+      <Tab.Screen name="Closet" component={ClosetStack} />
       <Tab.Screen
         name="Outfits"
         component={Home}
@@ -108,6 +112,7 @@ function AppNavigation() {
       <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
       <Stack.Screen name="TermConditions" component={TermConditions} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="TabData" component={TabData} />
     </Stack.Navigator>
   ) : (
     <Stack.Navigator screenOptions={{headerShown: false}}>

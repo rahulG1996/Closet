@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* ClosetTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* ClosetTests.m */; };
-		0C80B921A6F3F58F76C31292 /* libPods-Closet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Closet.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7699B88040F8A987B510C191 /* libPods-Closet-ClosetTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Closet-ClosetTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B130CB92506718A8695BF458 /* libPods-Closet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70DC6D69003C7A83834CA0CB /* libPods-Closet.a */; };
 		B7FE14AC2909B62E00A400FB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FE14AB2909B62E00A400FB /* GoogleService-Info.plist */; };
 		B7FE14AF2909B7A600A400FB /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B7FE14AE2909B7A600A400FB /* FirebaseAnalytics */; };
+		BDEC8F2BB2E2B15F759F0084 /* libPods-Closet-ClosetTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F9D809194C15B65424A14AB /* libPods-Closet-ClosetTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,11 +38,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Closet/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Closet/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Closet/main.m; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Closet-ClosetTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Closet-ClosetTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-Closet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closet.debug.xcconfig"; path = "Target Support Files/Pods-Closet/Pods-Closet.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Closet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closet.release.xcconfig"; path = "Target Support Files/Pods-Closet/Pods-Closet.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Closet-ClosetTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closet-ClosetTests.debug.xcconfig"; path = "Target Support Files/Pods-Closet-ClosetTests/Pods-Closet-ClosetTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-Closet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Closet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F9D809194C15B65424A14AB /* libPods-Closet-ClosetTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Closet-ClosetTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70DC6D69003C7A83834CA0CB /* libPods-Closet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Closet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Closet/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Closet-ClosetTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closet-ClosetTests.release.xcconfig"; path = "Target Support Files/Pods-Closet-ClosetTests/Pods-Closet-ClosetTests.release.xcconfig"; sourceTree = "<group>"; };
 		B7B20286290B0DEA00B5C99D /* Closet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Closet.entitlements; path = Closet/Closet.entitlements; sourceTree = "<group>"; };
@@ -55,7 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-Closet-ClosetTests.a in Frameworks */,
+				BDEC8F2BB2E2B15F759F0084 /* libPods-Closet-ClosetTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,7 +64,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7FE14AF2909B7A600A400FB /* FirebaseAnalytics in Frameworks */,
-				0C80B921A6F3F58F76C31292 /* libPods-Closet.a in Frameworks */,
+				B130CB92506718A8695BF458 /* libPods-Closet.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,8 +107,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-Closet.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-Closet-ClosetTests.a */,
+				70DC6D69003C7A83834CA0CB /* libPods-Closet.a */,
+				6F9D809194C15B65424A14AB /* libPods-Closet-ClosetTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
