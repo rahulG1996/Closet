@@ -1,9 +1,57 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Image, TouchableHighlight} from 'react-native';
+import {StyleSheet, Image, TouchableHighlight, View, Text} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Header, VText, VView} from '../../components';
 import {Images} from '../../assets';
+import {Colors} from '../../colors';
 // import PhotoEditor from 'react-native-photo-editor';
+
+let data = [
+  {
+    categoryType: 'Tops',
+    categoryData: [
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+    ],
+  },
+  {
+    categoryType: 'Layers',
+    categoryData: [
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+    ],
+  },
+  {
+    categoryType: 'Bottoms',
+    categoryData: [
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+    ],
+  },
+  {
+    categoryType: 'Beach',
+    categoryData: [
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+      {
+        images: require('../../assets/sweatshirt.webp'),
+      },
+    ],
+  },
+];
 
 export default props => {
   const [selectedImage, setSelectedImage] = useState('');
@@ -59,48 +107,71 @@ export default props => {
             />
           </VView>
         </VView>
-        <VView style={styles.footerContainer}>
-          <TouchableHighlight
-            underlayColor={'rgba(0,0,0,0.1)'}
-            onPress={handleCamera}
-            style={styles.footerImageContainer}>
-            <Image source={Images.camera} style={styles.footerImage} />
-          </TouchableHighlight>
-          <TouchableHighlight
-            underlayColor={'rgba(0,0,0,0.1)'}
-            onPress={handleGallery}
-            style={styles.footerImageContainer}>
-            <Image source={Images.photos} style={styles.footerImage} />
-          </TouchableHighlight>
-          <TouchableHighlight
-            underlayColor={'rgba(0,0,0,0.1)'}
-            onPress={() => alert('Hi')}
-            style={styles.footerImageContainer}>
-            <Image source={Images.googleIcon} style={styles.footerImage} />
-          </TouchableHighlight>
-        </VView>
       </VView>
     );
   };
   return (
     <VView style={styles.container}>
-      <Header title="Closet" showMenu />
-
-      {/* <VView style={{flex: 1, backgroundColor: 'green'}}> */}
-      {/* {selectedImage ? (
-        <VView>
-          <Image
-            source={{uri: selectedImage}}
-            style={{
-              height: 200,
-              width: 200,
-            }}
-          />
-        </VView>
-      ) : ( */}
-      {emptyScreen()}
-      {/* )} */}
-      {/* </VView> */}
+      <Header title="Closet" showMenu navigation={props.navigation} />
+      {/* {emptyScreen()} */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          paddingHorizontal: 16,
+        }}>
+        {data.map(item => {
+          return (
+            <View style={{marginVertical: 8}}>
+              <View
+                style={{
+                  width: 160,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }}>
+                {item.categoryData.splice(0, 4).map(i => {
+                  return (
+                    <View
+                      style={{
+                        width: '40%',
+                        height: 80,
+                        backgroundColor: Colors.grey1,
+                        margin: 2,
+                      }}>
+                      <Image
+                        source={i.images}
+                        style={{width: '95%', height: '95%'}}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+              <Text style={{marginTop: 8}}>{item.categoryType}</Text>
+            </View>
+          );
+        })}
+      </View>
+      <VView style={styles.footerContainer}>
+        <TouchableHighlight
+          underlayColor={'rgba(0,0,0,0.1)'}
+          onPress={handleCamera}
+          style={styles.footerImageContainer}>
+          <Image source={Images.camera} style={styles.footerImage} />
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor={'rgba(0,0,0,0.1)'}
+          onPress={handleGallery}
+          style={styles.footerImageContainer}>
+          <Image source={Images.photos} style={styles.footerImage} />
+        </TouchableHighlight>
+        <TouchableHighlight
+          underlayColor={'rgba(0,0,0,0.1)'}
+          onPress={() => alert('Hi')}
+          style={styles.footerImageContainer}>
+          <Image source={Images.googleIcon} style={styles.footerImage} />
+        </TouchableHighlight>
+      </VView>
     </VView>
   );
 };
@@ -132,7 +203,9 @@ const styles = StyleSheet.create({
     flex: 0.1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignSelf: 'center',
+    position: 'absolute',
+    bottom: 16,
   },
   footerImage: {
     height: 44,

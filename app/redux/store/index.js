@@ -5,19 +5,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthReducer from '../reducers/authReducer';
 import OtpReducer from '../reducers/sendOtpReducer';
 import ProfileReducer from '../reducers/profileReducer';
+import ClosetReducer from '../reducers/closetReducer';
 
 const persistConfig = {
   key: 'root',
   // Storage Method (React Native)
   storage: AsyncStorage,
   // Whitelist (Save Specific Reducers)
-  whitelist: ['AuthReducer', 'ProfileReducer'],
+  whitelist: ['AuthReducer', 'ProfileReducer', 'ClosetReducer'],
 };
 
 const rootReducer = combineReducers({
   AuthReducer,
   OtpReducer,
   ProfileReducer,
+  ClosetReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

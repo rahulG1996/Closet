@@ -19,6 +19,9 @@ import ClosetDetailsFrom from '../screens/Closet/component/closetDetailForm';
 import Menu from '../screens/Menu';
 import Outfits from '../screens/Outfits';
 import {getUserProfile} from '../redux/actions/profileAction';
+import {getBrandData, getCategoryData} from '../redux/actions/closetAction';
+import moment from 'moment';
+import 'moment/locale/hi';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -103,7 +106,8 @@ function AppNavigation() {
   useEffect(() => {
     if (userId) {
       dispatch(getUserProfile());
-      //get user profile api
+      dispatch(getBrandData());
+      dispatch(getCategoryData());
     }
   }, [dispatch, userId]);
   return !userId ? (
@@ -118,7 +122,7 @@ function AppNavigation() {
     </Stack.Navigator>
   ) : (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      {!isProfileCreated ? (
+      {isProfileCreated ? (
         <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
       ) : null}
       <Stack.Screen name="TabData" component={TabData} />

@@ -1,22 +1,50 @@
-import React from 'react';
-import {Image, ScrollView} from 'react-native';
-import {VView, VText, Buttons, Header, Input} from '../../../components';
-import {FONTS_SIZES} from '../../../fonts';
+import React, {useEffect, useState} from 'react';
+import {Image, ScrollView, StyleSheet} from 'react-native';
+import {VView, VText, Buttons, Header} from '../../../components';
 import {Colors} from '../../../colors';
+import SearchableDropdown from 'react-native-searchable-dropdown';
+import {useDispatch, useSelector} from 'react-redux';
 
 const ClosetDetailsFrom = props => {
+  const dispatch = useDispatch();
+  const brandData = useSelector(state => state.ClosetReducer.brandData);
+  const categoryData = useSelector(state => state.ClosetReducer.categoryData);
+  const [state, setState] = useState({
+    brandDataUpdated: [],
+    brandSelected: '',
+    categoryDataUpdated: [],
+  });
+
+  useEffect(() => {
+    let items = brandData.map(item => {
+      return {
+        ...item,
+        name: item.brandName,
+        id: item._id,
+      };
+    });
+    let groupedData = categoryData.flatMap(el =>
+      el.subCategory.map(proj => ({
+        name: el.categoryName + ' ' + proj.subCategoryName,
+        id: el._id + ' ' + proj._id,
+      })),
+    );
+    setState({
+      ...state,
+      brandDataUpdated: items,
+      categoryDataUpdated: groupedData,
+    });
+  }, []);
+
+  console.warn(state.categoryDataUpdated, categoryData);
+
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
         <Header {...props} showBack />
       </VView>
       <ScrollView>
-        <VView
-          style={{
-            alignItems: 'center',
-            backgroundColor: Colors.grey1,
-            height: 350,
-          }}>
+        <VView style={styles.imageContainer}>
           <Image
             source={require('../../../assets/sweatshirt.webp')}
             style={{height: '100%'}}
@@ -25,21 +53,57 @@ const ClosetDetailsFrom = props => {
         <VView style={{padding: 16}}>
           <VView>
             <VText text="Category" />
-            <Input placeholder="Tops, Pants, Shorts..." />
+            <SearchableDropdown
+              onTextChange={text =>
+                setState({...state, categorySelected: text.name})
+              }
+              onItemSelect={item =>
+                setState({...state, categorySelected: item})
+              }
+              containerStyle={styles.dropDownContainer}
+              textInputStyle={styles.inputContainer}
+              textInputProps={{value: state.categoryDataUpdated?.name}}
+              itemStyle={styles.searchItemContainer}
+              itemTextStyle={{
+                color: '#222',
+              }}
+              itemsContainerStyle={{
+                maxHeight: '60%',
+              }}
+              items={state.categoryDataUpdated}
+              defaultIndex={2}
+              placeholder="Tops, Pants, Shorts..."
+              resPtValue={false}
+              underlineColorAndroid="transparent"
+            />
             <VText text="Brand" />
-            <Input placeholder="H&M, Zara, Nike..." />
+            <SearchableDropdown
+              onTextChange={text =>
+                setState({...state, brandSelected: text.name})
+              }
+              onItemSelect={item => setState({...state, brandSelected: item})}
+              containerStyle={styles.dropDownContainer}
+              textInputStyle={styles.inputContainer}
+              textInputProps={{value: state.brandSelected?.name}}
+              itemStyle={styles.searchItemContainer}
+              itemTextStyle={{
+                color: '#222',
+              }}
+              itemsContainerStyle={{
+                maxHeight: '60%',
+              }}
+              items={state.brandDataUpdated}
+              defaultIndex={2}
+              placeholder="Tops, Pants, Shorts..."
+              resPtValue={false}
+              underlineColorAndroid="transparent"
+            />
+
             <VText text="Season" />
             <VView style={{flexDirection: 'row'}}>
               {['Spring', 'Summer', 'Fall', 'Winter'].map((item, index) => {
                 return (
-                  <VView
-                    style={{
-                      borderWidth: 1,
-                      marginRight: 8,
-                      padding: 8,
-                      borderColor: 'rgba(0,0,0,0.16)',
-                      marginTop: 8,
-                    }}>
+                  <VView style={styles.seasonContainer}>
                     <VText text={item} />
                   </VView>
                 );
@@ -54,3 +118,35 @@ const ClosetDetailsFrom = props => {
 };
 
 export default ClosetDetailsFrom;
+
+const styles = StyleSheet.create({
+  seasonContainer: {
+    borderWidth: 1,
+    marginRight: 8,
+    padding: 8,
+    borderColor: 'rgba(0,0,0,0.16)',
+    marginTop: 8,
+  },
+  dropDownContainer: {
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  imageContainer: {
+    alignItems: 'center',
+    backgroundColor: Colors.grey1,
+    height: 350,
+  },
+  inputContainer: {
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#FFFFFF',
+  },
+  searchItemContainer: {
+    padding: 10,
+    marginTop: 2,
+    backgroundColor: '#FFFFFF',
+    borderColor: '#bbb',
+    borderWidth: 1,
+  },
+});

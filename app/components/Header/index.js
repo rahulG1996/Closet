@@ -20,6 +20,7 @@ const Header = ({
         justifyContent: 'space-between',
         padding: 20,
         backgroundColor: 'white',
+        alignItems: 'center',
       }}>
       <VView style={{flexDirection: 'row'}}>
         {showBack && (
@@ -77,11 +78,11 @@ const Header = ({
         </TouchableOpacity>
       )}
       {showMenu && (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Menu')}>
           <Image
-            resizeMode="stretch"
+            resizeMode="contain"
             source={Images.menuBar}
-            style={{width: 24, height: 24}}
+            style={{width: 22, height: 22}}
           />
         </TouchableOpacity>
       )}
