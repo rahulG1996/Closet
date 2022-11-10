@@ -17,6 +17,7 @@ const Header = ({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 20,
+        backgroundColor: 'white',
       }}>
       <VView style={{flexDirection: 'row'}}>
         {showBack && (

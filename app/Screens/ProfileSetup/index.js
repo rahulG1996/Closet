@@ -16,7 +16,7 @@ const ProfileSetup = props => {
   });
 
   const selectGeneder = (item, index) => {
-    setState({...state, genderSelected: item.type});
+    setState({...state, genderSelected: item.type, genderErr: ''});
   };
 
   const pickImage = () => {
@@ -30,8 +30,27 @@ const ProfileSetup = props => {
     });
   };
 
+  const handleName = () => {
+    let {name, nameError} = state;
+    if (!name) {
+      nameError = 'Please enter your name';
+      setState({...state, nameError});
+    } else {
+      setState({...state, currentActiveTab: 1, page2: true});
+    }
+  };
+
+  const handleGender = () => {
+    let {genderSelected, genderErr} = state;
+    if (!genderSelected) {
+      setState({...state, genderErr: '*Please Select your gender'});
+    } else {
+      setState({...state, currentActiveTab: 2, page3: true});
+    }
+  };
+
   return (
-    <View style={{padding: 16, flex: 1}}>
+    <View style={{padding: 16, flex: 1, backgroundColor: 'white'}}>
       <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
         <View
           style={{
@@ -68,18 +87,18 @@ const ProfileSetup = props => {
               }}>
               What’s your name?
             </Text>
-            <Input placeholder="Name" />
+            <Input
+              placeholder="Name"
+              errorText={state.nameError}
+              onChangeText={e => setState({...state, name: e, nameError: ''})}
+              value={state.name}
+            />
             <Text style={{fontSize: 13}}>
               You can change this later in your profile settings
             </Text>
           </View>
           <View>
-            <Buttons
-              text="Next"
-              onPress={() =>
-                setState({...state, currentActiveTab: 1, page2: true})
-              }
-            />
+            <Buttons text="Next" onPress={handleName} />
           </View>
         </View>
       ) : state.currentActiveTab == 1 ? (
@@ -114,18 +133,16 @@ const ProfileSetup = props => {
                 );
               })}
             </View>
-            <Text style={{fontSize: 13}}>
+            {state.genderErr && (
+              <Text style={{color: 'red'}}>{state.genderErr}</Text>
+            )}
+            <Text style={{fontSize: 13, lineHeight: 20}}>
               Feeds will be prioritised based on your selected gender. You can
               change this later in your profile settings
             </Text>
           </View>
           <View>
-            <Buttons
-              text="Next"
-              onPress={() =>
-                setState({...state, currentActiveTab: 2, page3: true})
-              }
-            />
+            <Buttons text="Next" onPress={handleGender} />
             <Buttons
               text="go back"
               isInverse
@@ -166,11 +183,6 @@ const ProfileSetup = props => {
             <Buttons
               text={state.userImage ? 'Dome' : 'upload'}
               onPress={pickImage}
-            />
-            <Buttons
-              text="skip for now"
-              isInverse
-              onPress={() => props.navigation.navigate('TabData')}
             />
             <Buttons
               text="go back"

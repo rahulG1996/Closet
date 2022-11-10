@@ -53,10 +53,7 @@ const Home = props => {
                 color: Colors.black60,
               }}
             />
-            <Buttons
-              text="Set your preferences"
-              onPress={() => dispatch({type: 'LOGOUT'})}
-            />
+            <Buttons text="Set your preferences" />
           </VView>
         );
       case 3:
@@ -76,11 +73,13 @@ const Home = props => {
               />
             </VView>
           )}
-          <Image
-            source={require('../../assets/menu.webp')}
-            style={styles.menuIcon}
-            resizeMode="contain"
-          />
+          <TouchableOpacity onPress={() => props.navigation.navigate('Menu')}>
+            <Image
+              source={require('../../assets/menu.webp')}
+              style={styles.menuIcon}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
         </VView>
       </VView>
       <ScrollView showsVerticalScrollIndicator={false} onScroll={onScroll}>

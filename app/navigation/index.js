@@ -1,7 +1,7 @@
 import Home from '../screens/Home';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Text, Image} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {VText, VView} from '../components';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ViewProduct from '../screens/ViewProduct';
@@ -11,9 +11,12 @@ import ForgotPassword from '../screens/ForgotPassword';
 import VerifyEmail from '../screens/VerifyEmail';
 import ResetPassword from '../screens/ResetPassword';
 import ProfileSetup from '../screens/ProfileSetup';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import TermConditions from '../screens/TermCondition';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
+import Menu from '../screens/Menu';
+import Outfits from '../screens/Outfits';
+import {getUserProfile} from '../redux/actions/profileAction';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -82,36 +85,42 @@ function TabData() {
           },
         }}
       />
-      <Tab.Screen
-        name="Outfits"
-        component={Home}
-        listeners={{
-          tabPress: e => {
-            // Prevent default action
-            e.preventDefault();
-          },
-        }}
-      />
+      <Tab.Screen name="Outfits" component={Outfits} />
     </Tab.Navigator>
   );
 }
 
 function AppNavigation() {
+  const dispatch = useDispatch();
   const userId = useSelector(state => state.AuthReducer.userId);
-  console.log('navigation', userId);
+  const isProfileCreated = useSelector(
+    state => state.AuthReducer.isProfileCreated,
+  );
+  useEffect(() => {
+    if (userId) {
+      dispatch(getUserProfile());
+      //get user profile api
+    }
+  }, [dispatch, userId]);
   return !userId ? (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="LandingPage" component={LandingPage} />
       <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
       <Stack.Screen name="ResetPassword" component={ResetPassword} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
       <Stack.Screen name="TermConditions" component={TermConditions} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     </Stack.Navigator>
   ) : (
     <Stack.Navigator screenOptions={{headerShown: false}}>
+      {!isProfileCreated ? (
+        <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+      ) : null}
       <Stack.Screen name="TabData" component={TabData} />
+
+      <Stack.Screen name="Menu" component={Menu} />
+      <Stack.Screen name="TermConditions" component={TermConditions} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     </Stack.Navigator>
   );
 }
