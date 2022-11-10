@@ -16,6 +16,7 @@ const VerifyEmail = propsData => {
   const dispatch = useDispatch();
   const [value, setValue] = useState('');
   const [count, setCount] = useState(59);
+  const [errorText, setErrorText] = useState('');
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
@@ -36,7 +37,15 @@ const VerifyEmail = propsData => {
     if (Object.keys(verifyOtpResponse).length) {
       dispatch({type: 'VERIFY_OTP', value: ''});
       if (verifyOtpResponse.statusCode === 200) {
+        setErrorText('');
         dispatch({type: 'USERID', value: verifyOtpResponse.userId});
+        dispatch({
+          type: 'IS_PROFILE_CREATED',
+          value: verifyOtpResponse.isProfileCreated,
+        });
+      } else if (verifyOtpResponse.statusCode === 401) {
+        setValue(null);
+        setErrorText(true);
       }
     }
   }, [dispatch, verifyOtpResponse]);
@@ -78,21 +87,6 @@ const VerifyEmail = propsData => {
   const minutes = String(Math.floor(countDown / 60)).padStart(2, 0);
 
   useEffect(() => {
-    if (propsData?.route?.params?.autoSendOtp) {
-      dispatch(
-        sendOtp({
-          emailId: propsData?.route?.params?.email,
-          status: '1',
-        }),
-      );
-    }
-  }, [
-    dispatch,
-    propsData?.route?.params?.autoSendOtp,
-    propsData?.route?.params?.email,
-  ]);
-
-  useEffect(() => {
     let interval = setInterval(() => {
       setCount(prev => {
         if (prev < 0) clearInterval(interval);
@@ -107,7 +101,7 @@ const VerifyEmail = propsData => {
     dispatch(
       sendOtp({
         emailId: propsData?.route?.params?.email,
-        status: propsData?.route?.params?.status,
+        status: 2,
       }),
     );
   };
@@ -117,7 +111,7 @@ const VerifyEmail = propsData => {
       verifyOtp({
         emailId: propsData?.route?.params?.email,
         otp: value,
-        status: propsData?.route?.params?.status,
+        status: 1,
       }),
     );
   };
@@ -130,14 +124,6 @@ const VerifyEmail = propsData => {
         justifyContent: 'center',
         backgroundColor: 'white',
       }}>
-      <TouchableOpacity
-        style={{position: 'absolute', top: 16, right: 16}}
-        onPress={() => propsData.navigation.goBack()}>
-        <Image
-          source={require('../../assets/cross.webp')}
-          style={{width: 44, height: 44}}
-        />
-      </TouchableOpacity>
       <VText
         text="Verify your email"
         style={{
@@ -184,6 +170,12 @@ const VerifyEmail = propsData => {
           </Text>
         )}
       />
+      {errorText && (
+        <VText
+          text={'Enter a valid OTP'}
+          style={{color: 'red', textAlign: 'right', marginTop: 8}}
+        />
+      )}
       {seconds != 0 ? (
         <VView style={{alignItems: 'flex-end', margin: 8}}>
           <VText text={`OTP will be expired after ${minutes} : ${seconds}`} />
@@ -199,7 +191,12 @@ const VerifyEmail = propsData => {
           }
           isInverse
         />
-        <Buttons text="change email ID" isInverse noBorder />
+        <Buttons
+          text="change email ID"
+          isInverse
+          noBorder
+          onPress={() => propsData.navigation.goBack()}
+        />
       </VView>
     </VView>
   );

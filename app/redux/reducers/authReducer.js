@@ -2,6 +2,7 @@ const initialState = {
   loginResponse: {},
   signupResponse: {},
   userId: '',
+  isProfileCreated: false,
 };
 
 const AuthReducer = (state = initialState, action) => {
@@ -30,6 +31,12 @@ const AuthReducer = (state = initialState, action) => {
       return {
         ...state,
         signupResponse: action.value,
+      };
+    }
+    case 'IS_PROFILE_CREATED': {
+      return {
+        ...state,
+        isProfileCreated: action.value,
       };
     }
     default:

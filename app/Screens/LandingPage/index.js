@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {Component} from 'react';
 import {
   Dimensions,
   Text,
@@ -6,17 +6,22 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {FONTS_SIZES} from '../../fonts';
-import {Buttons, OverlayModal, VText, VView} from '../../components';
-import Login from '../Login';
-import CreateAccount from '../CreateAccount';
+import {Buttons, Input} from '../../components';
 import {connect} from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {bindActionCreators} from 'redux';
-import {emptyLoginResponse} from '../../redux/actions/authActions';
+import {emptyLoginResponse, loginAction} from '../../redux/actions/authActions';
+import {Colors} from '../../colors';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+let user = null;
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {appleAuth} from '@invertase/react-native-apple-authentication';
+import InstagramLogin from 'react-native-instagram-login';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
@@ -42,6 +47,16 @@ class LandingPage extends React.Component {
       modalData: null,
     };
   }
+
+  componentDidMount() {
+    GoogleSignin.configure({
+      //It is mandatory to call this method before attempting to call signIn()
+      scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+      // Repleace with your webClientId generated from Firebase console
+      webClientId:
+        '42976996434-853vucqpl1ec33rput6l2ij3jkbjm8m3.apps.googleusercontent.com',
+    });
+  }
   _renderItem = ({item, index}) => {
     return (
       <View style={styles.container} key={index}>
@@ -52,37 +67,20 @@ class LandingPage extends React.Component {
     );
   };
 
-  saveLoginData = data => {
-    this.setState({showModal: false});
-    this.props.emptyLoginResponse();
-    if (data.statusCode === 305) {
-      this.props.navigation.navigate('VerifyEmail', {
-        screen: 'signup',
-        status: '1',
-        email: data.email,
-        autoSendOtp: true,
-      });
+  componentDidUpdate(prevProps) {
+    if (prevProps.loginResponse !== this.props.loginResponse) {
+      this.props.emptyLoginResponse();
+      if (this.props.loginResponse.statusCode === 200) {
+        console.log(
+          '@@',
+          JSON.stringify(this.props.loginResponse, undefined, 2),
+        );
+        this.props.navigation.navigate('VerifyEmail', {
+          email: this.props.loginResponse.emailId,
+        });
+      }
     }
-  };
-
-  handleSignup = data => {
-    this.setState({showModal: false});
-    if (data.statusCode === 200) {
-      this.props.navigation.navigate('VerifyEmail', {
-        screen: 'signup',
-        status: '1',
-        email: data.email,
-        autoSendOtp: false,
-      });
-    } else if (data.statusCode === 303) {
-      this.props.navigation.navigate('VerifyEmail', {
-        screen: 'signup',
-        status: '1',
-        email: data.email,
-        autoSendOtp: true,
-      });
-    }
-  };
+  }
 
   openStaticPage = type => {
     this.setState({showModal: false});
@@ -93,81 +91,180 @@ class LandingPage extends React.Component {
     }
   };
 
+  googleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({
+        //Check if device has Google Play Services installed.
+        //Always resolves to true on iOS.
+        showPlayServicesUpdateDialog: true,
+      });
+      const userInfo = await GoogleSignin.signIn();
+      console.warn(userInfo);
+    } catch (error) {
+      console.warn('Message', error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.warn('User Cancelled the Login Flow');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.warn('Signing In');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.warn('Play Services Not Available or Outdated');
+      } else {
+        console.warn('Some Other Error Happened');
+      }
+    }
+  };
+
+  fetchAndUpdateCredentialState = async updateCredentialStateForUser => {
+    if (user === null) {
+      updateCredentialStateForUser('N/A');
+    } else {
+      const credentialState = await appleAuth.getCredentialStateForUser(user);
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        updateCredentialStateForUser('AUTHORIZED');
+      } else {
+        updateCredentialStateForUser(credentialState);
+      }
+    }
+  };
+
+  appleLogin = async updateCredentialStateForUser => {
+    console.warn('Beginning Apple Authentication');
+
+    // start a login request
+    try {
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+
+      console.warn(
+        'appleAuthRequestResponse',
+        JSON.stringify(appleAuthRequestResponse, undefined, 2),
+      );
+
+      const {
+        user: newUser,
+        email,
+        nonce,
+        identityToken,
+        realUserStatus /* etc */,
+      } = appleAuthRequestResponse;
+
+      user = newUser;
+
+      this.fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(
+        error => updateCredentialStateForUser(`Error: ${error.code}`),
+      );
+
+      if (identityToken) {
+        // e.g. sign in with Firebase Auth using `nonce` & `identityToken`
+        console.warn(nonce, identityToken);
+      } else {
+        // no token - failed sign-in?
+      }
+
+      if (realUserStatus === appleAuth.UserStatus.LIKELY_REAL) {
+        console.warn("I'm a real person!");
+      }
+
+      console.warn(`Apple Authentication Completed, ${user}, ${email}`);
+    } catch (error) {
+      if (error.code === appleAuth.Error.CANCELED) {
+        console.warn('User canceled Apple Sign in.');
+      } else {
+        console.error(error);
+      }
+    }
+  };
+
+  login = () => {
+    let {email} = this.state;
+    let pattern =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!email) {
+      this.setState({errorText: 'Please enter email id'});
+      return;
+    }
+    if (email && !pattern.test(email)) {
+      this.setState({errorText: 'Please enter valid email id'});
+      return;
+    }
+    this.props.loginAction({
+      emailId: email,
+      status: 1,
+    });
+  };
+
   render() {
     return (
       <View style={{backgroundColor: 'white', flex: 1}}>
-        <View>
-          <Carousel
-            loop={true}
-            autoplay={true}
-            layout="stack"
-            layoutCardOffset={9}
-            ref={c => (this._slider1Ref = c)}
-            data={this.state.entries}
-            renderItem={this._renderItem}
-            sliderWidth={SLIDER_WIDTH}
-            itemWidth={ITEM_WIDTH}
-            inactiveSlideShift={0}
-            useScrollView={true}
-            onSnapToItem={index => this.setState({activeIndex: index})}
-          />
-          <Pagination
-            dotsLength={this.state.entries.length}
-            activeDotIndex={this.state.activeIndex}
-            carouselRef={c => (this._slider1Ref = c)}
-            dotStyle={{
-              width: 10,
-              height: 10,
-              borderRadius: 5,
-              marginHorizontal: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.92)',
-            }}
-            inactiveDotOpacity={0.4}
-            inactiveDotScale={0.6}
-            tappableDots={true}
-          />
-        </View>
-        <ScrollView contentContainerStyle={{paddingHorizontal: 16}}>
-          <Buttons
-            text="login"
-            onPress={() => this.setState({showModal: true, modalData: 'login'})}
-          />
-          <Buttons
-            text="Create Account"
-            isInverse
-            onPress={() =>
-              this.setState({showModal: true, modalData: 'signup'})
-            }
-          />
-          <TouchableOpacity
-            style={{paddingVertical: 16, marginTop: 16}}
-            onPress={() => this.props.navigation.navigate('TabData')}>
-            <Text style={{textAlign: 'center', textTransform: 'uppercase'}}>
-              I want to explore first
-            </Text>
-          </TouchableOpacity>
-          <OverlayModal
-            component={
-              this.state.modalData === 'login' ? (
-                <Login
-                  closeModal={() => this.setState({showModal: false})}
-                  loginResponseData={this.saveLoginData}
-                  forgotPasswordClick={() => {
-                    this.setState({showModal: false});
-                    this.props.navigation.navigate('ForgotPassword');
-                  }}
-                  openStaticPage={this.openStaticPage}
+        <KeyboardAwareScrollView>
+          <View style={{backgroundColor: Colors.grey1}}>
+            <Carousel
+              loop={true}
+              autoplay={true}
+              layout="stack"
+              layoutCardOffset={9}
+              ref={c => (this._slider1Ref = c)}
+              data={this.state.entries}
+              renderItem={this._renderItem}
+              sliderWidth={SLIDER_WIDTH}
+              itemWidth={ITEM_WIDTH}
+              inactiveSlideShift={0}
+              useScrollView={true}
+              onSnapToItem={index => this.setState({activeIndex: index})}
+            />
+            <Pagination
+              dotsLength={this.state.entries.length}
+              activeDotIndex={this.state.activeIndex}
+              carouselRef={c => (this._slider1Ref = c)}
+              dotStyle={styles.dotStyle}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+              tappableDots={true}
+            />
+          </View>
+          <View style={{paddingHorizontal: 16, marginTop: 32}}>
+            <Text style={styles.headingStyle}>Log in or sign up</Text>
+            <Input
+              placeholder="Email Id"
+              onChangeText={e => this.setState({email: e, errorText: ''})}
+              errorText={this.state.errorText}
+              value={this.state.email}
+            />
+            <Buttons text="continue" onPress={this.login} />
+            <View style={styles.orContainer}>
+              <View style={styles.line} />
+              <Text>or</Text>
+              <View style={styles.line} />
+            </View>
+            <View style={styles.socialIconContainer}>
+              <TestInsta />
+              <TouchableOpacity onPress={this.googleLogin}>
+                <Image
+                  source={require('../../assets/google.webp')}
+                  style={[styles.socialIcon, {marginHorizontal: 16}]}
                 />
-              ) : (
-                <CreateAccount
-                  closeModal={() => this.setState({showModal: false})}
-                  signupData={this.handleSignup}
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.appleLogin}>
+                <Image
+                  source={require('../../assets/apple.webp')}
+                  style={styles.socialIcon}
                 />
-              )
-            }
-            showModal={this.state.showModal}
-          />
-        </ScrollView>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.tncContainer}>
+              <Text>By logging in you agree to our </Text>
+              <TouchableOpacity onPress={() => this.openStaticPage('tt')}>
+                <Text style={styles.tncText}>Terms and Conditions</Text>
+              </TouchableOpacity>
+              <Text> & </Text>
+              <TouchableOpacity onPress={() => this.openStaticPage('pp')}>
+                <Text style={styles.tncText}>Privacy policy</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
       </View>
     );
   }
@@ -181,6 +278,7 @@ export default connect(
     bindActionCreators(
       {
         emptyLoginResponse,
+        loginAction,
       },
       dispatch,
     ),
@@ -188,14 +286,14 @@ export default connect(
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
+    backgroundColor: Colors.grey1,
     borderRadius: 8,
     width: ITEM_WIDTH,
     paddingBottom: 40,
   },
   image: {
     width: ITEM_WIDTH,
-    height: 300,
+    height: 200,
   },
   header: {
     color: '#222',
@@ -212,4 +310,75 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     textAlign: 'center',
   },
+  socialIcon: {
+    width: 44,
+    height: 44,
+  },
+  dotStyle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.92)',
+  },
+  headingStyle: {
+    fontSize: FONTS_SIZES.s3,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  tncContainer: {
+    paddingBottom: 50,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  },
+  line: {
+    width: '40%',
+    height: 0.5,
+    backgroundColor: Colors.black60,
+  },
+  socialIconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 32,
+    paddingBottom: 16,
+    paddingHorizontal: 70,
+  },
+  orContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 28,
+  },
+  tncText: {
+    color: 'rgba(33, 122, 255, 1)',
+  },
 });
+
+export class TestInsta extends Component {
+  render() {
+    return (
+      <>
+        <TouchableOpacity onPress={() => this.instagramLogin.show()}>
+          <Image
+            source={require('../../assets/insta.webp')}
+            style={styles.socialIcon}
+          />
+        </TouchableOpacity>
+        <InstagramLogin
+          ref={ref => (this.instagramLogin = ref)}
+          appId="2136446439890907"
+          appSecret="b18deef2dfada2f0dfca918c0ea4cb7e"
+          redirectUrl="https://www.google.co.in/"
+          incognito={false}
+          scopes={['user_profile', 'user_media']}
+          onLoginSuccess={this.setIgToken}
+          onLoginFailure={data => console.log(data)}
+          language="en" //default is 'en' for english
+        />
+      </>
+    );
+  }
+}

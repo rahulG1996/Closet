@@ -5,7 +5,6 @@ export function loginAction(data) {
     const apiResponse = await NoAuthAPI('login', 'POST', data);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'LOGIN', value: apiResponse});
-      dispatch({type: 'USERID', value: apiResponse.userId});
     }
   };
 }

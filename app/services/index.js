@@ -27,7 +27,7 @@ let NoAuthAPI = (apiName, apiMethod, data) => {
   return fetch(baseUrl + apiName, init)
     .then(response => response.json())
     .then(responseData => {
-      console.log('response', responseData);
+      console.warn('response', responseData);
       if (responseData.data.statusCode === 200) {
         return responseData.data;
       } else {
