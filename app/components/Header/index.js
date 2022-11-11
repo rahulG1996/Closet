@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, TouchableOpacity} from 'react-native';
 import {FONTS_SIZES} from '../../fonts';
 import VText from '../Text';
@@ -12,7 +12,14 @@ const Header = ({
   showFilter = false,
   showBack = false,
   showMenu = false,
+  shoSwicth = false,
+  switchValue = () => {},
 }) => {
+  const [switchIcon, setSwitch] = useState(false);
+  const toggleSwitch = () => {
+    switchValue(!switchIcon);
+    setSwitch(!switchIcon);
+  };
   return (
     <VView
       style={{
@@ -22,7 +29,7 @@ const Header = ({
         backgroundColor: 'white',
         alignItems: 'center',
       }}>
-      <VView style={{flexDirection: 'row'}}>
+      <VView style={{flexDirection: 'row', alignItems: 'center'}}>
         {showBack && (
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Image
@@ -43,49 +50,64 @@ const Header = ({
           />
         )}
       </VView>
-      {showshare && (
-        <VView style={{flexDirection: 'row'}}>
+      <VView style={{flexDirection: 'row'}}>
+        {showshare && (
+          <VView style={{flexDirection: 'row'}}>
+            <TouchableOpacity>
+              <Image
+                resizeMode="stretch"
+                source={require('../../assets/iAdd.webp')}
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={{paddingHorizontal: 20}}>
+              <Image
+                resizeMode="stretch"
+                source={require('../../assets/iAddCloset.webp')}
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Image
+                resizeMode="stretch"
+                source={require('../../assets/iShare.webp')}
+                style={{width: 24, height: 24}}
+              />
+            </TouchableOpacity>
+          </VView>
+        )}
+        {showFilter && (
           <TouchableOpacity>
             <Image
               resizeMode="stretch"
-              source={require('../../assets/iAdd.webp')}
+              source={require('../../assets/iFilter.webp')}
               style={{width: 24, height: 24}}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={{paddingHorizontal: 20}}>
+        )}
+        {shoSwicth && (
+          <TouchableOpacity
+            style={{paddingHorizontal: 10}}
+            onPress={toggleSwitch}>
             <Image
-              resizeMode="stretch"
-              source={require('../../assets/iAddCloset.webp')}
-              style={{width: 24, height: 24}}
+              resizeMode="contain"
+              source={switchIcon ? Images.onIcon : Images.offIcon}
+              style={{width: 25, height: 25}}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+        )}
+        {showMenu && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Menu')}
+            style={{paddingHorizontal: 10}}>
             <Image
-              resizeMode="stretch"
-              source={require('../../assets/iShare.webp')}
-              style={{width: 24, height: 24}}
+              resizeMode="contain"
+              source={Images.menuBar}
+              style={{width: 22, height: 22}}
             />
           </TouchableOpacity>
-        </VView>
-      )}
-      {showFilter && (
-        <TouchableOpacity>
-          <Image
-            resizeMode="stretch"
-            source={require('../../assets/iFilter.webp')}
-            style={{width: 24, height: 24}}
-          />
-        </TouchableOpacity>
-      )}
-      {showMenu && (
-        <TouchableOpacity onPress={() => navigation.navigate('Menu')}>
-          <Image
-            resizeMode="contain"
-            source={Images.menuBar}
-            style={{width: 22, height: 22}}
-          />
-        </TouchableOpacity>
-      )}
+        )}
+      </VView>
     </VView>
   );
 };

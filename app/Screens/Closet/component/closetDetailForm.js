@@ -36,7 +36,7 @@ const ClosetDetailsFrom = props => {
     });
   }, []);
 
-  console.warn(state.categoryDataUpdated, categoryData);
+  console.warn(JSON.stringify(state.categoryDataUpdated, undefined, 2));
 
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>

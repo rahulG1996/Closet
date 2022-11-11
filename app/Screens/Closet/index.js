@@ -1,9 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Image, TouchableHighlight, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  Image,
+  TouchableHighlight,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Header, VText, VView} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
+import {useSelector} from 'react-redux';
 // import PhotoEditor from 'react-native-photo-editor';
 
 let data = [
@@ -55,6 +65,10 @@ let data = [
 
 export default props => {
   const [selectedImage, setSelectedImage] = useState('');
+  const [gridType, setGrid] = useState(false);
+  const [activeTab, setActiveTab] = useState('All');
+
+  const categoryData = useSelector(state => state.ClosetReducer.categoryData);
 
   useEffect(() => {
     setSelectedImage('');
@@ -110,10 +124,13 @@ export default props => {
       </VView>
     );
   };
-  return (
-    <VView style={styles.container}>
-      <Header title="Closet" showMenu navigation={props.navigation} />
-      {/* {emptyScreen()} */}
+
+  const switchValue = value => {
+    setGrid(value);
+  };
+
+  const listGrid = () => {
+    return (
       <View
         style={{
           flexDirection: 'row',
@@ -123,7 +140,13 @@ export default props => {
         }}>
         {data.map(item => {
           return (
-            <View style={{marginVertical: 8}}>
+            <TouchableOpacity
+              style={{marginVertical: 8}}
+              onPress={() =>
+                props.navigation.navigate('ClosetCategory', {
+                  categoryType: item.categoryType,
+                })
+              }>
               <View
                 style={{
                   width: 160,
@@ -148,10 +171,81 @@ export default props => {
                 })}
               </View>
               <Text style={{marginTop: 8}}>{item.categoryType}</Text>
-            </View>
+            </TouchableOpacity>
           );
         })}
       </View>
+    );
+  };
+
+  const renderItem = ({item, index}) => {
+    return (
+      <TouchableOpacity
+        onPress={() => setActiveTab(item.categoryName)}
+        style={{
+          paddingHorizontal: 30,
+          paddingVertical: 15,
+          borderBottomWidth: 1,
+          borderBottomColor:
+            activeTab === item.categoryName ? Colors.black60 : 'transparent',
+        }}>
+        <Text>{item.categoryName}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const lisSectionGrid = () => {
+    return (
+      <View>
+        <FlatList
+          data={[{categoryName: 'All'}, ...categoryData]}
+          horizontal
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+        />
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          }}>
+          {[1, 2, 3, 4, 5, 6, , 7, 8, 9].map(item => {
+            return (
+              <TouchableOpacity
+                style={{
+                  width: '45%',
+                  alignItems: 'center',
+                  backgroundColor: Colors.grey1,
+                  paddingHorizontal: 7,
+                  paddingVertical: 12,
+                  margin: 8,
+                }}
+                onPress={() => props.navigation.navigate('ClosetInfo')}>
+                <Image
+                  source={require('../../assets/sweatshirt.webp')}
+                  style={{width: 150, height: 140}}
+                />
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+
+  return (
+    <VView style={styles.container}>
+      <Header
+        title="Closet"
+        showMenu
+        navigation={props.navigation}
+        shoSwicth
+        switchValue={switchValue}
+      />
+      {/* {emptyScreen()} */}
+      <ScrollView style={{}}>
+        {gridType ? lisSectionGrid() : listGrid()}
+      </ScrollView>
       <VView style={styles.footerContainer}>
         <TouchableHighlight
           underlayColor={'rgba(0,0,0,0.1)'}
@@ -200,7 +294,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   footerContainer: {
-    flex: 0.1,
+    // flex: 0.1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignSelf: 'center',
