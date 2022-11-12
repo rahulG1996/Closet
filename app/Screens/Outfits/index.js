@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
-import {Header} from '../../components';
+import {Buttons, Header} from '../../components';
 
 const Outfits = props => {
   return (
@@ -21,6 +21,9 @@ const Outfits = props => {
           No Outfits to show. {'\n'} Create outfits to get more personalised
           clothing experinece
         </Text>
+      </View>
+      <View style={{paddingHorizontal: 16}}>
+        <Buttons text="Create Outfit" />
       </View>
     </View>
   );

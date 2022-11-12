@@ -14,6 +14,7 @@ import {Header, VText, VView} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
 import {useSelector} from 'react-redux';
+import PhotoEditor from 'react-native-photo-editor';
 // import PhotoEditor from 'react-native-photo-editor';
 
 let data = [
@@ -78,12 +79,11 @@ export default props => {
       width: 300,
       height: 400,
       cropping: true,
-    }).then(image => {
-      console.log(image);
-      props.navigation.navigate('ClosetDetailsFrom');
-      // PhotoEditor.Edit({
-      //   path: image?.path,
-      // });
+    }).then(img => {
+      props.navigation.navigate('EditCloset');
+      props.navigation.navigate('EditCloset', {
+        imgSource: img.path,
+      });
     });
   };
 
@@ -95,7 +95,9 @@ export default props => {
     }).then(img => {
       console.log('teststtststs', img);
       setSelectedImage(img?.path);
-      props.navigation.navigate('ClosetDetailsFrom');
+      props.navigation.navigate('EditCloset', {
+        imgSource: img.path,
+      });
     });
   };
 

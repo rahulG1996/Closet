@@ -22,6 +22,7 @@ import {getUserProfile} from '../redux/actions/profileAction';
 import {getBrandData, getCategoryData} from '../redux/actions/closetAction';
 import ClosetCategory from '../screens/ClosetCategory';
 import ClosetInfo from '../screens/ClosetInfo';
+import EditCloset from '../screens/EditCloset';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -62,6 +63,7 @@ const ClosetStack = () => {
       <Stack.Screen name="ViewProduct" component={ViewProduct} />
       <Stack.Screen name="ClosetCategory" component={ClosetCategory} />
       <Stack.Screen name="ClosetInfo" component={ClosetInfo} />
+      <Stack.Screen name="EditCloset" component={EditCloset} />
     </Stack.Navigator>
   );
 };

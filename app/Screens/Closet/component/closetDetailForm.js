@@ -1,12 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, StyleSheet} from 'react-native';
-import {VView, VText, Buttons, Header} from '../../../components';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Touchable,
+  TouchableOpacity,
+} from 'react-native';
+import {VView, VText, Buttons, Header, BigImage} from '../../../components';
 import {Colors} from '../../../colors';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useDispatch, useSelector} from 'react-redux';
 
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
+  const [selectedSeason, setSeason] = useState('');
   const brandData = useSelector(state => state.ClosetReducer.brandData);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const [state, setState] = useState({
@@ -25,7 +32,7 @@ const ClosetDetailsFrom = props => {
     });
     let groupedData = categoryData.flatMap(el =>
       el.subCategory.map(proj => ({
-        name: el.categoryName + ' ' + proj.subCategoryName,
+        name: el.categoryName + ' --> ' + proj.subCategoryName,
         id: el._id + ' ' + proj._id,
       })),
     );
@@ -36,20 +43,13 @@ const ClosetDetailsFrom = props => {
     });
   }, []);
 
-  console.warn(JSON.stringify(state.categoryDataUpdated, undefined, 2));
-
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
         <Header {...props} showBack />
       </VView>
       <ScrollView>
-        <VView style={styles.imageContainer}>
-          <Image
-            source={require('../../../assets/sweatshirt.webp')}
-            style={{height: '100%'}}
-          />
-        </VView>
+        <BigImage imgSource={props?.route?.params?.imgSource} />
         <VView style={{padding: 16}}>
           <VView>
             <VText text="Category" />
@@ -103,9 +103,19 @@ const ClosetDetailsFrom = props => {
             <VView style={{flexDirection: 'row'}}>
               {['Spring', 'Summer', 'Fall', 'Winter'].map((item, index) => {
                 return (
-                  <VView style={styles.seasonContainer}>
+                  <TouchableOpacity
+                    onPress={() => setSeason(item)}
+                    style={[
+                      styles.seasonContainer,
+                      {
+                        borderColor:
+                          item === selectedSeason
+                            ? Colors.black60
+                            : 'rgba(0,0,0,0.16)',
+                      },
+                    ]}>
                     <VText text={item} />
-                  </VView>
+                  </TouchableOpacity>
                 );
               })}
             </VView>
