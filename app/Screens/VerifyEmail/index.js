@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     height: 74,
     width: 74,
+    lineHeight: 63,
   },
   focusCell: {
     borderColor: '#000',

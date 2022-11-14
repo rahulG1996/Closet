@@ -13,8 +13,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import {Header, VText, VView} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import PhotoEditor from 'react-native-photo-editor';
+import {openClosetDetails} from '../../redux/actions/closetAction';
 // import PhotoEditor from 'react-native-photo-editor';
 
 let data = [
@@ -65,24 +66,40 @@ let data = [
 ];
 
 export default props => {
-  const [selectedImage, setSelectedImage] = useState('');
-  const [gridType, setGrid] = useState(false);
+  const dispatch = useDispatch();
+  const [gridType, setGrid] = useState(true);
   const [activeTab, setActiveTab] = useState('All');
+  const getcloset = useSelector(state => state.ClosetReducer.getcloset);
+  const userId = useSelector(state => state.AuthReducer.userId);
+  const [filterClosetData, setFilterClosetData] = useState(getcloset);
 
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
 
+  const singleClosetReponse = useSelector(
+    state => state.ClosetReducer.singleClosetReponse,
+  );
+
+  console.warn('comp', JSON.stringify(singleClosetReponse, undefined, 2));
+
   useEffect(() => {
-    setSelectedImage('');
-  }, []);
+    if (Object.keys(singleClosetReponse).length) {
+      dispatch({type: 'SINGLE_CLOSET', value: {}});
+      props.navigation.navigate('ClosetInfo', {
+        apiData: singleClosetReponse,
+      });
+    }
+  }, [dispatch, props.navigation, singleClosetReponse]);
+
   const handleCamera = () => {
     ImagePicker.openCamera({
       width: 300,
       height: 400,
       cropping: true,
+      includeBase64: true,
     }).then(img => {
       props.navigation.navigate('EditCloset');
       props.navigation.navigate('EditCloset', {
-        imgSource: img.path,
+        imgSource: img,
       });
     });
   };
@@ -92,11 +109,10 @@ export default props => {
       width: 300,
       height: 400,
       cropping: true,
+      includeBase64: true,
     }).then(img => {
-      console.log('teststtststs', img);
-      setSelectedImage(img?.path);
       props.navigation.navigate('EditCloset', {
-        imgSource: img.path,
+        imgSource: img,
       });
     });
   };
@@ -196,6 +212,22 @@ export default props => {
     );
   };
 
+  useEffect(() => {
+    if (activeTab) {
+      if (activeTab !== 'All') {
+        let filterData = getcloset;
+        filterData = getcloset.filter(item => {
+          if (item.categoryName === activeTab) {
+            return {...item};
+          }
+        });
+        setFilterClosetData(filterData);
+      } else {
+        setFilterClosetData(getcloset);
+      }
+    }
+  }, [activeTab, getcloset]);
+
   const lisSectionGrid = () => {
     return (
       <View>
@@ -211,28 +243,42 @@ export default props => {
             flexDirection: 'row',
             flexWrap: 'wrap',
           }}>
-          {[1, 2, 3, 4, 5, 6, , 7, 8, 9].map(item => {
-            return (
-              <TouchableOpacity
-                style={{
-                  width: '45%',
-                  alignItems: 'center',
-                  backgroundColor: Colors.grey1,
-                  paddingHorizontal: 7,
-                  paddingVertical: 12,
-                  margin: 8,
-                }}
-                onPress={() => props.navigation.navigate('ClosetInfo')}>
-                <Image
-                  source={require('../../assets/sweatshirt.webp')}
-                  style={{width: 150, height: 140}}
-                />
-              </TouchableOpacity>
-            );
-          })}
+          {filterClosetData.length > 0 ? (
+            filterClosetData.map(item => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    width: '45%',
+                    alignItems: 'center',
+                    backgroundColor: Colors.grey1,
+                    paddingHorizontal: 7,
+                    paddingVertical: 12,
+                    margin: 8,
+                  }}
+                  onPress={() => openClosetInfo(item.closetItemId)}>
+                  <Image
+                    source={{uri: item.itemImageUrl}}
+                    style={{width: 150, height: 140}}
+                  />
+                </TouchableOpacity>
+              );
+            })
+          ) : (
+            <View style={{alignItems: 'center'}}>
+              <Text>No Data Found</Text>
+            </View>
+          )}
         </View>
       </View>
     );
+  };
+
+  const openClosetInfo = id => {
+    let data = {
+      userId: userId,
+      closetItemId: id,
+    };
+    dispatch(openClosetDetails(data));
   };
 
   return (
@@ -242,12 +288,16 @@ export default props => {
         showMenu
         navigation={props.navigation}
         shoSwicth
-        switchValue={switchValue}
+        // switchValue={switchValue}
       />
-      {/* {emptyScreen()} */}
-      <ScrollView style={{}}>
-        {gridType ? lisSectionGrid() : listGrid()}
-      </ScrollView>
+      {getcloset.length === 0 ? (
+        emptyScreen()
+      ) : (
+        <ScrollView style={{}}>
+          {gridType ? lisSectionGrid() : listGrid()}
+        </ScrollView>
+      )}
+
       <VView style={styles.footerContainer}>
         <TouchableHighlight
           underlayColor={'rgba(0,0,0,0.1)'}

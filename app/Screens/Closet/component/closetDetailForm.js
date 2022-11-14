@@ -1,21 +1,24 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Touchable,
-  TouchableOpacity,
-} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {VView, VText, Buttons, Header, BigImage} from '../../../components';
 import {Colors} from '../../../colors';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useDispatch, useSelector} from 'react-redux';
+import {
+  addDataInCloset,
+  getClosetData,
+} from '../../../redux/actions/closetAction';
+import Toast from 'react-native-simple-toast';
 
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
   const [selectedSeason, setSeason] = useState('');
   const brandData = useSelector(state => state.ClosetReducer.brandData);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
+  const userId = useSelector(state => state.AuthReducer.userId);
+  const addClosetResponse = useSelector(
+    state => state.ClosetReducer.addClosetResponse,
+  );
   const [state, setState] = useState({
     brandDataUpdated: [],
     brandSelected: '',
@@ -23,17 +26,28 @@ const ClosetDetailsFrom = props => {
   });
 
   useEffect(() => {
+    if (Object.keys(addClosetResponse).length) {
+      if (addClosetResponse.statusCode == 200) {
+        dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        Toast.show('Closet added successfully');
+        dispatch(getClosetData());
+        props.navigation.navigate('ClosetScreen');
+      }
+    }
+  }, [addClosetResponse, dispatch, props.navigation]);
+
+  useEffect(() => {
     let items = brandData.map(item => {
       return {
         ...item,
         name: item.brandName,
-        id: item._id,
+        id: item.brandId,
       };
     });
     let groupedData = categoryData.flatMap(el =>
       el.subCategory.map(proj => ({
         name: el.categoryName + ' --> ' + proj.subCategoryName,
-        id: el._id + ' ' + proj._id,
+        id: el.categoryId + ' ' + proj.subCategoryId,
       })),
     );
     setState({
@@ -43,26 +57,42 @@ const ClosetDetailsFrom = props => {
     });
   }, []);
 
+  const addCloset = () => {
+    let {brandSelected, categorySelected} = state;
+    categorySelected = categorySelected.id.split(' ');
+
+    let data = {
+      userId: userId,
+      categoryId: categorySelected[0],
+      subCategoryId: categorySelected[1],
+      brandId: state.brandSelected?.id,
+      season: selectedSeason,
+      colorCode: '#111111',
+      itemImageUrl: `data:image/jpeg;base64,${props?.route?.params?.imgSource?.data}`,
+    };
+    dispatch(addDataInCloset(data));
+  };
+
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
         <Header {...props} showBack />
       </VView>
       <ScrollView>
-        <BigImage imgSource={props?.route?.params?.imgSource} />
+        <BigImage imgSource={props?.route?.params?.imgSource?.path} />
         <VView style={{padding: 16}}>
           <VView>
             <VText text="Category" />
             <SearchableDropdown
               onTextChange={text =>
-                setState({...state, categorySelected: text.name})
+                setState({...state, categorySelected: text})
               }
               onItemSelect={item =>
                 setState({...state, categorySelected: item})
               }
               containerStyle={styles.dropDownContainer}
               textInputStyle={styles.inputContainer}
-              textInputProps={{value: state.categoryDataUpdated?.name}}
+              textInputProps={{value: state.categorySelected?.name}}
               itemStyle={styles.searchItemContainer}
               itemTextStyle={{
                 color: '#222',
@@ -119,7 +149,7 @@ const ClosetDetailsFrom = props => {
                 );
               })}
             </VView>
-            <Buttons text="Add" />
+            <Buttons text="Add" onPress={addCloset} />
           </VView>
         </VView>
       </ScrollView>

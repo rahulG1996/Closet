@@ -15,11 +15,11 @@ const Header = ({
   shoSwicth = false,
   switchValue = () => {},
 }) => {
-  const [switchIcon, setSwitch] = useState(false);
-  const toggleSwitch = () => {
-    switchValue(!switchIcon);
-    setSwitch(!switchIcon);
-  };
+  const [switchIcon, setSwitch] = useState(true);
+  // const toggleSwitch = () => {
+  //   switchValue(!switchIcon);
+  //   setSwitch(!switchIcon);
+  // };
   return (
     <VView
       style={{
@@ -88,7 +88,8 @@ const Header = ({
         {shoSwicth && (
           <TouchableOpacity
             style={{paddingHorizontal: 10}}
-            onPress={toggleSwitch}>
+            // onPress={toggleSwitch}
+          >
             <Image
               resizeMode="contain"
               source={switchIcon ? Images.onIcon : Images.offIcon}

@@ -57,7 +57,9 @@ const EditCloset = props => {
       <Header showBack {...props} />
       <View style={{flex: 1}}>
         <BigImage
-          imgSource={isImageEdit ? newImage : props?.route?.params?.imgSource}
+          imgSource={
+            isImageEdit ? newImage : props?.route?.params?.imgSource?.path
+          }
         />
         <View style={{paddingHorizontal: 16}}>
           <View

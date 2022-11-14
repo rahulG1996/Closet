@@ -19,7 +19,7 @@ const ClosetInfo = props => {
       <ScrollView>
         <View>
           <View style={{alignItems: 'center'}}>
-            <BigImage />
+            <BigImage imgSource={props.route?.params?.apiData?.itemImageUrl} />
           </View>
           <View style={{paddingHorizontal: 16}}>
             <View style={{flexDirection: 'row'}}>

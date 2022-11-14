@@ -19,7 +19,11 @@ import ClosetDetailsFrom from '../screens/Closet/component/closetDetailForm';
 import Menu from '../screens/Menu';
 import Outfits from '../screens/Outfits';
 import {getUserProfile} from '../redux/actions/profileAction';
-import {getBrandData, getCategoryData} from '../redux/actions/closetAction';
+import {
+  getBrandData,
+  getCategoryData,
+  getClosetData,
+} from '../redux/actions/closetAction';
 import ClosetCategory from '../screens/ClosetCategory';
 import ClosetInfo from '../screens/ClosetInfo';
 import EditCloset from '../screens/EditCloset';
@@ -116,6 +120,7 @@ function AppNavigation() {
       dispatch(getUserProfile());
       dispatch(getBrandData());
       dispatch(getCategoryData());
+      dispatch(getClosetData());
     }
   }, [dispatch, userId]);
   return !userId ? (
@@ -131,16 +136,16 @@ function AppNavigation() {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       {!isProfileCreated ? (
         <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
-      ) : null}
-      <Stack.Screen name="TabData" component={TabData} />
-
-      <Stack.Screen name="Menu" component={Menu} />
-      <Stack.Screen name="TermConditions" component={TermConditions} />
-      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <Stack.Screen name="AddOutfit" component={AddOutfit} />
-      {isProfileCreated ? (
-        <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
-      ) : null}
+      ) : (
+        <>
+          <Stack.Screen name="TabData" component={TabData} />
+          <Stack.Screen name="Menu" component={Menu} />
+          <Stack.Screen name="TermConditions" component={TermConditions} />
+          <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+          <Stack.Screen name="AddOutfit" component={AddOutfit} />
+          <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

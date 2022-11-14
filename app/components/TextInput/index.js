@@ -11,15 +11,17 @@ const Input = ({
 }) => {
   return (
     <View>
-      <View style={styles.iconStyle}>
-        <Image
-          source={require('../../assets/mail.png')}
-          style={{width: 24, height: 24}}
-        />
-      </View>
+      {showIcon && (
+        <View style={styles.iconStyle}>
+          <Image
+            source={require('../../assets/mail.png')}
+            style={{width: 24, height: 24}}
+          />
+        </View>
+      )}
       <TextInput
         placeholder={placeholder}
-        style={styles.input(errorText)}
+        style={styles.input(errorText, showIcon)}
         value={value}
         onChangeText={onChangeText}
       />
@@ -31,12 +33,12 @@ const Input = ({
 export default Input;
 
 const styles = StyleSheet.create({
-  input: errorText => ({
+  input: (errorText, showIcon) => ({
     borderWidth: 1,
     padding: 16,
     borderColor: errorText ? Colors.red : Colors.greyBorder,
     marginVertical: 8,
-    paddingLeft: 50,
+    paddingLeft: showIcon ? 50 : 16,
   }),
   errorText: {
     color: Colors.red,

@@ -4,7 +4,10 @@ import {Colors} from '../../colors';
 import {Buttons, Input} from '../../components';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
-import {updateUserProfile} from '../../redux/actions/profileAction';
+import {
+  getUserProfile,
+  updateUserProfile,
+} from '../../redux/actions/profileAction';
 import Toast from 'react-native-simple-toast';
 
 const ProfileSetup = props => {
@@ -30,15 +33,20 @@ const ProfileSetup = props => {
 
   const userId = useSelector(state => state.AuthReducer.userId);
 
+  const isProfileCreated = useSelector(
+    state => state.AuthReducer.isProfileCreated,
+  );
+
   useEffect(() => {
     if (Object.keys(udpateProfileRepose).length) {
-      if (udpateProfileRepose.statusCode == 200) {
+      if (udpateProfileRepose.statusCode == 200 && isProfileCreated) {
         Toast.show('Profile Update successfully');
-        props.navigation.navigate('Home');
+        props.navigation.navigate('TabData');
         dispatch({type: 'PROFILE_DATA_UPDATED', value: ''});
+        dispatch(getUserProfile());
       }
     }
-  }, [udpateProfileRepose]);
+  }, [dispatch, props.navigation, udpateProfileRepose, isProfileCreated]);
 
   const selectGeneder = (item, index) => {
     setState({...state, genderSelected: item.type, genderErr: ''});
@@ -168,6 +176,17 @@ const ProfileSetup = props => {
       userId: userId,
       base64ImgString: `data:image/jpeg;base64,${state.userImage.data}`,
     };
+    if (isProfileCreated && !state.fromLocal) {
+      data.base64ImgString = null;
+    }
+    if (
+      state.name === userProfileResponse?.name &&
+      state.genderSelected === userProfileResponse?.gender &&
+      state.userImage === userProfileResponse?.profilePicUrl
+    ) {
+      props.navigation.navigate('TabData');
+      return;
+    }
     dispatch(updateUserProfile(data));
   };
 

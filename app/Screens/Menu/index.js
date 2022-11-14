@@ -54,7 +54,13 @@ const Menu = props => {
           onPress: () => {},
           style: 'cancel',
         },
-        {text: 'OK', onPress: () => dispatch({type: 'LOGOUT'})},
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch({type: 'LOGOUT'});
+            dispatch({type: 'PROFILE_DATA', value: ''});
+          },
+        },
       ]);
     }
     if (item.route) {
