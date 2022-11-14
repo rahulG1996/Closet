@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, TextInput, View, StyleSheet} from 'react-native';
+import {Text, TextInput, View, StyleSheet, Image} from 'react-native';
 import {Colors} from '../../colors';
 
 const Input = ({
@@ -7,9 +7,16 @@ const Input = ({
   value = '',
   onChangeText = () => {},
   errorText = '',
+  showIcon = false,
 }) => {
   return (
     <View>
+      <View style={styles.iconStyle}>
+        <Image
+          source={require('../../assets/mail.png')}
+          style={{width: 24, height: 24}}
+        />
+      </View>
       <TextInput
         placeholder={placeholder}
         style={styles.input(errorText)}
@@ -29,9 +36,15 @@ const styles = StyleSheet.create({
     padding: 16,
     borderColor: errorText ? Colors.red : Colors.greyBorder,
     marginVertical: 8,
+    paddingLeft: 50,
   }),
   errorText: {
     color: Colors.red,
     fontSize: 13,
+  },
+  iconStyle: {
+    position: 'absolute',
+    paddingVertical: 22,
+    paddingHorizontal: 18,
   },
 });

@@ -1,6 +1,6 @@
 const initialState = {
-  otpResponse: {},
-  verifyOtpResponse: {},
+  userProfileResponse: {},
+  udpateProfileRepose: {},
 };
 
 const ProfileReducer = (state = initialState, action) => {
@@ -8,7 +8,13 @@ const ProfileReducer = (state = initialState, action) => {
     case 'PROFILE_DATA': {
       return {
         ...state,
-        otpResponse: action.value,
+        userProfileResponse: action.value,
+      };
+    }
+    case 'PROFILE_DATA_UPDATED': {
+      return {
+        ...state,
+        udpateProfileRepose: action.value,
       };
     }
     default:

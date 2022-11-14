@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Buttons, VText, VView} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import {
@@ -11,10 +11,13 @@ import {
 } from 'react-native';
 import {Colors} from '../../colors';
 import Categories from './components/Categories';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Home = props => {
   const dispatch = useDispatch();
+  const isProfileCreated = useSelector(
+    state => state.AuthReducer.isProfileCreated,
+  );
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
   const onScroll = ({

@@ -6264,6 +6264,13 @@
   "resolved" "https://registry.npmjs.org/react-native-searchable-dropdown/-/react-native-searchable-dropdown-1.1.3.tgz"
   "version" "1.1.3"
 
+"react-native-simple-bottom-sheet@^1.0.4":
+  "integrity" "sha512-yvSId8GFZ/Kb1VmF7BAFJqlT33Ub0HLIo6NAnBT94CENdfxYjEYpq0eaq/VQYSfvU+GgNfP68AH+mgOK9/VQ1Q=="
+  "resolved" "https://registry.npmjs.org/react-native-simple-bottom-sheet/-/react-native-simple-bottom-sheet-1.0.4.tgz"
+  "version" "1.0.4"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "react-native-simple-toast@^1.1.4":
   "integrity" "sha512-7D8o8L445XDz7Rdh0pMgCIWuevv1FnGyuD7F8Nz/XhzMInmU4jL5VFJI25VVqQ2uGTaUSuo2ogXSgKnv6p9NJg=="
   "resolved" "https://registry.npmjs.org/react-native-simple-toast/-/react-native-simple-toast-1.1.4.tgz"

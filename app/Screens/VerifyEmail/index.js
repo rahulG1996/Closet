@@ -11,6 +11,7 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {sendOtp, verifyOtp} from '../../redux/actions/sendOtpAction';
 import Toast from 'react-native-simple-toast';
+import {Colors} from '../../colors';
 
 const VerifyEmail = propsData => {
   const dispatch = useDispatch();
@@ -145,6 +146,7 @@ const VerifyEmail = propsData => {
             marginVertical: 8,
             textAlign: 'center',
             lineHeight: 24,
+            color: Colors.black60,
           }}
         />
         <VText
@@ -178,7 +180,10 @@ const VerifyEmail = propsData => {
       )}
       {seconds != 0 ? (
         <VView style={{alignItems: 'flex-end', margin: 8}}>
-          <VText text={`OTP will be expired after ${minutes} : ${seconds}`} />
+          <VText
+            style={{color: Colors.black60}}
+            text={`OTP will be expired after ${minutes} : ${seconds}`}
+          />
         </VView>
       ) : null}
       <VView style={{marginTop: 56}}>

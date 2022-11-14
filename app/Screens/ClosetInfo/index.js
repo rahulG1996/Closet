@@ -68,7 +68,10 @@ const ClosetInfo = props => {
               </View>
             )}
 
-            <Buttons text="Create Outfit" />
+            <Buttons
+              text="Create Outfit"
+              onPress={() => props.navigation.navigate('AddOutfit')}
+            />
           </View>
         </View>
       </ScrollView>

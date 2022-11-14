@@ -71,10 +71,6 @@ class LandingPage extends React.Component {
     if (prevProps.loginResponse !== this.props.loginResponse) {
       this.props.emptyLoginResponse();
       if (this.props.loginResponse.statusCode === 200) {
-        console.log(
-          '@@',
-          JSON.stringify(this.props.loginResponse, undefined, 2),
-        );
         this.props.navigation.navigate('VerifyEmail', {
           email: this.props.loginResponse.emailId,
         });
@@ -137,11 +133,6 @@ class LandingPage extends React.Component {
         requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
       });
 
-      console.warn(
-        'appleAuthRequestResponse',
-        JSON.stringify(appleAuthRequestResponse, undefined, 2),
-      );
-
       const {
         user: newUser,
         email,
@@ -190,7 +181,7 @@ class LandingPage extends React.Component {
       return;
     }
     this.props.loginAction({
-      emailId: email,
+      emailId: email.toLowerCase(),
       status: 1,
     });
   };
@@ -198,7 +189,7 @@ class LandingPage extends React.Component {
   render() {
     return (
       <View style={{backgroundColor: 'white', flex: 1}}>
-        <KeyboardAwareScrollView>
+        <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
           <View style={{backgroundColor: Colors.grey1}}>
             <Carousel
               loop={true}
@@ -231,6 +222,7 @@ class LandingPage extends React.Component {
               onChangeText={e => this.setState({email: e, errorText: ''})}
               errorText={this.state.errorText}
               value={this.state.email}
+              showIcon
             />
             <Buttons text="continue" onPress={this.login} />
             <View style={styles.orContainer}>

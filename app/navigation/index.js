@@ -23,6 +23,7 @@ import {getBrandData, getCategoryData} from '../redux/actions/closetAction';
 import ClosetCategory from '../screens/ClosetCategory';
 import ClosetInfo from '../screens/ClosetInfo';
 import EditCloset from '../screens/EditCloset';
+import AddOutfit from '../screens/AddOutfit';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -107,6 +108,9 @@ function AppNavigation() {
   const isProfileCreated = useSelector(
     state => state.AuthReducer.isProfileCreated,
   );
+  const categoryData = useSelector(state => state.ClosetReducer.categoryData);
+  console.warn(JSON.stringify(categoryData, undefined, 2));
+
   useEffect(() => {
     if (userId) {
       dispatch(getUserProfile());
@@ -122,11 +126,10 @@ function AppNavigation() {
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="TermConditions" component={TermConditions} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-      <Stack.Screen name="TabData" component={TabData} />
     </Stack.Navigator>
   ) : (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      {isProfileCreated ? (
+      {!isProfileCreated ? (
         <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
       ) : null}
       <Stack.Screen name="TabData" component={TabData} />
@@ -134,6 +137,10 @@ function AppNavigation() {
       <Stack.Screen name="Menu" component={Menu} />
       <Stack.Screen name="TermConditions" component={TermConditions} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="AddOutfit" component={AddOutfit} />
+      {isProfileCreated ? (
+        <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+      ) : null}
     </Stack.Navigator>
   );
 }

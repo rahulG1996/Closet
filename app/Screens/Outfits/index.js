@@ -22,8 +22,11 @@ const Outfits = props => {
           clothing experinece
         </Text>
       </View>
-      <View style={{paddingHorizontal: 16}}>
-        <Buttons text="Create Outfit" />
+      <View style={{padding: 16}}>
+        <Buttons
+          text="Create Outfit"
+          onPress={() => props.navigation.navigate('AddOutfit')}
+        />
       </View>
     </View>
   );

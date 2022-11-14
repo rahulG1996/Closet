@@ -24,7 +24,10 @@ const AuthReducer = (state = initialState, action) => {
       return {
         ...state,
         loginResponse: {},
-        userId: '',
+        userId: null,
+        isProfileCreated: false,
+        userProfileResponse: {},
+        udpateProfileRepose: {},
       };
     }
     case 'SIGNUP': {

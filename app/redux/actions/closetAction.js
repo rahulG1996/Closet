@@ -12,8 +12,9 @@ export function getBrandData() {
 export function getCategoryData() {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('getCategories', 'GET');
+    console.warn('action', apiResponse);
     if (Object.keys(apiResponse).length) {
-      dispatch({type: 'GET_CATEGORY', value: apiResponse});
+      dispatch({type: 'GET_CATEGORY', value: apiResponse.data});
     }
   };
 }

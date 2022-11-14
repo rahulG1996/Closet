@@ -1,53 +1,64 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import {Colors} from '../../colors';
 import {Header} from '../../components';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const Menu = props => {
+  const userProfileResponse = useSelector(
+    state => state.ProfileReducer.userProfileResponse,
+  );
   const dispatch = useDispatch();
   const menuData = [
     {
       icon: '',
       manuName: 'My Profile',
-      route: '',
+      route: 'ProfileSetup',
     },
     {
       icon: '',
       manuName: 'Preferences',
-      route: '',
     },
     {
       icon: '',
       manuName: 'Terms & Conditions',
-      route: '',
+      route: 'TermConditions',
     },
     {
       icon: '',
       manuName: 'Privacy Policy',
-      route: '',
+      route: 'PrivacyPolicy',
     },
     {
       icon: '',
       manuName: 'Logout',
-      route: '',
     },
     {
       icon: '',
       manuName: 'Delete Account',
-      route: '',
     },
   ];
 
   const menuClick = item => {
     if (item.manuName === 'Logout') {
-      dispatch({type: 'LOGOUT'});
+      Alert.alert('Vetir', 'Are you sure want to logout', [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => dispatch({type: 'LOGOUT'})},
+      ]);
     }
-    if (item.manuName === 'Terms & Conditions') {
-      props.navigation.navigate('TermConditions');
-    }
-    if (item.manuName === 'Privacy Policy') {
-      props.navigation.navigate('PrivacyPolicy');
+    if (item.route) {
+      props.navigation.navigate(item.route);
     }
   };
   return (
@@ -57,14 +68,22 @@ const Menu = props => {
         <View style={styles.container1}>
           <View style={{marginHorizontal: 16}}>
             <Image
-              source={require('../../assets/iProfile.png')}
-              style={{width: 80, height: 80}}
+              source={
+                userProfileResponse?.profilePicUrl
+                  ? {uri: userProfileResponse.profilePicUrl}
+                  : require('../../assets/iProfile.png')
+              }
+              style={{width: 80, height: 80, borderRadius: 40}}
             />
           </View>
           <View style={styles.profileDataContainer}>
-            <Text style={{fontWeight: 'bold'}}>Abhishek</Text>
-            <Text>Male</Text>
-            <Text>abc@gmail.com</Text>
+            <Text style={{fontWeight: 'bold'}}>
+              {userProfileResponse?.name}
+            </Text>
+            <Text style={{textTransform: 'capitalize'}}>
+              {userProfileResponse?.gender}
+            </Text>
+            <Text>{userProfileResponse?.emailId}</Text>
           </View>
         </View>
         <View>
