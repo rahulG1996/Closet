@@ -90,8 +90,8 @@ function TabData() {
           }
           if (route.name === 'Outfits') {
             imgSource = focused
-              ? require('../assets/iOutfitSelected.webp')
-              : require('../assets/outfite.webp');
+              ? require('../assets/iOutfitSelected.png')
+              : require('../assets/iAddCloset.webp');
           }
 
           return renderTab(route, imgSource);

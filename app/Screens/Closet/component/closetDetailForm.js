@@ -27,6 +27,15 @@ const ClosetDetailsFrom = props => {
   });
 
   useEffect(() => {
+    if (props?.route?.params?.editClosetData) {
+      setState({
+        ...state,
+        selectedSeason: props?.route?.params?.editClosetData?.season,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});

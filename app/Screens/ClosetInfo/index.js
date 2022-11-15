@@ -53,7 +53,7 @@ const ClosetInfo = props => {
               </TouchableOpacity>
             </View>
             {activeOutfit ? (
-              <View style={styles.dataContainer}>
+              <View style={[styles.dataContainer, {alignItems: 'center'}]}>
                 <Image
                   source={require('../../assets/iOutfit.png')}
                   style={{width: 87, height: 87}}
@@ -64,7 +64,31 @@ const ClosetInfo = props => {
               </View>
             ) : (
               <View style={styles.dataContainer}>
-                <Text>Closet Details</Text>
+                <Text style={styles.titleStyle}>Category</Text>
+                <Text style={styles.subitleStyle}>
+                  {props.route?.params?.apiData?.categoryName}
+                </Text>
+                <Text style={styles.titleStyle}>Sub Category</Text>
+                <Text style={styles.subitleStyle}>
+                  {props.route?.params?.apiData?.subCategoryName}
+                </Text>
+                <Text style={styles.titleStyle}>Brand</Text>
+                <Text style={styles.subitleStyle}>
+                  {props.route?.params?.apiData?.brandName}
+                </Text>
+                <Text style={styles.titleStyle}>Season</Text>
+                <Text style={styles.subitleStyle}>
+                  {props.route?.params?.apiData?.season}
+                </Text>
+                <Text style={styles.titleStyle}>Color</Text>
+                <View
+                  style={{
+                    backgroundColor: props.route?.params?.apiData?.colorCode,
+                    width: 40,
+                    height: 40,
+                    marginTop: 8,
+                  }}
+                />
               </View>
             )}
 
@@ -89,7 +113,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   dataContainer: {
-    alignItems: 'center',
     marginVertical: 20,
+  },
+  titleStyle: {},
+  subitleStyle: {
+    color: Colors.black60,
+    marginTop: 8,
+    marginBottom: 16,
   },
 });

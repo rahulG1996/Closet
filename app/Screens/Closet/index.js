@@ -79,7 +79,7 @@ export default props => {
     state => state.ClosetReducer.singleClosetReponse,
   );
 
-  console.warn('comp', JSON.stringify(singleClosetReponse, undefined, 2));
+  console.warn('comp', JSON.stringify(getcloset, undefined, 2));
 
   useEffect(() => {
     if (Object.keys(singleClosetReponse).length) {
