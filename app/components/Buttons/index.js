@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: isInverse ? '#FFFFFF' : '#000000',
     paddingVertical: 16,
     alignItems: 'center',
-    marginTop: 16,
+    marginTop: 4,
     borderWidth: 2,
     borderColor: noBorder ? 'transparent' : Colors.grey1,
   }),

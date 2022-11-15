@@ -9,6 +9,7 @@ import {
   getClosetData,
 } from '../../../redux/actions/closetAction';
 import Toast from 'react-native-simple-toast';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
@@ -59,6 +60,26 @@ const ClosetDetailsFrom = props => {
 
   const addCloset = () => {
     let {brandSelected, categorySelected} = state;
+    if (!brandSelected) {
+      Toast.show('Please select Brand from given options');
+      return;
+    }
+    if (!categorySelected) {
+      Toast.show('Please select Category from given options');
+      return;
+    }
+    if (!selectedSeason) {
+      Toast.show('Please select seasons');
+      return;
+    }
+    if (categorySelected && !categorySelected?.id) {
+      Toast.show('Please select Category from given options');
+      return;
+    }
+    if (brandSelected && !brandSelected?.id) {
+      Toast.show('Please select Category from given options');
+      return;
+    }
     categorySelected = categorySelected.id.split(' ');
 
     let data = {
@@ -78,7 +99,7 @@ const ClosetDetailsFrom = props => {
       <VView>
         <Header {...props} showBack />
       </VView>
-      <ScrollView>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
         <BigImage imgSource={props?.route?.params?.imgSource?.path} />
         <VView style={{padding: 16}}>
           <VView>
@@ -152,7 +173,7 @@ const ClosetDetailsFrom = props => {
             <Buttons text="Add" onPress={addCloset} />
           </VView>
         </VView>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </VView>
   );
 };

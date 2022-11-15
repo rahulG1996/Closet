@@ -6,6 +6,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {store, persistor} from './app/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
+import {Platform, StatusBar, View} from 'react-native';
 
 class App extends Component {
   componentDidMount() {
@@ -15,15 +16,15 @@ class App extends Component {
   render() {
     return (
       <NavigationContainer>
-        <SafeAreaProvider>
-          <SafeAreaView style={{flex: 1}}>
-            <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
+        <SafeAreaView style={{flex: 1}}>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <View style={{flex: 1, paddingTop: 32}}>
                 <AppNavigation />
-              </PersistGate>
-            </Provider>
-          </SafeAreaView>
-        </SafeAreaProvider>
+              </View>
+            </PersistGate>
+          </Provider>
+        </SafeAreaView>
       </NavigationContainer>
     );
   }
