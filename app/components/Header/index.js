@@ -14,12 +14,19 @@ const Header = ({
   showMenu = false,
   shoSwicth = false,
   switchValue = () => {},
+  showVerticalMenu = false,
+  openMenu = () => {},
 }) => {
   const [switchIcon, setSwitch] = useState(true);
   // const toggleSwitch = () => {
   //   switchValue(!switchIcon);
   //   setSwitch(!switchIcon);
   // };
+
+  const verticalMenuClicked = () => {
+    openMenu(true);
+  };
+
   return (
     <VView
       style={{
@@ -105,6 +112,17 @@ const Header = ({
               resizeMode="contain"
               source={Images.menuBar}
               style={{width: 22, height: 22}}
+            />
+          </TouchableOpacity>
+        )}
+        {showVerticalMenu && (
+          <TouchableOpacity
+            onPress={verticalMenuClicked}
+            style={{paddingHorizontal: 10}}>
+            <Image
+              resizeMode="contain"
+              source={require('../../assets/vertical.png')}
+              style={{width: 32, height: 32}}
             />
           </TouchableOpacity>
         )}

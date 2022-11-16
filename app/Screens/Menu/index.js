@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   Text,
@@ -10,11 +10,17 @@ import {
 import {Colors} from '../../colors';
 import {Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
+import {deleteAccount} from '../../redux/actions/profileAction';
+import Toast from 'react-native-simple-toast';
 
 const Menu = props => {
   const userProfileResponse = useSelector(
     state => state.ProfileReducer.userProfileResponse,
   );
+  const deleteAccountResponse = useSelector(
+    state => state.ProfileReducer.deleteAccountResponse,
+  );
+  const userId = useSelector(state => state.AuthReducer.userId);
   const dispatch = useDispatch();
   const menuData = [
     {
@@ -46,6 +52,17 @@ const Menu = props => {
     },
   ];
 
+  useEffect(() => {
+    if (Object.keys(deleteAccountResponse).length) {
+      if (deleteAccountResponse.statusCode === 200) {
+        dispatch({type: 'ACOOUNT_DELETE', value: {}});
+        Toast.show('Your Account Delete Successfuly');
+        dispatch({type: 'LOGOUT'});
+        dispatch({type: 'PROFILE_DATA', value: ''});
+      }
+    }
+  }, [deleteAccountResponse, dispatch]);
+
   const menuClick = item => {
     if (item.manuName === 'Logout') {
       Alert.alert('Vetir', 'Are you sure want to logout', [
@@ -59,6 +76,25 @@ const Menu = props => {
           onPress: () => {
             dispatch({type: 'LOGOUT'});
             dispatch({type: 'PROFILE_DATA', value: ''});
+          },
+        },
+      ]);
+    }
+    if (item.manuName === 'Delete Account') {
+      Alert.alert('Vetir', 'Are you sure want to delete your account', [
+        {
+          text: 'Cancel',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(
+              deleteAccount({
+                userId: userId,
+              }),
+            );
           },
         },
       ]);

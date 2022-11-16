@@ -6,6 +6,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addDataInCloset,
+  editDataInCloset,
   getClosetData,
 } from '../../../redux/actions/closetAction';
 import Toast from 'react-native-simple-toast';
@@ -13,6 +14,9 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
+  const [bgImageUrl, setBgImag] = useState(
+    props?.route?.params?.imgSource?.path,
+  );
   const [selectedSeason, setSeason] = useState('');
   const brandData = useSelector(state => state.ClosetReducer.brandData);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
@@ -20,17 +24,48 @@ const ClosetDetailsFrom = props => {
   const addClosetResponse = useSelector(
     state => state.ClosetReducer.addClosetResponse,
   );
+  const editClosetResponse = useSelector(
+    state => state.ClosetReducer.editClosetResponse,
+  );
+
   const [state, setState] = useState({
     brandDataUpdated: [],
     brandSelected: '',
     categoryDataUpdated: [],
   });
 
+  console.warn(
+    'props',
+    JSON.stringify(
+      {
+        name: props?.route?.params?.editClosetData?.brandName,
+        id: props?.route?.params?.editClosetData?.brandId,
+      },
+      undefined,
+      2,
+    ),
+  );
+
   useEffect(() => {
     if (props?.route?.params?.editClosetData) {
+      setSeason(props?.route?.params?.editClosetData?.season);
+      let brandSelected1 = {
+        name: props?.route?.params?.editClosetData?.brandName,
+        id: props?.route?.params?.editClosetData?.brandId,
+      };
+      let categorySelected1 = {
+        name:
+          props?.route?.params?.editClosetData?.categoryName +
+          ' --> ' +
+          props?.route?.params?.editClosetData?.subCategoryName,
+        id: `${props?.route?.params?.editClosetData?.categoryId} ${props?.route?.params?.editClosetData?.subCategoryId}`,
+      };
+      setBgImag(props?.route?.params?.editClosetData?.itemImageUrl);
+      console.warn('@@@@', categorySelected1, brandSelected1);
       setState({
         ...state,
-        selectedSeason: props?.route?.params?.editClosetData?.season,
+        brandSelected: brandSelected1,
+        categorySelected: categorySelected1,
       });
     }
   }, []);
@@ -47,9 +82,20 @@ const ClosetDetailsFrom = props => {
   }, [addClosetResponse, dispatch, props.navigation]);
 
   useEffect(() => {
+    if (Object.keys(editClosetResponse).length) {
+      if (editClosetResponse.statusCode === 200) {
+        dispatch({type: 'EDIT_CLOSET', value: {}});
+        Toast.show('Closet Information edit successfully');
+        props.navigation.navigate('ClosetInfo', {
+          apiData: editClosetResponse,
+        });
+      }
+    }
+  }, [editClosetResponse, dispatch]);
+
+  useEffect(() => {
     let items = brandData.map(item => {
       return {
-        ...item,
         name: item.brandName,
         id: item.brandId,
       };
@@ -98,10 +144,18 @@ const ClosetDetailsFrom = props => {
       brandId: state.brandSelected?.id,
       season: selectedSeason,
       colorCode: '#111111',
-      itemImageUrl: `data:image/jpeg;base64,${props?.route?.params?.imgSource?.data}`,
+      itemImageUrl: bgImageUrl,
     };
+    console.warn('data', data);
+    if (props?.route?.params?.editCloset) {
+      data.closetItemId = props.route?.params.editClosetData?.closetItemId;
+      dispatch(editDataInCloset(data));
+      return;
+    }
     dispatch(addDataInCloset(data));
   };
+
+  console.warn(state.brandSelected, state.categorySelected);
 
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
@@ -109,7 +163,7 @@ const ClosetDetailsFrom = props => {
         <Header {...props} showBack />
       </VView>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <BigImage imgSource={props?.route?.params?.imgSource?.path} />
+        <BigImage imgSource={bgImageUrl} />
         <VView style={{padding: 16}}>
           <VView>
             <VText text="Category" />
@@ -160,8 +214,8 @@ const ClosetDetailsFrom = props => {
             />
 
             <VText text="Season" />
-            <VView style={{flexDirection: 'row'}}>
-              {['Spring', 'Summer', 'Fall', 'Winter'].map((item, index) => {
+            <VView style={{flexDirection: 'row', marginBottom: 8}}>
+              {['spring', 'summer', 'fall', 'winter'].map((item, index) => {
                 return (
                   <TouchableOpacity
                     onPress={() => setSeason(item)}
@@ -174,7 +228,7 @@ const ClosetDetailsFrom = props => {
                             : 'rgba(0,0,0,0.16)',
                       },
                     ]}>
-                    <VText text={item} />
+                    <VText style={{textTransform: 'capitalize'}} text={item} />
                   </TouchableOpacity>
                 );
               })}

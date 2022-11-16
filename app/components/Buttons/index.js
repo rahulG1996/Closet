@@ -9,13 +9,14 @@ const Buttons = ({
   isInverse = false,
   noBorder = false,
   disabled = false,
+  textColor = '',
 }) => {
   return (
     <TouchableOpacity
       disabled={disabled}
       style={styles.buttonContainer(isInverse, noBorder)}
       onPress={onPress}>
-      <VText text={text} style={styles.buttontext(isInverse)} />
+      <VText text={text} style={styles.buttontext(isInverse, textColor)} />
     </TouchableOpacity>
   );
 };
@@ -31,8 +32,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: noBorder ? 'transparent' : Colors.grey1,
   }),
-  buttontext: isInverse => ({
-    color: isInverse ? 'black' : 'white',
+  buttontext: (isInverse, textColor) => ({
+    color: textColor ? textColor : isInverse ? 'black' : 'white',
     textTransform: 'uppercase',
   }),
 });

@@ -4,6 +4,8 @@ const initialState = {
   addClosetResponse: {},
   getcloset: [],
   singleClosetReponse: {},
+  deleteClosetResponse: {},
+  editClosetResponse: {},
 };
 
 const ClosetReducer = (state = initialState, action) => {
@@ -37,6 +39,18 @@ const ClosetReducer = (state = initialState, action) => {
       return {
         ...state,
         singleClosetReponse: action.value,
+      };
+    }
+    case 'DELETE_CLOSET': {
+      return {
+        ...state,
+        deleteClosetResponse: action.value,
+      };
+    }
+    case 'EDIT_CLOSET': {
+      return {
+        ...state,
+        editClosetResponse: action.value,
       };
     }
     default:

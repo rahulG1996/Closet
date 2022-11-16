@@ -26,3 +26,12 @@ export function updateUserProfile(data) {
     }
   };
 }
+
+export function deleteAccount(data) {
+  return async (dispatch, getState) => {
+    const apiResponse = await NoAuthAPI('deleteAccount', 'POST', data);
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'ACOOUNT_DELETE', value: apiResponse});
+    }
+  };
+}

@@ -1,6 +1,7 @@
 const initialState = {
   userProfileResponse: {},
   udpateProfileRepose: {},
+  deleteAccountResponse: {},
 };
 
 const ProfileReducer = (state = initialState, action) => {
@@ -15,6 +16,12 @@ const ProfileReducer = (state = initialState, action) => {
       return {
         ...state,
         udpateProfileRepose: action.value,
+      };
+    }
+    case 'ACOOUNT_DELETE': {
+      return {
+        ...state,
+        deleteAccountResponse: action.value,
       };
     }
     default:
