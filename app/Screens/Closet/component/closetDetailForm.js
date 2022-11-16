@@ -1,6 +1,14 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
-import {VView, VText, Buttons, Header, BigImage} from '../../../components';
+import {ScrollView, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  VView,
+  VText,
+  Buttons,
+  Header,
+  BigImage,
+  OverlayModal,
+} from '../../../components';
 import {Colors} from '../../../colors';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import {useDispatch, useSelector} from 'react-redux';
@@ -11,16 +19,28 @@ import {
 } from '../../../redux/actions/closetAction';
 import Toast from 'react-native-simple-toast';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import ColorPicker from 'react-native-wheel-color-picker';
 
+let gPicker = '';
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
   const [bgImageUrl, setBgImag] = useState(
     props?.route?.params?.imgSource?.path,
   );
+  const [currentColor, setCurrentColor] = useState('');
+  const [swatchesOnly, setSwatchesOnly] = useState('');
+
+  const [swatchesLast, setSwatchesLast] = useState(true);
+  const [swatchesEnabled, setSwatchesEnabled] = useState('');
+  const [disc, setDisc] = useState('');
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [getColor, setGetColor] = useState('#fff');
+  const [showModal, setShowModal] = useState(false);
   const [selectedSeason, setSeason] = useState('');
   const brandData = useSelector(state => state.ClosetReducer.brandData);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const userId = useSelector(state => state.AuthReducer.userId);
+
   const addClosetResponse = useSelector(
     state => state.ClosetReducer.addClosetResponse,
   );
@@ -157,6 +177,68 @@ const ClosetDetailsFrom = props => {
 
   console.warn(state.brandSelected, state.categorySelected);
 
+  const onColorChange = clr => {
+    //     setCurrentColor
+    // setSwatchesOnly
+    console.log('changed color', clr);
+  };
+
+  const onColorSelect = clr => {
+    setGetColor(clr);
+  };
+
+  const renderColorPalette = () => {
+    return (
+      <VView style={{}}>
+        <ColorPicker
+          color={currentColor}
+          swatchesOnly={swatchesOnly}
+          onColorChange={onColorChange}
+          onColorChangeComplete={onColorSelect}
+          noSnap={false}
+          row={true}
+          vertical={false}
+          swatchesLast={swatchesLast}
+          swatches={swatchesEnabled}
+          discrete={disc}
+          sliderHidden={true}
+        />
+        <VView
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: 20,
+          }}>
+          <VText text="Selected Color" />
+          <VView
+            style={{
+              paddingVertical: 14,
+              backgroundColor: getColor,
+              marginLeft: 10,
+              borderWidth: 1,
+              borderColor: Colors.greyBorder,
+              borderRadius: 5,
+              width: 50,
+            }}
+          />
+        </VView>
+        <Buttons
+          text="Add Color"
+          // isInverse
+          onPress={() => {
+            let checkColorExist = selectedColors.includes(getColor);
+            if (!checkColorExist) {
+              setSelectedColors(oldArray => [...oldArray, getColor]);
+              setShowModal(false);
+              setGetColor('');
+            } else {
+              Toast.show('Color already added');
+            }
+          }}
+        />
+      </VView>
+    );
+  };
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
@@ -214,7 +296,7 @@ const ClosetDetailsFrom = props => {
             />
 
             <VText text="Season" />
-            <VView style={{flexDirection: 'row', marginBottom: 8}}>
+            <VView style={{flexDirection: 'row'}}>
               {['spring', 'summer', 'fall', 'winter'].map((item, index) => {
                 return (
                   <TouchableOpacity
@@ -233,10 +315,53 @@ const ClosetDetailsFrom = props => {
                 );
               })}
             </VView>
+            <VView style={{marginVertical: 16}}>
+              <VText
+                text="Color"
+                style={{
+                  marginBottom: 8,
+                }}
+              />
+              <VView
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                }}>
+                {selectedColors?.map((colr, index) => {
+                  return (
+                    <VView
+                      style={{
+                        height: 40,
+                        width: 40,
+                        backgroundColor: colr,
+                        marginRight: 8,
+                        marginBottom: 8,
+                        borderWidth: 1,
+                        borderRadius: 5,
+                        borderColor: Colors.greyBorder,
+                      }}
+                    />
+                  );
+                })}
+
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => setShowModal(true)}>
+                  <Image
+                    source={require('../../../assets/color.png')}
+                    style={{
+                      height: 40,
+                      width: 40,
+                    }}
+                  />
+                </TouchableOpacity>
+              </VView>
+            </VView>
             <Buttons text="Add" onPress={addCloset} />
           </VView>
         </VView>
       </KeyboardAwareScrollView>
+      <OverlayModal showModal={showModal} component={renderColorPalette()} />
     </VView>
   );
 };

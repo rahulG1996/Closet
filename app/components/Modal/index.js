@@ -3,7 +3,7 @@ import React from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const OverlayModal = ({component = {}, showModal = false}) => {
+const OverlayModal = ({component = {}, showModal = false, onDismiss}) => {
   return (
     <View>
       <Modal
@@ -15,7 +15,8 @@ const OverlayModal = ({component = {}, showModal = false}) => {
         style={{
           margin: 0,
           justifyContent: 'flex-end',
-        }}>
+        }}
+        onDismiss={onDismiss}>
         <View
           style={{
             backgroundColor: 'white',
