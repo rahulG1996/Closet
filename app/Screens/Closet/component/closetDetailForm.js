@@ -114,6 +114,24 @@ const ClosetDetailsFrom = props => {
   }, [editClosetResponse, dispatch]);
 
   useEffect(() => {
+    let brandSelected1 = {};
+    let categorySelected1;
+    if (props?.route?.params?.editClosetData) {
+      setSeason(props?.route?.params?.editClosetData?.season);
+      brandSelected1 = {
+        name: props?.route?.params?.editClosetData?.brandName,
+        id: props?.route?.params?.editClosetData?.brandId,
+      };
+      categorySelected1 = {
+        name:
+          props?.route?.params?.editClosetData?.categoryName +
+          ' --> ' +
+          props?.route?.params?.editClosetData?.subCategoryName,
+        id: `${props?.route?.params?.editClosetData?.categoryId} ${props?.route?.params?.editClosetData?.subCategoryId}`,
+      };
+      setBgImag(props?.route?.params?.editClosetData?.itemImageUrl);
+      console.warn('@@@@', categorySelected1, brandSelected1);
+    }
     let items = brandData.map(item => {
       return {
         name: item.brandName,
@@ -130,6 +148,8 @@ const ClosetDetailsFrom = props => {
       ...state,
       brandDataUpdated: items,
       categoryDataUpdated: groupedData,
+      brandSelected: brandSelected1,
+      categorySelected: categorySelected1,
     });
   }, []);
 
@@ -163,8 +183,10 @@ const ClosetDetailsFrom = props => {
       subCategoryId: categorySelected[1],
       brandId: state.brandSelected?.id,
       season: selectedSeason,
-      colorCode: '#111111',
-      itemImageUrl: bgImageUrl,
+      colorCode: JSON.stringify(selectedColors),
+      itemImageUrl: props?.route?.params?.editCloset
+        ? bgImageUrl
+        : `data:image/jpeg;base64,${props?.route?.params?.imgSource?.data}`,
     };
     console.warn('data', data);
     if (props?.route?.params?.editCloset) {

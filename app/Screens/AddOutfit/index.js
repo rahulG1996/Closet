@@ -16,6 +16,8 @@ import BottomSheet from 'react-native-simple-bottom-sheet';
 import {useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Buttons, Header} from '../../components';
+import {PinchGestureHandler, State} from 'react-native-gesture-handler';
+const screen = Dimensions.get('window');
 
 const AddCloset = props => {
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
@@ -77,12 +79,12 @@ const AddCloset = props => {
           pan: new Animated.ValueXY(0, 0),
           imageSrc: require('../../assets/sweatshirt.webp'),
           id: id,
+          scale: new Animated.Value(1),
         },
       ]);
     } else {
       //remove image logic
     }
-    console.warn(JSON.stringify(closetData1, undefined, 2));
   };
 
   const renderItem = ({item, index}) => {
@@ -101,7 +103,9 @@ const AddCloset = props => {
     );
   };
 
-  console.warn(JSON.stringify(closetData, undefined, 2));
+  const imageLocations = value => {
+    console.warn('value', JSON.stringify(value, undefined, 2));
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -110,7 +114,7 @@ const AddCloset = props => {
         source={require('../../assets/bg.png')}
         resizeMode="contain"
         style={{height: Dimensions.get('window').height * 0.5}}>
-        <App outfitImages={outfitImages} />
+        <App outfitImages={outfitImages} imageLocations={imageLocations} />
       </ImageBackground>
       <BottomSheet
         ref={ref => (panelRef.current = ref)}
@@ -179,7 +183,24 @@ const AddCloset = props => {
 };
 
 class App extends Component {
-  panResponder = item => {
+  constructor(props) {
+    super(props);
+    this.state = {
+      closedata: this.props.outfitImages,
+    };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.outfitImages !== this.props.outfitImages) {
+      this.setState({closedata: this.props.outfitImages});
+    }
+    if (prevState.closedata !== this.state.closedata) {
+      this.props.imageLocations(this.state.closedata);
+    }
+  }
+
+  panResponder = (item, index) => {
+    let {closedata} = this.state;
     return PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: () => {
@@ -192,29 +213,63 @@ class App extends Component {
         null,
         {dx: item.pan.x, dy: item.pan.y},
       ]),
-      onPanResponderRelease: () => {
+      onPanResponderRelease: event => {
+        closedata[index] = closedata[index];
+        this.setState({closedata}, () => {
+          this.props.imageLocations(this.state.closedata);
+        });
         item.pan.flattenOffset();
       },
     });
   };
+
+  onPinchStateChange = event => {
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      Animated.spring(this.scale, {
+        toValue: 1,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+
+  onPinchEvent = i =>
+    Animated.event(
+      [
+        {
+          nativeEvent: {scale: i.scale},
+        },
+      ],
+      {
+        useNativeDriver: true,
+      },
+    );
 
   render() {
     return (
       <View style={styles.container}>
         {this.props.outfitImages.map((i, index) => {
           return (
-            <Animated.View
-              style={{
-                transform: [{translateX: i.pan.x}, {translateY: i.pan.y}],
-              }}
-              {...this.panResponder(i).panHandlers}>
-              <View style={{width: 100, height: 100}}>
-                <Image
+            <View style={{width: 100, height: 100}}>
+              <PinchGestureHandler
+                onGestureEvent={this.onPinchEvent(i)}
+                onHandlerStateChange={this.onPinchStateChange}>
+                <Animated.Image
+                  {...this.panResponder(i, index).panHandlers}
                   source={i.imageSrc}
-                  style={{width: '100%', height: '100%'}}
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderWidth: 2,
+                    transform: [
+                      {scale: i.scale},
+                      {translateX: i.pan.x},
+                      {translateY: i.pan.y},
+                    ],
+                  }}
+                  resizeMode="stretch"
                 />
-              </View>
-            </Animated.View>
+              </PinchGestureHandler>
+            </View>
           );
         })}
       </View>
