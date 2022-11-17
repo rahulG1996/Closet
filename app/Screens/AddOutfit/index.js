@@ -69,6 +69,7 @@ const AddCloset = props => {
   ]);
 
   const addClosetInOutfit = (index, id) => {
+    // const filteredPeople = people.filter((item) => item.id !== idToRemove);
     let closetData1 = closetData;
     closetData1[index].added = !closetData1[index].added;
     setClosetData(closetData1);
@@ -84,6 +85,8 @@ const AddCloset = props => {
       ]);
     } else {
       //remove image logic
+      const filteredOutFitImage = outfitImages.filter(item => item.id !== id);
+      setOutfitImages(filteredOutFitImage);
     }
   };
 
