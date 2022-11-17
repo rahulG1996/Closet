@@ -29,25 +29,29 @@ const EditCloset = props => {
   const editImage = type => {
     if (type === 'crop') {
       ImageCropPicker.openCropper({
-        path: isImageEdit ? newImage : props?.route?.params?.imgSource,
+        path: isImageEdit
+          ? newImage.path
+          : props?.route?.params?.imgSource?.path,
         width: 300,
         height: 400,
       }).then(image => {
         setImageEdit(true);
-        setImage(image.path);
+        setImage(image);
         console.log(image);
       });
     }
     if (type === 'rotate') {
       ImageCropPicker.openCropper({
-        path: isImageEdit ? newImage : props?.route?.params?.imgSource,
+        path: isImageEdit
+          ? newImage.path
+          : props?.route?.params?.imgSource?.path,
         width: 300,
         height: 400,
         cropping: false,
         includeBase64: true,
       }).then(image => {
         setImageEdit(true);
-        setImage(image.path);
+        setImage(image);
         console.log(image);
       });
     }
@@ -61,7 +65,7 @@ const EditCloset = props => {
       <View style={{flex: 1}}>
         <BigImage
           imgSource={
-            isImageEdit ? newImage : props?.route?.params?.imgSource?.path
+            isImageEdit ? newImage?.path : props?.route?.params?.imgSource?.path
           }
         />
         <View style={{paddingHorizontal: 16}}>

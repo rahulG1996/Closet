@@ -20,6 +20,7 @@ import {openClosetDetails} from '../../redux/actions/closetAction';
 import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
 import ViewShot, {captureRef} from 'react-native-view-shot';
+import RNFS from 'react-native-fs';
 // import PhotoEditor from 'react-native-photo-editor';
 
 let data = [
@@ -85,8 +86,6 @@ export default props => {
     state => state.ClosetReducer.singleClosetReponse,
   );
 
-  console.warn('comp', JSON.stringify(getcloset, undefined, 2));
-
   useEffect(() => {
     if (Object.keys(singleClosetReponse).length) {
       dispatch({type: 'SINGLE_CLOSET', value: {}});
@@ -117,6 +116,7 @@ export default props => {
       cropping: true,
       includeBase64: true,
     }).then(img => {
+      console.warn('comp', JSON.stringify(img.path, undefined, 2));
       props.navigation.navigate('EditCloset', {
         imgSource: img,
       });
@@ -291,15 +291,18 @@ export default props => {
     captureRef(captureViewRef, {
       format: 'jpeg',
       quality: 0.9,
-      result: 'base64',
     }).then(
       uri => {
-        props.navigation.navigate('EditCloset', {
-          imgSource: {data: uri, path: `data:image/png;base64,${uri}`},
-          from: 'google',
+        RNFS.readFile(uri, 'base64').then(res => {
+          props.navigation.navigate('EditCloset', {
+            imgSource: {data: res, path: uri},
+            from: 'google',
+          });
+          setWebView(false);
+          console.warn('urlString', uri);
         });
-        setWebView(false);
-        console.warn(uri);
+
+        // console.warn(uri);
       },
       error => alert('Oops, snapshot failed', error),
     );
