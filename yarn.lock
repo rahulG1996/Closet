@@ -6399,6 +6399,11 @@
   "resolved" "https://registry.npmjs.org/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz"
   "version" "3.3.0"
 
+"react-native-view-shot@^3.5.0":
+  "integrity" "sha512-+/a0zcEcCzAwuzQTU7CmwR1/bDcuy3Yj7093xI3Dhcjccb3FwxNiRyIBonsMSj3fQMmBcqV5d8DGCAeOJ5Ij3A=="
+  "resolved" "https://registry.npmjs.org/react-native-view-shot/-/react-native-view-shot-3.5.0.tgz"
+  "version" "3.5.0"
+
 "react-native-webview@^11.23.1", "react-native-webview@^11.6.2":
   "integrity" "sha512-bmqsdg4RYOUYD37R9XTrQALm7eD62KbLNPRfgvpLGd1SjaurvAjjsLrLN4mt6yOtKOMKeZvlcAl3x6De6cCQsA=="
   "resolved" "https://registry.npmjs.org/react-native-webview/-/react-native-webview-11.23.1.tgz"

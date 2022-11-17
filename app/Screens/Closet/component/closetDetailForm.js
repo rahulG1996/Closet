@@ -21,7 +21,6 @@ import Toast from 'react-native-simple-toast';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ColorPicker from 'react-native-wheel-color-picker';
 
-let gPicker = '';
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
   const [bgImageUrl, setBgImag] = useState(
@@ -175,6 +174,10 @@ const ClosetDetailsFrom = props => {
       Toast.show('Please select Category from given options');
       return;
     }
+    if (!selectedColors.length) {
+      Toast.show('Please select one color');
+      return;
+    }
     categorySelected = categorySelected.id.split(' ');
 
     let data = {
@@ -183,10 +186,10 @@ const ClosetDetailsFrom = props => {
       subCategoryId: categorySelected[1],
       brandId: state.brandSelected?.id,
       season: selectedSeason,
-      colorCode: JSON.stringify(selectedColors),
+      colorCode: selectedColors[0],
       itemImageUrl: props?.route?.params?.editCloset
         ? bgImageUrl
-        : `data:image/jpeg;base64,${props?.route?.params?.imgSource?.data}`,
+        : `data:image/png;base64,${props?.route?.params?.imgSource?.data}`,
     };
     console.warn('data', data);
     if (props?.route?.params?.editCloset) {
@@ -197,13 +200,7 @@ const ClosetDetailsFrom = props => {
     dispatch(addDataInCloset(data));
   };
 
-  console.warn(state.brandSelected, state.categorySelected);
-
-  const onColorChange = clr => {
-    //     setCurrentColor
-    // setSwatchesOnly
-    console.log('changed color', clr);
-  };
+  console.warn('props', props?.route?.params?.imgSource?.data);
 
   const onColorSelect = clr => {
     setGetColor(clr);
@@ -215,7 +212,6 @@ const ClosetDetailsFrom = props => {
         <ColorPicker
           color={currentColor}
           swatchesOnly={swatchesOnly}
-          onColorChange={onColorChange}
           onColorChangeComplete={onColorSelect}
           noSnap={false}
           row={true}

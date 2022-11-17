@@ -44,6 +44,7 @@ const EditCloset = props => {
         width: 300,
         height: 400,
         cropping: false,
+        includeBase64: true,
       }).then(image => {
         setImageEdit(true);
         setImage(image.path);
@@ -51,6 +52,8 @@ const EditCloset = props => {
       });
     }
   };
+
+  console.log('edit', props?.route?.params?.imgSource?.data);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Image,
@@ -8,14 +8,18 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Linking,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import {Header, VText, VView} from '../../components';
+import {Buttons, Header, VText, VView} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
 import {useDispatch, useSelector} from 'react-redux';
 import PhotoEditor from 'react-native-photo-editor';
 import {openClosetDetails} from '../../redux/actions/closetAction';
+import {InAppBrowser} from 'react-native-inappbrowser-reborn';
+import WebView from 'react-native-webview';
+import ViewShot, {captureRef} from 'react-native-view-shot';
 // import PhotoEditor from 'react-native-photo-editor';
 
 let data = [
@@ -67,6 +71,8 @@ let data = [
 
 export default props => {
   const dispatch = useDispatch();
+  const captureViewRef = useRef();
+  const [showWebView, setWebView] = useState(false);
   const [gridType, setGrid] = useState(true);
   const [activeTab, setActiveTab] = useState('All');
   const getcloset = useSelector(state => state.ClosetReducer.getcloset);
@@ -281,6 +287,24 @@ export default props => {
     dispatch(openClosetDetails(data));
   };
 
+  const onCapture = () => {
+    captureRef(captureViewRef, {
+      format: 'jpeg',
+      quality: 0.9,
+      result: 'base64',
+    }).then(
+      uri => {
+        props.navigation.navigate('EditCloset', {
+          imgSource: {data: uri, path: `data:image/png;base64,${uri}`},
+          from: 'google',
+        });
+        setWebView(false);
+        console.warn(uri);
+      },
+      error => alert('Oops, snapshot failed', error),
+    );
+  };
+
   return (
     <VView style={styles.container}>
       <Header
@@ -298,26 +322,77 @@ export default props => {
         </ScrollView>
       )}
 
-      <VView style={styles.footerContainer}>
-        <TouchableHighlight
-          underlayColor={'rgba(0,0,0,0.1)'}
-          onPress={handleCamera}
-          style={styles.footerImageContainer}>
-          <Image source={Images.camera} style={styles.footerImage} />
-        </TouchableHighlight>
-        <TouchableHighlight
-          underlayColor={'rgba(0,0,0,0.1)'}
-          onPress={handleGallery}
-          style={styles.footerImageContainer}>
-          <Image source={Images.photos} style={styles.footerImage} />
-        </TouchableHighlight>
-        <TouchableHighlight
-          underlayColor={'rgba(0,0,0,0.1)'}
-          onPress={() => alert('Hi')}
-          style={styles.footerImageContainer}>
-          <Image source={Images.googleIcon} style={styles.footerImage} />
-        </TouchableHighlight>
-      </VView>
+      {showWebView ? (
+        <View
+          style={{
+            margin: 16,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <TouchableOpacity
+            style={{
+              width: '45%',
+              alignItems: 'center',
+              backgroundColor: 'black',
+              paddingVertical: 20,
+            }}
+            onPress={onCapture}>
+            <Text style={{color: 'white', textTransform: 'uppercase'}}>
+              Add to Closet
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setWebView(false)}
+            style={{
+              width: '45%',
+              alignItems: 'center',
+              backgroundColor: 'black',
+              paddingVertical: 20,
+            }}>
+            <Text style={{color: 'white', textTransform: 'uppercase'}}>
+              cancel
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <VView style={styles.footerContainer}>
+          <TouchableHighlight
+            underlayColor={'rgba(0,0,0,0.1)'}
+            onPress={handleCamera}
+            style={styles.footerImageContainer}>
+            <Image source={Images.camera} style={styles.footerImage} />
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor={'rgba(0,0,0,0.1)'}
+            onPress={handleGallery}
+            style={styles.footerImageContainer}>
+            <Image source={Images.photos} style={styles.footerImage} />
+          </TouchableHighlight>
+          <TouchableHighlight
+            underlayColor={'rgba(0,0,0,0.1)'}
+            onPress={() => setWebView(true)}
+            style={styles.footerImageContainer}>
+            <Image source={Images.googleIcon} style={styles.footerImage} />
+          </TouchableHighlight>
+        </VView>
+      )}
+      {showWebView && (
+        <View
+          ref={captureViewRef}
+          style={{
+            height: '90%',
+            position: 'absolute',
+            zIndex: 999,
+            width: '100%',
+          }}>
+          <WebView
+            automaticallyAdjustContentInsets={false}
+            source={{
+              uri: 'https://www.google.co.in/',
+            }}
+          />
+        </View>
+      )}
     </VView>
   );
 };
@@ -326,6 +401,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
+    zIndex: -999,
   },
   footerImageContainer: {
     marginRight: 16,
