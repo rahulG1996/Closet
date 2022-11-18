@@ -7,6 +7,9 @@ import {store, persistor} from './app/redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
 import {Platform, StatusBar, View} from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+
+let isNoch = DeviceInfo.hasNotch();
 
 class App extends Component {
   componentDidMount() {
@@ -16,10 +19,13 @@ class App extends Component {
   render() {
     return (
       <NavigationContainer>
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+          }}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              <View style={{flex: 1, paddingTop: 32}}>
+              <View style={{flex: 1, marginTop: isNoch ? 32 : 10}}>
                 <AppNavigation />
               </View>
             </PersistGate>

@@ -191,7 +191,11 @@ const ClosetDetailsFrom = props => {
 
   const renderColorPalette = () => {
     return (
-      <VView style={{}}>
+      <VView
+        style={{
+          height: '60%',
+          zIndex: 99,
+        }}>
         <ColorPicker
           color={currentColor}
           swatchesOnly={swatchesOnly}
@@ -202,7 +206,7 @@ const ClosetDetailsFrom = props => {
           swatchesLast={swatchesLast}
           swatches={swatchesEnabled}
           discrete={disc}
-          sliderHidden={true}
+          sliderHidden={false}
         />
         <VView
           style={{
@@ -362,7 +366,11 @@ const ClosetDetailsFrom = props => {
           </VView>
         </VView>
       </KeyboardAwareScrollView>
-      <OverlayModal showModal={showModal} component={renderColorPalette()} />
+      <OverlayModal
+        showModal={showModal}
+        component={renderColorPalette()}
+        isScrollEnabled={false}
+      />
     </VView>
   );
 };

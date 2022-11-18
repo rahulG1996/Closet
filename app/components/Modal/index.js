@@ -3,7 +3,12 @@ import React from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const OverlayModal = ({component = {}, showModal = false, onDismiss}) => {
+const OverlayModal = ({
+  component = {},
+  showModal = false,
+  onDismiss,
+  isScrollEnabled = true,
+}) => {
   return (
     <View>
       <Modal
@@ -24,7 +29,9 @@ const OverlayModal = ({component = {}, showModal = false, onDismiss}) => {
             borderTopRightRadius: 16,
             padding: 16,
           }}>
-          <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps="handled"
+            scrollEnabled={isScrollEnabled}>
             {component}
           </KeyboardAwareScrollView>
         </View>
