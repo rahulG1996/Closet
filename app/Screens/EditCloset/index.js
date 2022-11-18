@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {Image, Touchable, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  Touchable,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {Colors} from '../../colors';
 import {BigImage, Buttons, Header} from '../../components';
@@ -15,14 +21,6 @@ const EditCloset = props => {
     {
       type: 'rotate',
       icon: require('../../assets/rotate.png'),
-    },
-    {
-      type: 'crop',
-      icon: require('../../assets/erase.png'),
-    },
-    {
-      type: 'crop',
-      icon: require('../../assets/adjust.png'),
     },
   ];
 
@@ -62,7 +60,7 @@ const EditCloset = props => {
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header showBack {...props} />
-      <View style={{flex: 1}}>
+      <ScrollView style={{flex: 1}}>
         <BigImage
           imgSource={
             isImageEdit ? newImage?.path : props?.route?.params?.imgSource?.path
@@ -79,11 +77,24 @@ const EditCloset = props => {
               return (
                 <TouchableOpacity
                   onPress={() => editImage(item.type)}
-                  style={{padding: 28, backgroundColor: Colors.grey1}}>
+                  style={{
+                    flex: 1,
+                    paddingVertical: 28,
+                    backgroundColor: Colors.grey1,
+                    alignItems: 'center',
+                    marginHorizontal: 8,
+                  }}>
                   <Image source={item.icon} style={{width: 24, height: 24}} />
                 </TouchableOpacity>
               );
             })}
+          </View>
+          <View style={{marginBottom: 8}}>
+            <Buttons
+              text="remove background"
+              isInverse
+              onPress={() => alert('work in progress')}
+            />
           </View>
           <Buttons
             text="next"
@@ -96,7 +107,7 @@ const EditCloset = props => {
             }
           />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };

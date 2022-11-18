@@ -93,7 +93,7 @@ function TabData() {
           if (route.name === 'Outfits') {
             imgSource = focused
               ? require('../assets/iOutfitSelected.png')
-              : require('../assets/iAddCloset.webp');
+              : require('../assets/outfitIcon.png');
           }
 
           return renderTab(route, imgSource);

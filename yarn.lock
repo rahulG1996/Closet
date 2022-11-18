@@ -6165,7 +6165,7 @@
     "kleur" "^3.0.3"
     "sisteransi" "^1.0.5"
 
-"prop-types@*", "prop-types@^15.6.1", "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@^15.8.1":
+"prop-types@*", "prop-types@^15.6.1", "prop-types@^15.6.2", "prop-types@^15.7.0", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   "version" "15.8.1"
@@ -6285,6 +6285,11 @@
   "resolved" "https://registry.npmjs.org/react-native-confirmation-code-field/-/react-native-confirmation-code-field-7.3.1.tgz"
   "version" "7.3.1"
 
+"react-native-device-info@^10.3.0":
+  "integrity" "sha512-/ziZN1sA1REbJTv5mQZ4tXggcTvSbct+u5kCaze8BmN//lbxcTvWsU6NQd4IihLt89VkbX+14IGc9sVApSxd/w=="
+  "resolved" "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-10.3.0.tgz"
+  "version" "10.3.0"
+
 "react-native-elevation@^1.0.0":
   "integrity" "sha512-BWIKcEYtzjRV6GpkX0Km5/w2E7fgIcywiQOT7JZTc5NSbv/YI9kpFinB9lRFsOoRVGmiqq/O3VfP/oH2clIiBA=="
   "resolved" "https://registry.npmjs.org/react-native-elevation/-/react-native-elevation-1.0.0.tgz"
@@ -6368,6 +6373,13 @@
   "integrity" "sha512-SWrnatVC4H73cEN+6rVlc0M5cGS20K6EwL8u2CmlBlLNEwH6OfayMgOCwpKJdmN2GPZKJ2JraQru8Ga7JL4zaw=="
   "resolved" "https://registry.npmjs.org/react-native-photo-editor/-/react-native-photo-editor-1.0.13.tgz"
   "version" "1.0.13"
+
+"react-native-photo-view-ex@^1.1.0":
+  "integrity" "sha512-g98Ao3eH1kzv52BE4o49keUA8GK4PHdb+3AGLymZF1k3YZVEH3YoKpPpZMuyOGfHdxHk+OO5/dmfC+3u9zLAVA=="
+  "resolved" "https://registry.npmjs.org/react-native-photo-view-ex/-/react-native-photo-view-ex-1.1.0.tgz"
+  "version" "1.1.0"
+  dependencies:
+    "prop-types" "^15.7.0"
 
 "react-native-safe-area-context@^4.3.4", "react-native-safe-area-context@>= 3.0.0":
   "integrity" "sha512-4dFZPDHRigZ+uw8HCmMLyC/IT1BG0B9QLvuwsBQAMDCRSrxISIYza9VIbsIn2FGvZiQ1gOoXBHDmy9WFihQsTg=="

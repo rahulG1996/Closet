@@ -50,29 +50,25 @@ export default props => {
   }, [dispatch, props.navigation, singleClosetReponse]);
 
   useEffect(() => {
-    if (!gridType) {
-      let categoryArray = [
-        ...new Set(getcloset.map(item => item.categoryName)),
-      ];
+    let categoryArray = [...new Set(getcloset.map(item => item.categoryName))];
 
-      let finalArray = [];
+    let finalArray = [];
 
-      for (let i = 0; i < categoryArray.length; i++) {
-        let tempArray = [];
-        for (let j = 0; j < getcloset.length; j++) {
-          if (getcloset[j].categoryName === categoryArray[i]) {
-            tempArray.push(getcloset[j]);
-          }
+    for (let i = 0; i < categoryArray.length; i++) {
+      let tempArray = [];
+      for (let j = 0; j < getcloset.length; j++) {
+        if (getcloset[j].categoryName === categoryArray[i]) {
+          tempArray.push(getcloset[j]);
         }
-        finalArray.push({
-          total: tempArray.length,
-          category: categoryArray[i],
-          subCategory: tempArray,
-        });
-        setGridClosetData(finalArray);
       }
+      finalArray.push({
+        total: tempArray.length,
+        category: categoryArray[i],
+        subCategory: tempArray,
+      });
+      setGridClosetData(finalArray);
     }
-  }, [getcloset, gridType]);
+  }, [getcloset]);
 
   const handleCamera = () => {
     ImagePicker.openCamera({

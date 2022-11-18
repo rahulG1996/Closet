@@ -22,10 +22,11 @@ class App extends Component {
         <SafeAreaView
           style={{
             flex: 1,
+            marginTop: isNoch ? 32 : 10,
           }}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              <View style={{flex: 1, marginTop: isNoch ? 32 : 10}}>
+              <View style={{flex: 1}}>
                 <AppNavigation />
               </View>
             </PersistGate>

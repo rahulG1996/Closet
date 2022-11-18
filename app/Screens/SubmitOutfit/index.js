@@ -10,7 +10,7 @@ const SubmitOutfit = props => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header showBack showVerticalMenu {...props} />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <BigImage />
+        <BigImage imgSource={props?.route?.params?.imgSource?.data} />
         <View style={{paddingHorizontal: 16}}>
           <Text style={styles.headingStyle}>Name</Text>
           <Input placeholder="Name" />

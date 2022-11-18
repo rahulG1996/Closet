@@ -20,6 +20,7 @@ import {
 import Toast from 'react-native-simple-toast';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import ColorPicker from 'react-native-wheel-color-picker';
+import ImageCropPicker from 'react-native-image-crop-picker';
 
 const ClosetDetailsFrom = props => {
   const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const ClosetDetailsFrom = props => {
   const brandData = useSelector(state => state.ClosetReducer.brandData);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const userId = useSelector(state => state.AuthReducer.userId);
+  const [isImageEdit, setImageEdit] = useState(false);
+  const [newImage, setImage] = useState(null);
 
   const addClosetResponse = useSelector(
     state => state.ClosetReducer.addClosetResponse,
@@ -172,8 +175,10 @@ const ClosetDetailsFrom = props => {
       subCategoryId: categorySelected[1],
       brandId: state.brandSelected?.id,
       season: selectedSeason,
-      colorCode: selectedColors[0],
-      itemImageUrl: props?.route?.params?.editCloset
+      colorCode: selectedColors,
+      itemImageUrl: isImageEdit
+        ? `data:image/png;base64,${newImage?.data}`
+        : props?.route?.params?.editCloset
         ? bgImageUrl
         : `data:image/png;base64,${props?.route?.params?.imgSource?.data}`,
     };
@@ -244,13 +249,31 @@ const ClosetDetailsFrom = props => {
       </VView>
     );
   };
+
+  const editImage = () => {
+    ImageCropPicker.openCropper({
+      path: props?.route?.params?.editCloset
+        ? bgImageUrl
+        : `data:image/png;base64,${props?.route?.params?.imgSource?.data}`,
+      width: 300,
+      height: 400,
+      cropping: false,
+      includeBase64: true,
+    }).then(image => {
+      setImageEdit(true);
+      setImage(image);
+      console.log(image);
+      setBgImag(image.path);
+    });
+  };
+
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
         <Header {...props} showBack />
       </VView>
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <BigImage imgSource={bgImageUrl} />
+        <BigImage imgSource={bgImageUrl} showEdit editImage={editImage} />
         <VView style={{padding: 16}}>
           <VView>
             <VText text="Category" />

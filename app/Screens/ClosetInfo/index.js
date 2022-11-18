@@ -160,14 +160,21 @@ const ClosetInfo = props => {
                   {props.route?.params?.apiData?.season}
                 </Text>
                 <Text style={styles.titleStyle}>Color</Text>
-                <View
-                  style={{
-                    backgroundColor: props.route?.params?.apiData?.colorCode,
-                    width: 40,
-                    height: 40,
-                    marginTop: 8,
-                  }}
-                />
+                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                  {props.route?.params?.apiData?.colorCode.map(item => {
+                    return (
+                      <View
+                        style={{
+                          backgroundColor: item,
+                          width: 40,
+                          height: 40,
+                          marginTop: 8,
+                          marginRight: 8,
+                        }}
+                      />
+                    );
+                  })}
+                </View>
               </View>
             )}
 

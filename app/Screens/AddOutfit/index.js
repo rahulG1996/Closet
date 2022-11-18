@@ -1,4 +1,4 @@
-import React, {Component, useRef, useState} from 'react';
+import React, {Component, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Dimensions,
@@ -17,75 +17,43 @@ import {useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Buttons, Header} from '../../components';
 import {PinchGestureHandler, State} from 'react-native-gesture-handler';
+import PhotoView from 'react-native-photo-view-ex';
+import ViewShot, {captureRef} from 'react-native-view-shot';
+import RNFS from 'react-native-fs';
+
 const screen = Dimensions.get('window');
 
 const AddCloset = props => {
+  const captureViewRef = useRef();
+  const [showBgImage, setBgImg] = useState(true);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const panelRef = useRef(null);
   const [activeTab, setActiveTab] = useState('All');
   const [outfitImages, setOutfitImages] = useState([]);
+  const getcloset = useSelector(state => state.ClosetReducer.getcloset);
+  const [filterClosetData, setFilterClosetData] = useState(getcloset);
 
-  const [closetData, setClosetData] = useState([
-    {
-      id: 1,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 2,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 3,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 4,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 5,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 6,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 7,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-    {
-      id: 8,
-      imageSrc: require('../../assets/sweatshirt.webp'),
-      added: false,
-    },
-  ]);
+  const [closetData, setClosetData] = useState([]);
 
-  const addClosetInOutfit = (index, id) => {
+  const addClosetInOutfit = (index, item) => {
     // const filteredPeople = people.filter((item) => item.id !== idToRemove);
-    let closetData1 = closetData;
+    let closetData1 = filterClosetData;
     closetData1[index].added = !closetData1[index].added;
-    setClosetData(closetData1);
-    if (!outfitImages.some(item => item.id === id)) {
+    setFilterClosetData(closetData1);
+    if (!outfitImages.some(i => i.closetItemId === item.closetItemId)) {
       setOutfitImages(oldArray => [
         ...oldArray,
         {
           pan: new Animated.ValueXY(0, 0),
-          imageSrc: require('../../assets/sweatshirt.webp'),
-          id: id,
-          scale: new Animated.Value(1),
+          imageSrc: item.itemImageUrl,
+          closetItemId: item.closetItemId,
         },
       ]);
     } else {
       //remove image logic
-      const filteredOutFitImage = outfitImages.filter(item => item.id !== id);
+      const filteredOutFitImage = outfitImages.filter(
+        i => i.closetItemId !== item.closetItemId,
+      );
       setOutfitImages(filteredOutFitImage);
     }
   };
@@ -107,18 +75,70 @@ const AddCloset = props => {
   };
 
   const imageLocations = value => {
-    console.warn('value', JSON.stringify(value, undefined, 2));
+    console.log('value', JSON.stringify(value, undefined, 2));
+  };
+
+  const switchValue = value => {
+    if (value) {
+      setBgImg(false);
+    } else {
+      setBgImg(true);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab) {
+      if (activeTab !== 'All') {
+        let filterData = getcloset;
+        filterData = getcloset.filter(item => {
+          if (item.categoryName === activeTab) {
+            return {...item};
+          }
+        });
+        setFilterClosetData(filterData);
+      } else {
+        setFilterClosetData(getcloset);
+      }
+    }
+  }, [activeTab, getcloset]);
+
+  const onCapture = () => {
+    setBgImg(false);
+    setTimeout(() => {
+      captureRef(captureViewRef, {
+        format: 'jpeg',
+        quality: 0.9,
+      }).then(
+        uri => {
+          RNFS.readFile(uri, 'base64').then(res => {
+            props.navigation.navigate('SubmitOutfit', {
+              imgSource: {data: `data:image/png;base64,${res}`},
+            });
+            // console.warn('urlString', uri);
+          });
+
+          // console.warn(uri);
+        },
+        error => alert('Oops, snapshot failed', error),
+      );
+    }, 900);
   };
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <Header showBack {...props} />
-      <ImageBackground
-        source={require('../../assets/bg.png')}
-        resizeMode="contain"
-        style={{height: Dimensions.get('window').height * 0.5}}>
-        <App outfitImages={outfitImages} imageLocations={imageLocations} />
-      </ImageBackground>
+      <Header showBack {...props} showSwitch switchValue={switchValue} />
+      {showBgImage ? (
+        <ImageBackground
+          source={require('../../assets/bg.png')}
+          resizeMode="contain"
+          style={{height: Dimensions.get('window').height * 0.5}}>
+          <App outfitImages={outfitImages} imageLocations={imageLocations} />
+        </ImageBackground>
+      ) : (
+        <View ref={captureViewRef}>
+          <App outfitImages={outfitImages} imageLocations={imageLocations} />
+        </View>
+      )}
       <BottomSheet
         ref={ref => (panelRef.current = ref)}
         sliderMinHeight={Dimensions.get('window').height * 0.3}
@@ -140,10 +160,10 @@ const AddCloset = props => {
                 flexWrap: 'wrap',
                 justifyContent: 'space-between',
               }}>
-              {closetData.map((item, index) => {
+              {filterClosetData.map((item, index) => {
                 return (
                   <TouchableOpacity
-                    onPress={() => addClosetInOutfit(index, item.id)}
+                    onPress={() => addClosetInOutfit(index, item)}
                     style={{
                       alignItems: 'center',
                       backgroundColor: Colors.grey1,
@@ -152,7 +172,7 @@ const AddCloset = props => {
                       margin: 8,
                     }}>
                     <Image
-                      source={require('../../assets/sweatshirt.webp')}
+                      source={{uri: item.itemImageUrl}}
                       style={{width: 50, height: 50}}
                     />
                     <View style={{position: 'absolute', right: 5, top: 5}}>
@@ -179,10 +199,7 @@ const AddCloset = props => {
           width: '100%',
           paddingHorizontal: 16,
         }}>
-        <Buttons
-          text="next"
-          onPress={() => props.navigation.navigate('SubmitOutfit')}
-        />
+        <Buttons text="next" onPress={onCapture} />
       </View>
     </View>
   );
@@ -259,21 +276,23 @@ class App extends Component {
               <PinchGestureHandler
                 onGestureEvent={this.onPinchEvent(i)}
                 onHandlerStateChange={this.onPinchStateChange}>
-                <Animated.Image
+                <Animated.View
                   {...this.panResponder(i, index).panHandlers}
-                  source={i.imageSrc}
                   style={{
-                    width: 100,
-                    height: 100,
-                    borderWidth: 2,
-                    transform: [
-                      {scale: i.scale},
-                      {translateX: i.pan.x},
-                      {translateY: i.pan.y},
-                    ],
-                  }}
-                  resizeMode="stretch"
-                />
+                    width: 200,
+                    height: 200,
+                    transform: [{translateX: i.pan.x}, {translateY: i.pan.y}],
+                  }}>
+                  <PhotoView
+                    source={{uri: i.imageSrc}}
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    resizeMode="contain"
+                    minimumZoomScale={1}
+                    maximumZoomScale={2}
+                    style={{width: '100%', height: '100%'}}
+                  />
+                </Animated.View>
               </PinchGestureHandler>
             </View>
           );
