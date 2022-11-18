@@ -12,19 +12,25 @@ const Header = ({
   showFilter = false,
   showBack = false,
   showMenu = false,
-  shoSwicth = false,
+  showSwitch = false,
   switchValue = () => {},
   showVerticalMenu = false,
   openMenu = () => {},
+  handleSorting = () => {},
+  showSort = false,
 }) => {
-  const [switchIcon, setSwitch] = useState(true);
-  // const toggleSwitch = () => {
-  //   switchValue(!switchIcon);
-  //   setSwitch(!switchIcon);
-  // };
+  const [switchIcon, setSwitch] = useState(false);
+  const toggleSwitch = () => {
+    switchValue(!switchIcon);
+    setSwitch(!switchIcon);
+  };
 
   const verticalMenuClicked = () => {
     openMenu(true);
+  };
+
+  const sortClicked = () => {
+    handleSorting();
   };
 
   return (
@@ -57,7 +63,7 @@ const Header = ({
           />
         )}
       </VView>
-      <VView style={{flexDirection: 'row'}}>
+      <VView style={{flexDirection: 'row', alignItems: 'center'}}>
         {showshare && (
           <VView style={{flexDirection: 'row'}}>
             <TouchableOpacity>
@@ -92,15 +98,25 @@ const Header = ({
             />
           </TouchableOpacity>
         )}
-        {shoSwicth && (
+        {showSwitch && (
           <TouchableOpacity
             style={{paddingHorizontal: 10}}
-            // onPress={toggleSwitch}
-          >
+            onPress={toggleSwitch}>
             <Image
               resizeMode="contain"
               source={switchIcon ? Images.onIcon : Images.offIcon}
               style={{width: 25, height: 25}}
+            />
+          </TouchableOpacity>
+        )}
+        {showSort && (
+          <TouchableOpacity
+            onPress={sortClicked}
+            style={{paddingHorizontal: 10}}>
+            <Image
+              resizeMode="contain"
+              source={require('../../assets/sort.png')}
+              style={{width: 32, height: 32}}
             />
           </TouchableOpacity>
         )}
@@ -115,6 +131,7 @@ const Header = ({
             />
           </TouchableOpacity>
         )}
+
         {showVerticalMenu && (
           <TouchableOpacity
             onPress={verticalMenuClicked}

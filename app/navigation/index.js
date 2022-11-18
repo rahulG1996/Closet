@@ -28,6 +28,8 @@ import ClosetCategory from '../screens/ClosetCategory';
 import ClosetInfo from '../screens/ClosetInfo';
 import EditCloset from '../screens/EditCloset';
 import AddOutfit from '../screens/AddOutfit';
+import SubmitOutfit from '../screens/SubmitOutfit';
+import OutfitDetail from '../screens/OutfitDetail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -144,6 +146,8 @@ function AppNavigation() {
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
           <Stack.Screen name="AddOutfit" component={AddOutfit} />
           <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
+          <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
+          <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
         </>
       )}
     </Stack.Navigator>

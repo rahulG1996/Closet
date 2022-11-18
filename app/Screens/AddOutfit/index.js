@@ -179,7 +179,10 @@ const AddCloset = props => {
           width: '100%',
           paddingHorizontal: 16,
         }}>
-        <Buttons text="next" />
+        <Buttons
+          text="next"
+          onPress={() => props.navigation.navigate('SubmitOutfit')}
+        />
       </View>
     </View>
   );

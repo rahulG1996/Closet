@@ -24,30 +24,30 @@ const Menu = props => {
   const dispatch = useDispatch();
   const menuData = [
     {
-      icon: '',
+      icon: require('../../assets/myprofile.png'),
       manuName: 'My Profile',
       route: 'ProfileSetup',
     },
     {
-      icon: '',
+      icon: require('../../assets/preferences.png'),
       manuName: 'Preferences',
     },
     {
-      icon: '',
+      icon: require('../../assets/t&c.png'),
       manuName: 'Terms & Conditions',
       route: 'TermConditions',
     },
     {
-      icon: '',
+      icon: require('../../assets/privacypolicy.png'),
       manuName: 'Privacy Policy',
       route: 'PrivacyPolicy',
     },
     {
-      icon: '',
+      icon: require('../../assets/logout.png'),
       manuName: 'Logout',
     },
     {
-      icon: '',
+      icon: require('../../assets/delete.png'),
       manuName: 'Delete Account',
     },
   ];
@@ -134,18 +134,19 @@ const Menu = props => {
               <TouchableOpacity
                 onPress={() => menuClick(item)}
                 style={styles.menuContainer}>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <View style={{paddingHorizontal: 16}}>
-                    <View
-                      style={{
-                        width: 24,
-                        height: 24,
-                        borderRadius: 12,
-                        backgroundColor: '#D9D9D9',
-                      }}
-                    />
+                    <Image source={item.icon} style={{width: 24, height: 24}} />
                   </View>
-                  <Text>{item.manuName}</Text>
+                  <Text
+                    style={{
+                      color:
+                        item.manuName === 'Delete Account'
+                          ? '#CE1A1A'
+                          : 'black',
+                    }}>
+                    {item.manuName}
+                  </Text>
                 </View>
                 <View style={{paddingRight: 20}}>
                   <Image
@@ -182,5 +183,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: Colors.grey1,
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });

@@ -21,62 +21,16 @@ import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
 import ViewShot, {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
-// import PhotoEditor from 'react-native-photo-editor';
-
-let data = [
-  {
-    categoryType: 'Tops',
-    categoryData: [
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-    ],
-  },
-  {
-    categoryType: 'Layers',
-    categoryData: [
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-    ],
-  },
-  {
-    categoryType: 'Bottoms',
-    categoryData: [
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-    ],
-  },
-  {
-    categoryType: 'Beach',
-    categoryData: [
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-      {
-        images: require('../../assets/sweatshirt.webp'),
-      },
-    ],
-  },
-];
 
 export default props => {
   const dispatch = useDispatch();
   const captureViewRef = useRef();
   const [showWebView, setWebView] = useState(false);
-  const [gridType, setGrid] = useState(true);
+  const [gridType, setGrid] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
   const getcloset = useSelector(state => state.ClosetReducer.getcloset);
+  const [gridClosetData, setGridClosetData] = useState([]);
+
   const userId = useSelector(state => state.AuthReducer.userId);
   const [filterClosetData, setFilterClosetData] = useState(getcloset);
 
@@ -94,6 +48,31 @@ export default props => {
       });
     }
   }, [dispatch, props.navigation, singleClosetReponse]);
+
+  useEffect(() => {
+    if (!gridType) {
+      let categoryArray = [
+        ...new Set(getcloset.map(item => item.categoryName)),
+      ];
+
+      let finalArray = [];
+
+      for (let i = 0; i < categoryArray.length; i++) {
+        let tempArray = [];
+        for (let j = 0; j < getcloset.length; j++) {
+          if (getcloset[j].categoryName === categoryArray[i]) {
+            tempArray.push(getcloset[j]);
+          }
+        }
+        finalArray.push({
+          total: tempArray.length,
+          category: categoryArray[i],
+          subCategory: tempArray,
+        });
+        setGridClosetData(finalArray);
+      }
+    }
+  }, [getcloset, gridType]);
 
   const handleCamera = () => {
     ImagePicker.openCamera({
@@ -162,42 +141,55 @@ export default props => {
           flexWrap: 'wrap',
           paddingHorizontal: 16,
         }}>
-        {data.map(item => {
-          return (
-            <TouchableOpacity
-              style={{marginVertical: 8}}
-              onPress={() =>
-                props.navigation.navigate('ClosetCategory', {
-                  categoryType: item.categoryType,
-                })
-              }>
-              <View
-                style={{
-                  width: 160,
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                }}>
-                {item.categoryData.splice(0, 4).map(i => {
-                  return (
-                    <View
-                      style={{
-                        width: '40%',
-                        height: 80,
-                        backgroundColor: Colors.grey1,
-                        margin: 2,
-                      }}>
-                      <Image
-                        source={i.images}
-                        style={{width: '95%', height: '95%'}}
-                      />
-                    </View>
-                  );
-                })}
-              </View>
-              <Text style={{marginTop: 8}}>{item.categoryType}</Text>
-            </TouchableOpacity>
-          );
-        })}
+        {gridClosetData.length
+          ? gridClosetData.map(item => {
+              return (
+                <TouchableOpacity
+                  style={{marginVertical: 8}}
+                  onPress={() =>
+                    props.navigation.navigate('ClosetCategory', {
+                      categoryType: item,
+                    })
+                  }>
+                  <View
+                    style={{
+                      width: 160,
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                      justifyContent: 'space-between',
+                    }}>
+                    {item.subCategory.length !== 0 &&
+                      [1, 2, 3, 4].map((i, index) => {
+                        return (
+                          <View
+                            style={{
+                              width: '45%',
+                              height: 80,
+                              backgroundColor: Colors.grey1,
+                              margin: 2,
+                            }}>
+                            <Image
+                              source={{
+                                uri: item.subCategory[index]?.itemImageUrl,
+                              }}
+                              style={{width: '95%', height: '95%'}}
+                            />
+                          </View>
+                        );
+                      })}
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text style={{marginTop: 8}}>{item.category}</Text>
+                    <Text style={{marginTop: 8}}>{item.total}</Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+          : null}
       </View>
     );
   };
@@ -314,8 +306,8 @@ export default props => {
         title="Closet"
         showMenu
         navigation={props.navigation}
-        shoSwicth
-        // switchValue={switchValue}
+        showSwitch
+        switchValue={switchValue}
       />
       {getcloset.length === 0 ? (
         emptyScreen()
