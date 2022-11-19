@@ -3,6 +3,7 @@ const initialState = {
   signupResponse: {},
   userId: '',
   isProfileCreated: false,
+  googleLoginResponse: {},
 };
 
 const AuthReducer = (state = initialState, action) => {
@@ -40,6 +41,12 @@ const AuthReducer = (state = initialState, action) => {
       return {
         ...state,
         isProfileCreated: action.value,
+      };
+    }
+    case 'GOOGLE_LOGIN': {
+      return {
+        ...state,
+        googleLoginResponse: action?.value,
       };
     }
     default:
