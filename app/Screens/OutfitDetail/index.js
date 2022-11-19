@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,18 +7,63 @@ import {
   FlatList,
   Image,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {Colors} from '../../colors';
 import {BigImage, Buttons, Header, Input, OverlayModal} from '../../components';
 import Modal from 'react-native-modal';
+import {useDispatch, useSelector} from 'react-redux';
+import {
+  getOutfitDetail,
+  getOutfitsList,
+} from '../../redux/actions/outfitActions';
+import {deleteOutfit} from '../../redux/actions/outfitActions';
+import SimpleToast from 'react-native-simple-toast';
 
 const OutfitDetail = props => {
+  const getOutfitDetailData = useSelector(
+    state => state.OutfitReducer.getOutfitDetailData,
+  );
+  const userId = useSelector(state => state.AuthReducer.userId);
+  const dispatch = useDispatch();
   const [showModal, setModal] = useState(false);
   const [showDeleteModal, setDeleteModal] = useState(false);
   const openMenu = () => {
     setModal(true);
   };
+  const deleteOutfitRepsponse = useSelector(
+    state => state.OutfitReducer.deleteOutfitRepsponse,
+  );
+
+  useEffect(() => {
+    return () => {
+      dispatch({type: 'OUTFIT_DETAILS', value: {}});
+    };
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(deleteOutfitRepsponse).length) {
+      dispatch({type: 'OUTFIT_DELETE', value: {}});
+      if (deleteOutfitRepsponse.statusCode === 200) {
+        SimpleToast.show('Outfit delete successfully');
+        dispatch(getOutfitsList());
+        props.navigation.navigate('Outfits');
+      }
+    }
+  }, [deleteOutfitRepsponse, dispatch]);
+
+  useEffect(() => {
+    if (props?.route?.params?.outfitId) {
+      dispatch(
+        getOutfitDetail({
+          userId: userId,
+          outfitId: props?.route?.params?.outfitId,
+        }),
+      );
+    }
+  }, []);
+
   const renderItem = (item, index) => {
     return (
       <View
@@ -39,7 +84,7 @@ const OutfitDetail = props => {
             marginBottom: 8,
           }}>
           <Image
-            source={require('../../assets/sweatshirt.webp')}
+            source={{uri: item.itemImageUrl}}
             style={{
               height: 140,
               width: 100,
@@ -62,13 +107,13 @@ const OutfitDetail = props => {
         <Buttons
           text="Edit"
           isInverse
-          //   onPress={() => {
-          //     setModal(false);
-          //     props.navigation.navigate('ClosetDetailsFrom', {
-          //       editClosetData: props.route?.params?.apiData,
-          //       editCloset: true,
-          //     });
-          //   }}
+          onPress={() => {
+            setModal(false);
+            props.navigation.navigate('SubmitOutfit', {
+              editOutfitData: getOutfitDetailData,
+              editoutfit: true,
+            });
+          }}
         />
         <Buttons
           text="remove"
@@ -87,39 +132,60 @@ const OutfitDetail = props => {
   };
   const removeCloset = () => {
     setDeleteModal(false);
-    // dispatch(
-    //   deleteClosetData({
-    //     userId: userId,
-    //     closetItemId: props.route?.params?.apiData?.closetItemId,
-    //   }),
-    // );
+    dispatch(
+      deleteOutfit({
+        userId: userId,
+        outfitId: getOutfitDetailData?.outfitId,
+      }),
+    );
   };
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header showBack showVerticalMenu {...props} openMenu={openMenu} />
       <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-        <BigImage />
-        <View style={{padding: 16}}>
-          <Text style={styles.titleStyle}>Name</Text>
-          <Text style={styles.subitleStyle}>Name</Text>
-          <Text style={styles.titleStyle}>Description</Text>
-          <Text style={styles.subitleStyle}>Description</Text>
+        {Object.keys(getOutfitDetailData).length > 0 ? (
+          <>
+            <BigImage imgSource={getOutfitDetailData?.outfitImageType} />
+            <View style={{padding: 16}}>
+              <Text style={styles.titleStyle}>Name</Text>
+              <Text style={styles.subitleStyle}>
+                {getOutfitDetailData.name}
+              </Text>
+              <Text style={styles.titleStyle}>Description</Text>
+              <Text style={styles.subitleStyle}>
+                {getOutfitDetailData.description}
+              </Text>
 
-          <Text style={styles.titleStyle}>Season</Text>
-          <Text style={styles.subitleStyle}>season</Text>
-          <Text style={styles.titleStyle}>Clothes in this outfit</Text>
-          <FlatList
-            data={[1, 2, 3, 4, 5, 6]}
-            numColumns={2}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item, index}) => renderItem(item, index)}
-            contentContainerStyle={{
-              paddingVertical: 16,
-              paddingHorizontal: 8,
-              paddingBottom: 100,
-            }}
-          />
-        </View>
+              <Text style={styles.titleStyle}>Season</Text>
+              <View style={{flexDirection: 'row'}}>
+                {getOutfitDetailData.seasons.map(item => {
+                  return (
+                    <Text style={[styles.subitleStyle, {marginVertical: 8}]}>
+                      {item}
+                    </Text>
+                  );
+                })}
+              </View>
+              <Text style={styles.titleStyle}>Clothes in this outfit</Text>
+              <FlatList
+                data={getOutfitDetailData?.closetDetailsList}
+                numColumns={2}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({item, index}) => renderItem(item, index)}
+                contentContainerStyle={{
+                  paddingVertical: 16,
+                  paddingHorizontal: 8,
+                  paddingBottom: 100,
+                }}
+              />
+            </View>
+          </>
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={'large'} />
+          </View>
+        )}
         {showModal && (
           <OverlayModal showModal={showModal} component={renderMenu()} />
         )}

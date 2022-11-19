@@ -32,14 +32,39 @@ const AddCloset = props => {
   const [outfitImages, setOutfitImages] = useState([]);
   const getcloset = useSelector(state => state.ClosetReducer.getcloset);
   const [filterClosetData, setFilterClosetData] = useState(getcloset);
+  const [closetIds, setClosetIds] = useState([]);
 
   const [closetData, setClosetData] = useState([]);
+  const [imageData, setImageData] = useState([]);
+
+  useEffect(() => {
+    if (props?.route?.params?.editOutfitData) {
+      let closetIds = [];
+      props?.route?.params?.editOutfitData?.closetDetailsList?.map(item => {
+        closetIds.push(item.closetItemId);
+      });
+      let imageData1 = props?.route?.params?.editOutfitData?.imageData;
+      imageData1 = imageData1.map(item => {
+        console.warn(item.pan);
+        return {...item, pan: new Animated.ValueXY(0, 0)};
+      });
+      setOutfitImages(imageData1);
+      setClosetIds(closetIds);
+    }
+  }, []);
+
+  // console.warn('props', JSON.stringify(outfitImages, undefined, 2));
 
   const addClosetInOutfit = (index, item) => {
     // const filteredPeople = people.filter((item) => item.id !== idToRemove);
-    let closetData1 = filterClosetData;
-    closetData1[index].added = !closetData1[index].added;
-    setFilterClosetData(closetData1);
+    let closetIds1 = closetIds;
+    if (closetIds1.includes(item.closetItemId)) {
+      closetIds1 = closetIds1.filter(i => i !== item.closetItemId);
+    } else {
+      closetIds1.push(item.closetItemId);
+    }
+    setClosetIds(closetIds1);
+
     if (!outfitImages.some(i => i.closetItemId === item.closetItemId)) {
       setOutfitImages(oldArray => [
         ...oldArray,
@@ -75,7 +100,8 @@ const AddCloset = props => {
   };
 
   const imageLocations = value => {
-    console.log('value', JSON.stringify(value, undefined, 2));
+    // console.log('value', JSON.stringify(value, undefined, 2));
+    setImageData(value);
   };
 
   const switchValue = value => {
@@ -112,7 +138,17 @@ const AddCloset = props => {
         uri => {
           RNFS.readFile(uri, 'base64').then(res => {
             props.navigation.navigate('SubmitOutfit', {
-              imgSource: {data: `data:image/png;base64,${res}`},
+              outfitData: {
+                imgSource: {data: `data:image/png;base64,${res}`},
+                closetIds: closetIds,
+                imageData: imageData,
+              },
+              editOutfitData: {
+                outfitImageType: `data:image/png;base64,${res}`,
+                closetIds: closetIds,
+                imageData: imageData,
+              },
+              editoutfit: props?.route?.params?.editoutfit || false,
             });
             // console.warn('urlString', uri);
           });
@@ -158,7 +194,7 @@ const AddCloset = props => {
                 alignItems: 'center',
                 flexDirection: 'row',
                 flexWrap: 'wrap',
-                justifyContent: 'space-between',
+                // justifyContent: 'space-between',
               }}>
               {filterClosetData.map((item, index) => {
                 return (
@@ -179,7 +215,7 @@ const AddCloset = props => {
                       <Image
                         style={{width: 16, height: 16}}
                         source={
-                          item.added
+                          closetIds.includes(item.closetItemId)
                             ? require('../../assets/check.png')
                             : require('../../assets/uncheck.png')
                         }
@@ -199,7 +235,7 @@ const AddCloset = props => {
           width: '100%',
           paddingHorizontal: 16,
         }}>
-        <Buttons text="next" onPress={onCapture} />
+        {closetIds.length >= 2 && <Buttons text="next" onPress={onCapture} />}
       </View>
     </View>
   );
@@ -268,6 +304,7 @@ class App extends Component {
     );
 
   render() {
+    console.warn('cmp', JSON.stringify(this.props.outfitImages, undefined, 2));
     return (
       <View style={styles.container}>
         {this.props.outfitImages.map((i, index) => {

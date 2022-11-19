@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Buttons, Header, OverlayModal} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
+import {getOutfitsList} from '../../redux/actions/outfitActions';
 
 const Outfits = props => {
+  const dispatch = useDispatch();
   const [showModal, setModal] = useState(false);
   const [sortingData, setSortingData] = useState([
     {
@@ -28,6 +31,18 @@ const Outfits = props => {
       isSelected: false,
     },
   ]);
+
+  const getOutfitData =
+    useSelector(state => state.OutfitReducer.getOutfitData) || [];
+
+  console.warn('getOutfitData', getOutfitData);
+
+  // useEffect(() => {
+  //   if (Object.keys(getOutfitData).length) {
+  //     console.warn('getOutfitData', getOutfitData);
+  //   }
+  // }, [getOutfitData]);
+
   const renderItem = (item, index) => {
     return (
       <View
@@ -39,7 +54,11 @@ const Outfits = props => {
         }}>
         <TouchableOpacity
           activeOpacity={0.7}
-          onPress={() => props.navigation.navigate('OutfitDetail')}
+          onPress={() =>
+            props.navigation.navigate('OutfitDetail', {
+              outfitId: item.outfitId,
+            })
+          }
           style={{
             backgroundColor: Colors.grey1,
             paddingVertical: 10,
@@ -49,7 +68,7 @@ const Outfits = props => {
             marginBottom: 8,
           }}>
           <Image
-            source={require('../../assets/sweatshirt.webp')}
+            source={{uri: item.outfitImageType}}
             style={{
               height: 200,
               width: 100,
@@ -57,7 +76,7 @@ const Outfits = props => {
             }}
           />
         </TouchableOpacity>
-        <Text>Black and White</Text>
+        <Text>{item.name}</Text>
       </View>
     );
   };
@@ -135,33 +154,37 @@ const Outfits = props => {
         {...props}
         handleSorting={handleSorting}
       />
-      {/* <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-        }}>
-        <Image
-          source={require('../../assets/empty.png')}
-          style={{width: 100, height: 100}}
+      {getOutfitData.length > 0 ? (
+        <FlatList
+          data={getOutfitData}
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => renderItem(item, index)}
+          contentContainerStyle={{
+            paddingVertical: 16,
+            paddingHorizontal: 8,
+            paddingBottom: 100,
+          }}
         />
-        <Text style={{textAlign: 'center', padding: 16, lineHeight: 24}}>
-          No Outfits to show. {'\n'} Create outfits to get more personalised
-          clothing experinece
-        </Text>
-      </View> */}
-      <FlatList
-        data={[1, 2, 3, 4, 5, 6]}
-        numColumns={2}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => renderItem(item, index)}
-        contentContainerStyle={{
-          paddingVertical: 16,
-          paddingHorizontal: 8,
-          paddingBottom: 100,
-        }}
-      />
+      ) : (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+          }}>
+          <Image
+            source={require('../../assets/empty.png')}
+            style={{width: 100, height: 100}}
+          />
+          <Text style={{textAlign: 'center', padding: 16, lineHeight: 24}}>
+            No Outfits to show. {'\n'} Create outfits to get more personalised
+            clothing experinece
+          </Text>
+        </View>
+      )}
+
       <OverlayModal showModal={showModal} component={sortData()} />
       <View
         style={{padding: 16, position: 'absolute', bottom: 16, width: '100%'}}>

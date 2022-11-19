@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import {Colors} from '../../colors';
 import VText from '../Text';
 
@@ -10,13 +10,18 @@ const Buttons = ({
   noBorder = false,
   disabled = false,
   textColor = '',
+  loading = false,
 }) => {
   return (
     <TouchableOpacity
       disabled={disabled}
       style={styles.buttonContainer(isInverse, noBorder)}
-      onPress={onPress}>
-      <VText text={text} style={styles.buttontext(isInverse, textColor)} />
+      onPress={loading ? () => {} : onPress}>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <VText text={text} style={styles.buttontext(isInverse, textColor)} />
+      )}
     </TouchableOpacity>
   );
 };

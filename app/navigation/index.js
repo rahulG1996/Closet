@@ -7,9 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ViewProduct from '../screens/ViewProduct';
 import CategoryScreen from '../screens/CategoryScreen';
 import LandingPage from '../screens/LandingPage';
-import ForgotPassword from '../screens/ForgotPassword';
 import VerifyEmail from '../screens/VerifyEmail';
-import ResetPassword from '../screens/ResetPassword';
 import ProfileSetup from '../screens/ProfileSetup';
 import {useDispatch, useSelector} from 'react-redux';
 import TermConditions from '../screens/TermCondition';
@@ -30,6 +28,7 @@ import EditCloset from '../screens/EditCloset';
 import AddOutfit from '../screens/AddOutfit';
 import SubmitOutfit from '../screens/SubmitOutfit';
 import OutfitDetail from '../screens/OutfitDetail';
+import {getOutfitsList} from '../redux/actions/outfitActions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -123,14 +122,13 @@ function AppNavigation() {
       dispatch(getBrandData());
       dispatch(getCategoryData());
       dispatch(getClosetData());
+      dispatch(getOutfitsList());
     }
   }, [dispatch, userId]);
   return !userId ? (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="LandingPage" component={LandingPage} />
       <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
-      <Stack.Screen name="ResetPassword" component={ResetPassword} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       <Stack.Screen name="TermConditions" component={TermConditions} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
     </Stack.Navigator>
