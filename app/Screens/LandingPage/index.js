@@ -12,7 +12,11 @@ import {FONTS_SIZES} from '../../fonts';
 import {Buttons, Input} from '../../components';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {emptyLoginResponse, loginAction} from '../../redux/actions/authActions';
+import {
+  emptyLoginResponse,
+  loginAction,
+  googleLoginAction,
+} from '../../redux/actions/authActions';
 import {Colors} from '../../colors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 let user = null;
@@ -76,6 +80,11 @@ class LandingPage extends React.Component {
         });
       }
     }
+    if (prevProps.googleLoginResponse !== this.props.googleLoginResponse) {
+      if (this.props.googleLoginResponse?.isProfileCreated) {
+        this.props.navigation.navigate('TabData');
+      } else this.props.navigation.navigate('ProfileSetup');
+    }
   }
 
   openStaticPage = type => {
@@ -95,7 +104,10 @@ class LandingPage extends React.Component {
         showPlayServicesUpdateDialog: true,
       });
       const userInfo = await GoogleSignin.signIn();
-      console.warn(userInfo);
+      this.props.googleLoginAction({
+        idToken: userInfo?.idToken,
+      });
+      console.log('user info -0--------->', userInfo);
     } catch (error) {
       console.warn('Message', error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -266,12 +278,16 @@ class LandingPage extends React.Component {
 export default connect(
   state => ({
     loginResponse: state.AuthReducer.loginResponse,
+    googleLoginResponse: state.AuthReducer.googleLoginResponse,
+    userId: state.AuthReducer.userId,
+    isProfileCreated: state.AuthReducer.isProfileCreated,
   }),
   dispatch =>
     bindActionCreators(
       {
         emptyLoginResponse,
         loginAction,
+        googleLoginAction,
       },
       dispatch,
     ),
