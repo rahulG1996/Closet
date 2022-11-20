@@ -63,14 +63,6 @@ const ClosetInfo = props => {
     }
   }, [deleteClosetResponse, dispatch]);
 
-  useEffect(() => {
-    console.log(
-      'findOutFitListfindOutFitList',
-      JSON.stringify(findOutFitList[0], undefined, 2),
-    );
-    // setFindOutFitList([{}]);
-  }, [findOutFitList]);
-
   const renderMenu = () => {
     return (
       <View>
@@ -159,7 +151,7 @@ const ClosetInfo = props => {
             </View>
             {activeOutfit ? (
               <View style={[styles.dataContainer, {alignItems: 'center'}]}>
-                {findOutFitListData.length <= 0 ? (
+                {findOutFitList.length === 0 ? (
                   <>
                     <Image
                       source={require('../../assets/iOutfit.png')}
@@ -176,28 +168,34 @@ const ClosetInfo = props => {
                       width: '100%',
                       flexWrap: 'wrap',
                     }}>
-                    {findOutFitListData.map((item, index) => {
-                      return (
-                        <TouchableOpacity
-                          style={{
-                            height: 109,
-                            width: 109,
-                            backgroundColor: Colors.grey1,
-                            marginRight: 8,
-                            marginBottom: 8,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Image
-                            source={require('../../assets/sweatshirt.webp')}
+                    {findOutFitList.length > 0 &&
+                      findOutFitList.map((item, index) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() =>
+                              props.navigation.navigate('OutfitDetail', {
+                                outfitId: item.outfitId,
+                              })
+                            }
                             style={{
-                              height: '90%',
-                              width: '90%',
-                            }}
-                          />
-                        </TouchableOpacity>
-                      );
-                    })}
+                              height: 109,
+                              width: 109,
+                              backgroundColor: Colors.grey1,
+                              marginRight: 8,
+                              marginBottom: 8,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Image
+                              source={{uri: item.outfitImageType}}
+                              style={{
+                                height: '90%',
+                                width: '90%',
+                              }}
+                            />
+                          </TouchableOpacity>
+                        );
+                      })}
                   </VView>
                 )}
               </View>
@@ -216,9 +214,17 @@ const ClosetInfo = props => {
                   {props.route?.params?.apiData?.brandName}
                 </Text>
                 <Text style={styles.titleStyle}>Season</Text>
-                <Text style={styles.subitleStyle}>
-                  {props.route?.params?.apiData?.season}
-                </Text>
+
+                <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                  {props.route?.params?.apiData?.season.map(item => {
+                    return (
+                      <Text style={[styles.subitleStyle, {marginRight: 4}]}>
+                        {item}
+                      </Text>
+                    );
+                  })}
+                </View>
+
                 <Text style={styles.titleStyle}>Color</Text>
                 <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                   {props.route?.params?.apiData?.colorCode.map(item => {

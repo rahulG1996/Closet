@@ -65,3 +65,13 @@ export function deleteClosetData(data) {
     }
   };
 }
+
+export function removeBackgroundFromImage(data) {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('removeBg', 'POST', data);
+    dispatch({type: 'COMMON_LOADER', value: false});
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'REMOVE_BG_IMAGE', value: apiResponse});
+    }
+  };
+}

@@ -1,18 +1,17 @@
-import React, {useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  Touchable,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
-import {BigImage, Buttons, Header} from '../../components';
+import {BigImage, Buttons, Header, Loader} from '../../components';
+import {removeBackgroundFromImage} from '../../redux/actions/closetAction';
 
 const EditCloset = props => {
+  const dispatch = useDispatch();
   const [isImageEdit, setImageEdit] = useState(false);
   const [newImage, setImage] = useState(null);
+  const [bgImageData, setBgRemoval] = useState(false);
+  const [removedBg, setRemovedImg] = useState(null);
   const editTools = [
     {
       type: 'crop',
@@ -23,11 +22,28 @@ const EditCloset = props => {
       icon: require('../../assets/rotate.png'),
     },
   ];
+  const removeBgResponse = useSelector(
+    state => state.ClosetReducer.removeBgResponse,
+  );
+
+  useEffect(() => {
+    if (Object.keys(removeBgResponse)) {
+      if (removeBgResponse.statusCode == 200) {
+        dispatch({type: 'REMOVE_BG_IMAGE', value: {}});
+        setRemovedImg(removeBgResponse?.imageData);
+        setBgRemoval(true);
+      }
+    }
+  }, [removeBgResponse]);
+
+  const isLoading = useSelector(state => state.CommonLoaderReducer.isLoading);
 
   const editImage = type => {
     if (type === 'crop') {
       ImageCropPicker.openCropper({
-        path: isImageEdit
+        path: bgImageData
+          ? `data:image/jpeg;base64,${removedBg}`
+          : isImageEdit
           ? newImage.path
           : props?.route?.params?.imgSource?.path,
         width: 300,
@@ -36,11 +52,14 @@ const EditCloset = props => {
         setImageEdit(true);
         setImage(image);
         console.log(image);
+        setBgRemoval(false);
       });
     }
     if (type === 'rotate') {
       ImageCropPicker.openCropper({
-        path: isImageEdit
+        path: bgImageData
+          ? `data:image/jpeg;base64,${removedBg}`
+          : isImageEdit
           ? newImage.path
           : props?.route?.params?.imgSource?.path,
         width: 300,
@@ -51,11 +70,21 @@ const EditCloset = props => {
         setImageEdit(true);
         setImage(image);
         console.log(image);
+        setBgRemoval(false);
       });
     }
   };
 
-  console.log('edit', props?.route?.params?.imgSource?.data);
+  const removeBg = () => {
+    dispatch(
+      removeBackgroundFromImage({
+        imageData: isImageEdit
+          ? `data:image/jpeg;base64,${newImage.data}`
+          : `data:image/jpeg;base64,${props?.route?.params?.imgSource.data}`,
+      }),
+    );
+    dispatch({type: 'COMMON_LOADER', value: true});
+  };
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -63,7 +92,11 @@ const EditCloset = props => {
       <ScrollView style={{flex: 1}}>
         <BigImage
           imgSource={
-            isImageEdit ? newImage?.path : props?.route?.params?.imgSource?.path
+            bgImageData
+              ? `data:image/jpeg;base64,${removedBg}`
+              : isImageEdit
+              ? newImage?.path
+              : props?.route?.params?.imgSource?.path
           }
         />
         <View style={{paddingHorizontal: 16}}>
@@ -90,17 +123,18 @@ const EditCloset = props => {
             })}
           </View>
           <View style={{marginBottom: 8}}>
-            <Buttons
-              text="remove background"
-              isInverse
-              onPress={() => alert('work in progress')}
-            />
+            <Buttons text="remove background" isInverse onPress={removeBg} />
           </View>
           <Buttons
             text="next"
             onPress={() =>
               props.navigation.navigate('ClosetDetailsFrom', {
-                imgSource: isImageEdit
+                imgSource: bgImageData
+                  ? {
+                      path: `data:image/jpeg;base64,${removedBg}`,
+                      data: removedBg,
+                    }
+                  : isImageEdit
                   ? newImage
                   : props?.route?.params?.imgSource,
               })
@@ -108,6 +142,7 @@ const EditCloset = props => {
           />
         </View>
       </ScrollView>
+      {isLoading ? <Loader /> : null}
     </View>
   );
 };

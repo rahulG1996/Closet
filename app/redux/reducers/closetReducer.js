@@ -6,6 +6,7 @@ const initialState = {
   singleClosetReponse: {},
   deleteClosetResponse: {},
   editClosetResponse: {},
+  removeBgResponse: {},
 };
 
 const ClosetReducer = (state = initialState, action) => {
@@ -51,6 +52,12 @@ const ClosetReducer = (state = initialState, action) => {
       return {
         ...state,
         editClosetResponse: action.value,
+      };
+    }
+    case 'REMOVE_BG_IMAGE': {
+      return {
+        ...state,
+        removeBgResponse: action.value,
       };
     }
     default:

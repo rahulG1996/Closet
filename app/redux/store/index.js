@@ -7,6 +7,7 @@ import OtpReducer from '../reducers/sendOtpReducer';
 import ProfileReducer from '../reducers/profileReducer';
 import ClosetReducer from '../reducers/closetReducer';
 import OutfitReducer from '../reducers/outfitReducer';
+import CommonLoaderReducer from '../reducers/loaderReducer';
 
 const persistConfig = {
   key: 'root',
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   ProfileReducer,
   ClosetReducer,
   OutfitReducer,
+  CommonLoaderReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

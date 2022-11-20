@@ -58,6 +58,7 @@ const ClosetDetailsFrom = props => {
 
   useEffect(() => {
     if (props?.route?.params?.editClosetData) {
+      setSelectedColors(props.route?.params?.editClosetData?.colorCode);
       setSeason(props?.route?.params?.editClosetData?.season);
       let brandSelected1 = {
         name: props?.route?.params?.editClosetData?.brandName,
@@ -106,6 +107,7 @@ const ClosetDetailsFrom = props => {
     let brandSelected1 = {};
     let categorySelected1;
     if (props?.route?.params?.editClosetData) {
+      setSelectedColors(props.route?.params?.editClosetData?.colorCode);
       setSeason(props?.route?.params?.editClosetData?.season);
       brandSelected1 = {
         name: props?.route?.params?.editClosetData?.brandName,
