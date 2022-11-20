@@ -1,15 +1,19 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
-import {Buttons, Header, OverlayModal} from '../../components';
+import {Buttons, Header, OverlayModal, VView} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import {getOutfitsList} from '../../redux/actions/outfitActions';
 
 const Outfits = props => {
   const dispatch = useDispatch();
   const [showModal, setModal] = useState(false);
-  const [sortingData, setSortingData] = useState([
+  const [selectedSort, setSelectedSort] = useState({});
+  const [selectedSortIndex, setSelectedSortIndex] = useState(0);
+
+  const sortingData = [
     {
       type: 'asc',
       title: 'Alphabetical (A to Z)',
@@ -20,17 +24,17 @@ const Outfits = props => {
       title: 'Alphabetical (Z to A)',
       isSelected: false,
     },
-    {
-      type: 'asc1',
-      title: 'Date added',
-      isSelected: false,
-    },
-    {
-      type: 'asc2',
-      title: 'Date modified',
-      isSelected: false,
-    },
-  ]);
+    // {
+    //   type: 'asc1',
+    //   title: 'Date added',
+    //   isSelected: false,
+    // },
+    // {
+    //   type: 'asc2',
+    //   title: 'Date modified',
+    //   isSelected: false,
+    // },
+  ];
 
   const getOutfitData =
     useSelector(state => state.OutfitReducer.getOutfitData) || [];
@@ -95,10 +99,10 @@ const Outfits = props => {
             />
           </TouchableOpacity>
         </View>
-        {sortingData.map(item => {
+        {sortingData.map((item, index) => {
           return (
             <TouchableOpacity
-              onPress={() => changeFilter(item)}
+              onPress={() => handleSortingOption(item, index)}
               style={{paddingVertical: 12, flexDirection: 'row'}}>
               <View
                 style={{
@@ -110,7 +114,7 @@ const Outfits = props => {
                   justifyContent: 'center',
                   marginRight: 22,
                 }}>
-                {item.isSelected && (
+                {selectedSortIndex == index && (
                   <View
                     style={{
                       width: 12,
@@ -125,23 +129,40 @@ const Outfits = props => {
             </TouchableOpacity>
           );
         })}
+        <VView
+          style={{
+            paddingVertical: 10,
+          }}>
+          <Buttons
+            text="Apply"
+            // isInverse
+            onPress={() => handleSorting()}
+          />
+        </VView>
       </View>
     );
   };
 
-  const changeFilter = item => {
-    let sortingData1 = sortingData;
-    sortingData1 = sortingData1.map(i => {
-      if (i.title === item.title) {
-        return {...i, isSelected: true};
-      } else {
-        return {...i, isSelected: false};
-      }
-    });
-    setSortingData(sortingData1);
+  const handleSortingOption = (item, index) => {
+    setSelectedSort(item);
+    setSelectedSortIndex(index);
   };
 
   const handleSorting = () => {
+    if (selectedSort?.type == 'asc' || selectedSortIndex == 0) {
+      getOutfitData.sort((a, b) =>
+        a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1,
+      );
+      setSelectedSort(0);
+    } else if (selectedSort?.type == 'desc') {
+      getOutfitData.sort((a, b) =>
+        a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1,
+      );
+      setSelectedSort(0);
+    }
+  };
+
+  const handleSortingModal = () => {
     setModal(true);
   };
 
@@ -152,7 +173,7 @@ const Outfits = props => {
         showSort
         showMenu
         {...props}
-        handleSorting={handleSorting}
+        handleSorting={handleSortingModal}
       />
       {getOutfitData.length > 0 ? (
         <FlatList
