@@ -16,6 +16,7 @@ import {
   emptyLoginResponse,
   loginAction,
   googleLoginAction,
+  storeUserId,
 } from '../../redux/actions/authActions';
 import {Colors} from '../../colors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -81,9 +82,10 @@ class LandingPage extends React.Component {
       }
     }
     if (prevProps.googleLoginResponse !== this.props.googleLoginResponse) {
-      if (this.props.googleLoginResponse?.isProfileCreated) {
-        this.props.navigation.navigate('TabData');
-      } else this.props.navigation.navigate('ProfileSetup');
+      this.props.storeUserId({
+        userId: this.props.googleLoginResponse?.userId,
+        isProfileCreated: this.props.googleLoginResponse?.isProfileCreated,
+      });
     }
   }
 
@@ -288,6 +290,7 @@ export default connect(
         emptyLoginResponse,
         loginAction,
         googleLoginAction,
+        storeUserId,
       },
       dispatch,
     ),

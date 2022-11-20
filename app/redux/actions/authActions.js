@@ -9,17 +9,21 @@ export function loginAction(data) {
   };
 }
 
+export function storeUserId(data) {
+  return async dispatch => {
+    dispatch({type: 'USERID', value: data.userId});
+    dispatch({
+      type: 'IS_PROFILE_CREATED',
+      value: data.isProfileCreated,
+    });
+  };
+}
+
 export function googleLoginAction(data) {
   return async dispatch => {
     const response = await NoAuthAPI('googleLogin', 'POST', data);
-    console.log('response google login', response?.isProfileCreated);
     if (Object.keys(response).length && response?.statusCode == 200) {
       dispatch({type: 'GOOGLE_LOGIN', value: response});
-      // dispatch({type: 'USERID', value: response?.userId});
-      // dispatch({
-      //   type: 'IS_PROFILE_CREATED',
-      //   value: response?.isProfileCreated,
-      // });
     }
   };
 }

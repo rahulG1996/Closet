@@ -11,6 +11,7 @@ import {
 import Toast from 'react-native-simple-toast';
 
 const ProfileSetup = props => {
+  const [isImageRemove, setImage] = useState(false);
   const userProfileResponse = useSelector(
     state => state.ProfileReducer.userProfileResponse,
   );
@@ -174,10 +175,15 @@ const ProfileSetup = props => {
       name: state.name,
       gender: state.genderSelected.toLowerCase(),
       userId: userId,
-      base64ImgString: `data:image/jpeg;base64,${state.userImage.data}`,
     };
     if (isProfileCreated && !state.fromLocal) {
       data.base64ImgString = null;
+    }
+    if (isProfileCreated && isImageRemove) {
+      data.base64ImgString = null;
+    }
+    if (state.userImage) {
+      data.base64ImgString = `data:image/jpeg;base64,${state.userImage.data}`;
     }
     if (
       state.name === userProfileResponse?.name &&
@@ -218,19 +224,31 @@ const ProfileSetup = props => {
                 onPress={pickImage}>
                 <Text style={{color: '#217AFF'}}>Change</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={{padding: 5}}
+                onPress={() => {
+                  setImage(false);
+                  setState({...state, userImage: null});
+                }}>
+                <Text style={{color: '#217AFF'}}>Remove</Text>
+              </TouchableOpacity>
             </View>
           ) : (
-            <Image
-              source={require('../../assets/iProfile.png')}
-              style={{width: 128, height: 128}}
-            />
+            <>
+              <Image
+                source={require('../../assets/iProfile.png')}
+                style={{width: 128, height: 128}}
+              />
+              <TouchableOpacity
+                style={{padding: 5, margin: 10}}
+                onPress={pickImage}>
+                <Text style={{color: '#217AFF'}}>Upload</Text>
+              </TouchableOpacity>
+            </>
           )}
         </View>
         <View>
-          <Buttons
-            text={state.userImage ? 'Done' : 'upload'}
-            onPress={state.userImage ? updateProfile : pickImage}
-          />
+          <Buttons text={'Done'} onPress={updateProfile} />
           <Buttons
             text="go back"
             isInverse

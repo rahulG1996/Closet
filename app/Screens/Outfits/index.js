@@ -136,7 +136,7 @@ const Outfits = props => {
           <Buttons
             text="Apply"
             // isInverse
-            onPress={() => handleSorting()}
+            onPress={handleSorting}
           />
         </VView>
       </View>
@@ -160,6 +160,7 @@ const Outfits = props => {
       );
       setSelectedSort(0);
     }
+    setModal(false);
   };
 
   const handleSortingModal = () => {
@@ -170,7 +171,7 @@ const Outfits = props => {
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header
         title="Outfits"
-        showSort
+        showSort={getOutfitData.length > 0}
         showMenu
         {...props}
         handleSorting={handleSortingModal}
