@@ -201,6 +201,24 @@ const ClosetDetailsFrom = props => {
           height: '60%',
           zIndex: 99,
         }}>
+        <TouchableOpacity
+          onPress={() => setShowModal(false)}
+          style={{
+            height: 50,
+            width: 50,
+            zIndex: 600,
+            borderRadius: 50,
+            alignSelf: 'flex-end',
+            marginBottom: 20,
+          }}>
+          <Image
+            source={require('../../../assets//cross.webp')}
+            style={{
+              height: '100%',
+              width: '100%',
+            }}
+          />
+        </TouchableOpacity>
         <ColorPicker
           color={currentColor}
           swatchesOnly={swatchesOnly}
