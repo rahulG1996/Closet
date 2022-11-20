@@ -146,6 +146,8 @@ function AppNavigation() {
           <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
           <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
           <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
+          <Stack.Screen name="ClosetInfo" component={ClosetInfo} />
+          <Stack.Screen name="EditCloset" component={EditCloset} />
         </>
       )}
     </Stack.Navigator>

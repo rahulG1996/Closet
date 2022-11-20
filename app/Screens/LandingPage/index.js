@@ -142,6 +142,7 @@ class LandingPage extends React.Component {
       } = appleAuthRequestResponse;
 
       user = newUser;
+      alert(JSON.stringify(user));
 
       this.fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(
         error => updateCredentialStateForUser(`Error: ${error.code}`),
@@ -149,7 +150,7 @@ class LandingPage extends React.Component {
 
       if (identityToken) {
         // e.g. sign in with Firebase Auth using `nonce` & `identityToken`
-        console.warn(nonce, identityToken);
+        console.warn('token', nonce, identityToken);
       } else {
         // no token - failed sign-in?
       }

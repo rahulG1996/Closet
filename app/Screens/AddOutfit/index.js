@@ -45,15 +45,12 @@ const AddCloset = props => {
       });
       let imageData1 = props?.route?.params?.editOutfitData?.imageData;
       imageData1 = imageData1.map(item => {
-        console.warn(item.pan);
         return {...item, pan: new Animated.ValueXY(0, 0)};
       });
       setOutfitImages(imageData1);
       setClosetIds(closetIds);
     }
   }, []);
-
-  // console.warn('props', JSON.stringify(outfitImages, undefined, 2));
 
   const addClosetInOutfit = (index, item) => {
     // const filteredPeople = people.filter((item) => item.id !== idToRemove);
@@ -100,7 +97,7 @@ const AddCloset = props => {
   };
 
   const imageLocations = value => {
-    // console.log('value', JSON.stringify(value, undefined, 2));
+    console.warn('value', JSON.stringify(value, undefined, 2));
     setImageData(value);
   };
 
@@ -129,7 +126,7 @@ const AddCloset = props => {
   }, [activeTab, getcloset]);
 
   const onCapture = () => {
-    setBgImg(false);
+    // setBgImg(false);
     setTimeout(() => {
       captureRef(captureViewRef, {
         format: 'jpeg',
@@ -139,16 +136,21 @@ const AddCloset = props => {
           RNFS.readFile(uri, 'base64').then(res => {
             props.navigation.navigate('SubmitOutfit', {
               outfitData: {
-                imgSource: {data: `data:image/png;base64,${res}`},
+                imgSource: {data: `data:image/jpeg;base64,${res}`},
                 closetIds: closetIds,
                 imageData: imageData,
+                closetDetailsList: closetIds || [],
               },
               editOutfitData: {
-                outfitImageType: `data:image/png;base64,${res}`,
+                outfitImageType: `data:image/jpeg;base64,${res}`,
                 closetIds: closetIds,
                 imageData: imageData,
+                closetDetailsList:
+                  props?.route?.params?.editOutfitData?.closetDetailsList || [],
+                outfitId:
+                  props?.route?.params?.editOutfitData?.outfitId || null,
               },
-              editoutfit: props?.route?.params?.editoutfit || false,
+              editoutfitImage: props?.route?.params?.editoutfit || false,
             });
             // console.warn('urlString', uri);
           });
@@ -168,7 +170,9 @@ const AddCloset = props => {
           source={require('../../assets/bg.png')}
           resizeMode="contain"
           style={{height: Dimensions.get('window').height * 0.5}}>
-          <App outfitImages={outfitImages} imageLocations={imageLocations} />
+          <View ref={captureViewRef}>
+            <App outfitImages={outfitImages} imageLocations={imageLocations} />
+          </View>
         </ImageBackground>
       ) : (
         <View ref={captureViewRef}>
@@ -304,7 +308,6 @@ class App extends Component {
     );
 
   render() {
-    console.warn('cmp', JSON.stringify(this.props.outfitImages, undefined, 2));
     return (
       <View style={styles.container}>
         {this.props.outfitImages.map((i, index) => {

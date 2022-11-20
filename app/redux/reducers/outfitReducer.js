@@ -3,6 +3,7 @@ const initialState = {
   getOutfitData: {},
   getOutfitDetailData: {},
   deleteOutfitRepsponse: {},
+  editOutfitRepsponse: {},
 };
 
 const OutfitReducer = (state = initialState, action) => {
@@ -29,6 +30,12 @@ const OutfitReducer = (state = initialState, action) => {
       return {
         ...state,
         deleteOutfitRepsponse: action.value,
+      };
+    }
+    case 'EDIT_OUTFIT': {
+      return {
+        ...state,
+        editOutfitRepsponse: action.value,
       };
     }
     default:

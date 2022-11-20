@@ -5,7 +5,11 @@ import Toast from 'react-native-simple-toast';
 import {useSelector, useDispatch} from 'react-redux';
 import {Colors} from '../../colors';
 import {BigImage, Buttons, Header, Input} from '../../components';
-import {addOutfit, getOutfitsList} from '../../redux/actions/outfitActions';
+import {
+  addOutfit,
+  editOutfit,
+  getOutfitsList,
+} from '../../redux/actions/outfitActions';
 
 const SubmitOutfit = props => {
   const [outfitName, setOutfitName] = useState('');
@@ -16,16 +20,48 @@ const SubmitOutfit = props => {
   const [nameErr, setNameError] = useState('');
   const [descriptionErr, setDescErr] = useState('');
   const [loading, setLoading] = useState(false);
+  const [closetIds, setClosetIds] = useState([]);
 
   const addOutfitReponse = useSelector(
     state => state.OutfitReducer.addOutfitReponse,
   );
 
+  const editOutfitRepsponse = useSelector(
+    state => state.OutfitReducer.editOutfitRepsponse,
+  );
+
   useEffect(() => {
+    if (Object.keys(editOutfitRepsponse)) {
+      if (editOutfitRepsponse.statusCode === 200) {
+        dispatch(getOutfitsList());
+        dispatch({type: 'EDIT_OUTFIT', value: {}});
+        Toast.show('Outfit edit successfully');
+        props.navigation.navigate('OutfitDetail', {
+          outfitId: editOutfitRepsponse.outfitId,
+        });
+      }
+    }
+  }, [editOutfitRepsponse]);
+
+  useEffect(() => {
+    console.warn(
+      JSON.stringify(
+        props?.route?.params?.editOutfitData?.seasons,
+        undefined,
+        2,
+      ),
+    );
     if (props?.route?.params?.editOutfitData) {
       setOutfitName(props?.route?.params?.editOutfitData?.name);
+      let closetIds1 = [];
       setDescription(props?.route?.params?.editOutfitData?.description);
-      setSeason(props?.route?.params?.editOutfitData?.seasons);
+      props?.route?.params?.editOutfitData?.imageData?.map(item => {
+        closetIds1.push(item.closetItemId);
+      });
+      setClosetIds(closetIds1);
+      if (props?.route?.params?.editOutfitData?.seasons) {
+        setSeason(props?.route?.params?.editOutfitData?.seasons);
+      }
     }
   }, []);
 
@@ -44,7 +80,7 @@ const SubmitOutfit = props => {
   }, [addOutfitReponse, dispatch]);
 
   const setSeasonData = item => {
-    let selectedSeason1 = [...selectedSeason];
+    let selectedSeason1 = [...selectedSeason] || [];
     if (!selectedSeason.includes(item)) {
       selectedSeason1.push(item);
     } else {
@@ -69,16 +105,28 @@ const SubmitOutfit = props => {
     }
     let data = {
       userId: userId,
-      closetItemIds: props?.route?.params?.outfitData?.closetIds,
-      outfitImageType: props?.route?.params?.outfitData?.imgSource?.data,
+      closetItemIds: closetIds,
+      outfitImageType:
+        props?.route?.params?.outfitData?.imgSource?.data ||
+        props?.route?.params?.editOutfitData?.outfitImageType,
       name: outfitName,
       description: description,
       seasons: selectedSeason,
-      imageData: props?.route?.params?.outfitData?.imageData,
+      imageData:
+        props?.route?.params?.outfitData?.imageData ||
+        props?.route?.params?.editOutfitData?.imageData,
     };
     setLoading(true);
+    if (props?.route?.params?.editOutfitData?.outfitId) {
+      data.outfitId = props?.route?.params?.editOutfitData?.outfitId;
+      dispatch(editOutfit(data));
+      return;
+    }
+    console.warn('data', data);
     dispatch(addOutfit(data));
   };
+
+  // alert(props?.route?.params?.editOutfitData?.outfitId);
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -128,7 +176,7 @@ const SubmitOutfit = props => {
                   style={[
                     styles.seasonContainer,
                     {
-                      borderColor: selectedSeason.includes(item)
+                      borderColor: selectedSeason?.includes(item)
                         ? Colors.black60
                         : 'rgba(0,0,0,0.16)',
                     },

@@ -9,6 +9,15 @@ export function addOutfit(data) {
   };
 }
 
+export function editOutfit(data) {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('editOutfitDetails', 'POST', data);
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'EDIT_OUTFIT', value: apiResponse});
+    }
+  };
+}
+
 export function getOutfitsList() {
   return async (dispatch, getState) => {
     const apiPath = `getOutfitDetails?userId=${getState().AuthReducer.userId}`;

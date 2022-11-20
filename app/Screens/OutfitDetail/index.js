@@ -20,6 +20,7 @@ import {
 } from '../../redux/actions/outfitActions';
 import {deleteOutfit} from '../../redux/actions/outfitActions';
 import SimpleToast from 'react-native-simple-toast';
+import {openClosetDetails} from '../../redux/actions/closetAction';
 
 const OutfitDetail = props => {
   const getOutfitDetailData = useSelector(
@@ -32,6 +33,9 @@ const OutfitDetail = props => {
   const openMenu = () => {
     setModal(true);
   };
+  const singleClosetReponse = useSelector(
+    state => state.ClosetReducer.singleClosetReponse,
+  );
   const deleteOutfitRepsponse = useSelector(
     state => state.OutfitReducer.deleteOutfitRepsponse,
   );
@@ -52,6 +56,15 @@ const OutfitDetail = props => {
       }
     }
   }, [deleteOutfitRepsponse, dispatch]);
+
+  useEffect(() => {
+    if (Object.keys(singleClosetReponse).length) {
+      dispatch({type: 'SINGLE_CLOSET', value: {}});
+      props.navigation.navigate('ClosetInfo', {
+        apiData: singleClosetReponse,
+      });
+    }
+  }, [dispatch, props.navigation, singleClosetReponse]);
 
   useEffect(() => {
     if (props?.route?.params?.outfitId) {
@@ -75,6 +88,7 @@ const OutfitDetail = props => {
         }}>
         <TouchableOpacity
           activeOpacity={0.7}
+          onPress={() => openClosetInfo(item.closetItemId)}
           style={{
             backgroundColor: Colors.grey1,
             paddingVertical: 10,
@@ -139,6 +153,15 @@ const OutfitDetail = props => {
       }),
     );
   };
+
+  const openClosetInfo = id => {
+    let data = {
+      userId: userId,
+      closetItemId: id,
+    };
+    dispatch(openClosetDetails(data));
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header showBack showVerticalMenu {...props} openMenu={openMenu} />
@@ -160,7 +183,11 @@ const OutfitDetail = props => {
               <View style={{flexDirection: 'row'}}>
                 {getOutfitDetailData.seasons.map(item => {
                   return (
-                    <Text style={[styles.subitleStyle, {marginVertical: 8}]}>
+                    <Text
+                      style={[
+                        styles.subitleStyle,
+                        {marginVertical: 8, marginRight: 8},
+                      ]}>
                       {item}
                     </Text>
                   );

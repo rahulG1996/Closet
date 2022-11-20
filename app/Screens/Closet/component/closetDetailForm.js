@@ -36,7 +36,7 @@ const ClosetDetailsFrom = props => {
   const [selectedColors, setSelectedColors] = useState([]);
   const [getColor, setGetColor] = useState('#fff');
   const [showModal, setShowModal] = useState(false);
-  const [selectedSeason, setSeason] = useState('');
+  const [selectedSeason, setSeason] = useState([]);
   const brandData = useSelector(state => state.ClosetReducer.brandData);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const userId = useSelector(state => state.AuthReducer.userId);
@@ -151,7 +151,7 @@ const ClosetDetailsFrom = props => {
       Toast.show('Please select Category from given options');
       return;
     }
-    if (!selectedSeason) {
+    if (!selectedSeason.length) {
       Toast.show('Please select seasons');
       return;
     }
@@ -177,10 +177,10 @@ const ClosetDetailsFrom = props => {
       season: selectedSeason,
       colorCode: selectedColors,
       itemImageUrl: isImageEdit
-        ? `data:image/png;base64,${newImage?.data}`
+        ? `data:image/jpeg;base64,${newImage?.data}`
         : props?.route?.params?.editCloset
         ? bgImageUrl
-        : `data:image/png;base64,${props?.route?.params?.imgSource?.data}`,
+        : `data:image/jpeg;base64,${props?.route?.params?.imgSource?.data}`,
     };
     if (props?.route?.params?.editCloset) {
       data.closetItemId = props.route?.params.editClosetData?.closetItemId;
@@ -267,6 +267,17 @@ const ClosetDetailsFrom = props => {
     });
   };
 
+  const setSeasonData = item => {
+    let selectedSeason1 = [...selectedSeason];
+    if (!selectedSeason.includes(item)) {
+      selectedSeason1.push(item);
+    } else {
+      selectedSeason1 = selectedSeason1.filter(i => i !== item);
+    }
+
+    setSeason(selectedSeason1);
+  };
+
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
@@ -328,14 +339,13 @@ const ClosetDetailsFrom = props => {
               {['spring', 'summer', 'fall', 'winter'].map((item, index) => {
                 return (
                   <TouchableOpacity
-                    onPress={() => setSeason(item)}
+                    onPress={() => setSeasonData(item)}
                     style={[
                       styles.seasonContainer,
                       {
-                        borderColor:
-                          item === selectedSeason
-                            ? Colors.black60
-                            : 'rgba(0,0,0,0.16)',
+                        borderColor: selectedSeason.includes(item)
+                          ? Colors.black60
+                          : 'rgba(0,0,0,0.16)',
                       },
                     ]}>
                     <VText style={{textTransform: 'capitalize'}} text={item} />
