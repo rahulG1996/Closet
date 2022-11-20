@@ -46,3 +46,14 @@ export function deleteOutfit(data) {
     }
   };
 }
+
+export function findOutfitList(data) {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('findOutfitList', 'POST', data);
+    if (Object.keys(apiResponse).length) {
+      console.log('list outfit api response ->', apiResponse);
+
+      dispatch({type: 'FIND_OUTFIT_LIST', value: apiResponse?.outfitList});
+    }
+  };
+}

@@ -52,7 +52,7 @@ const OutfitDetail = props => {
       if (deleteOutfitRepsponse.statusCode === 200) {
         SimpleToast.show('Outfit delete successfully');
         dispatch(getOutfitsList());
-        props.navigation.navigate('Outfits');
+        props.navigation.navigate('Outfit');
       }
     }
   }, [deleteOutfitRepsponse, dispatch]);

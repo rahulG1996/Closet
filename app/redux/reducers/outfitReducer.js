@@ -4,6 +4,7 @@ const initialState = {
   getOutfitDetailData: {},
   deleteOutfitRepsponse: {},
   editOutfitRepsponse: {},
+  findOutfitListRepsponse: [],
 };
 
 const OutfitReducer = (state = initialState, action) => {
@@ -36,6 +37,12 @@ const OutfitReducer = (state = initialState, action) => {
       return {
         ...state,
         editOutfitRepsponse: action.value,
+      };
+    }
+    case 'FIND_OUTFIT_LIST': {
+      return {
+        ...state,
+        findOutfitListRepsponse: action.value,
       };
     }
     default:

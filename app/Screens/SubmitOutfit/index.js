@@ -72,7 +72,7 @@ const SubmitOutfit = props => {
         Toast.show('Outfit added successfully');
         dispatch(getOutfitsList());
         setLoading(false);
-        props.navigation.navigate('Outfits');
+        props.navigation.navigate('Outfit');
       } else {
         setLoading(false);
       }

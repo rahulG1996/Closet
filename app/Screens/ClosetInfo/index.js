@@ -13,12 +13,20 @@ import Modal from 'react-native-modal';
 import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
-import {BigImage, Buttons, Header, OverlayModal} from '../../components';
+import {
+  BigImage,
+  Buttons,
+  Header,
+  OverlayModal,
+  VText,
+  VView,
+} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import {
   deleteClosetData,
   getClosetData,
 } from '../../redux/actions/closetAction';
+import {findOutfitList} from '../../redux/actions/outfitActions';
 
 const ClosetInfo = props => {
   const dispatch = useDispatch();
@@ -26,15 +34,25 @@ const ClosetInfo = props => {
   const deleteClosetResponse = useSelector(
     state => state.ClosetReducer.deleteClosetResponse,
   );
+  const findOutFitList = useSelector(
+    state => state.OutfitReducer.findOutfitListRepsponse,
+  );
   const [activeOutfit, setActiveOutfit] = useState(true);
   const [showModal, setModal] = useState(false);
   const [showDeleteModal, setDeleteModal] = useState(false);
+  const [findOutFitListData, setFindOutFitList] = useState([]);
 
   const openMenu = () => {
     setModal(true);
   };
 
   useEffect(() => {
+    dispatch(
+      findOutfitList({
+        userId: userId,
+        closetItemId: props.route?.params?.apiData?.closetItemId,
+      }),
+    );
     if (Object.keys(deleteClosetResponse).length) {
       if (deleteClosetResponse.statusCode === 200) {
         dispatch({type: 'DELETE_CLOSET', value: {}});
@@ -44,6 +62,14 @@ const ClosetInfo = props => {
       }
     }
   }, [deleteClosetResponse, dispatch]);
+
+  useEffect(() => {
+    console.log(
+      'findOutFitListfindOutFitList',
+      JSON.stringify(findOutFitList[0], undefined, 2),
+    );
+    // setFindOutFitList([{}]);
+  }, [findOutFitList]);
 
   const renderMenu = () => {
     return (
@@ -133,13 +159,47 @@ const ClosetInfo = props => {
             </View>
             {activeOutfit ? (
               <View style={[styles.dataContainer, {alignItems: 'center'}]}>
-                <Image
-                  source={require('../../assets/iOutfit.png')}
-                  style={{width: 87, height: 87}}
-                />
-                <Text style={{textAlign: 'center', paddingVertical: 20}}>
-                  No Outfit created with this cloth
-                </Text>
+                {findOutFitListData.length <= 0 ? (
+                  <>
+                    <Image
+                      source={require('../../assets/iOutfit.png')}
+                      style={{width: 87, height: 87}}
+                    />
+                    <Text style={{textAlign: 'center', paddingVertical: 20}}>
+                      No Outfit created with this cloth
+                    </Text>
+                  </>
+                ) : (
+                  <VView
+                    style={{
+                      flexDirection: 'row',
+                      width: '100%',
+                      flexWrap: 'wrap',
+                    }}>
+                    {findOutFitListData.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          style={{
+                            height: 109,
+                            width: 109,
+                            backgroundColor: Colors.grey1,
+                            marginRight: 8,
+                            marginBottom: 8,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}>
+                          <Image
+                            source={require('../../assets/sweatshirt.webp')}
+                            style={{
+                              height: '90%',
+                              width: '90%',
+                            }}
+                          />
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </VView>
+                )}
               </View>
             ) : (
               <View style={styles.dataContainer}>

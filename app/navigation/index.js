@@ -73,6 +73,16 @@ const ClosetStack = () => {
     </Stack.Navigator>
   );
 };
+const OutfitStack = () => {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Outfit" component={Outfits} />
+      <Stack.Screen name="AddOutfit" component={AddOutfit} />
+      <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
+      <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
+    </Stack.Navigator>
+  );
+};
 
 function TabData() {
   return (
@@ -102,7 +112,7 @@ function TabData() {
       })}>
       <Tab.Screen name="Shop" component={ShopStack} />
       <Tab.Screen name="Closet" component={ClosetStack} />
-      <Tab.Screen name="Outfits" component={Outfits} />
+      <Tab.Screen name="Outfits" component={OutfitStack} />
     </Tab.Navigator>
   );
 }
@@ -142,12 +152,21 @@ function AppNavigation() {
           <Stack.Screen name="Menu" component={Menu} />
           <Stack.Screen name="TermConditions" component={TermConditions} />
           <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-          <Stack.Screen name="AddOutfit" component={AddOutfit} />
           <Stack.Screen name="ProfileSetup" component={ProfileSetup} />
-          <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
-          <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
+
+          <Stack.Screen name="ClosetScreen" component={ClosetScreen} />
+          <Stack.Screen
+            name="ClosetDetailsFrom"
+            component={ClosetDetailsFrom}
+          />
+          <Stack.Screen name="ViewProduct" component={ViewProduct} />
+          <Stack.Screen name="ClosetCategory" component={ClosetCategory} />
           <Stack.Screen name="ClosetInfo" component={ClosetInfo} />
           <Stack.Screen name="EditCloset" component={EditCloset} />
+          <Stack.Screen name="Outfit" component={Outfits} />
+          <Stack.Screen name="AddOutfit" component={AddOutfit} />
+          <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
+          <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
         </>
       )}
     </Stack.Navigator>
