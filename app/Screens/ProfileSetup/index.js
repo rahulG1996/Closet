@@ -175,15 +175,13 @@ const ProfileSetup = props => {
       name: state.name,
       gender: state.genderSelected.toLowerCase(),
       userId: userId,
+      base64ImgString: `data:image/png;base64,${state.userImage?.data}`,
     };
     if (isProfileCreated && !state.fromLocal) {
       data.base64ImgString = null;
     }
     if (isProfileCreated && isImageRemove) {
       data.base64ImgString = null;
-    }
-    if (state.userImage) {
-      data.base64ImgString = `data:image/jpeg;base64,${state.userImage.data}`;
     }
     if (
       state.name === userProfileResponse?.name &&

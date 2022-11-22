@@ -60,6 +60,7 @@ export default props => {
   }, [dispatch, props.navigation, singleClosetReponse]);
 
   useEffect(() => {
+    console.warn('re-render');
     let categoryArray = [...new Set(getcloset.map(item => item.categoryName))];
 
     let finalArray = [];
@@ -143,7 +144,7 @@ export default props => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          // justifyContent: 'space-between',
           flexWrap: 'wrap',
           paddingHorizontal: 16,
         }}>
@@ -151,7 +152,7 @@ export default props => {
           ? gridClosetData.map(item => {
               return (
                 <TouchableOpacity
-                  style={{marginVertical: 8}}
+                  style={{margin: 8}}
                   onPress={() =>
                     props.navigation.navigate('ClosetCategory', {
                       categoryType: item,
@@ -162,7 +163,6 @@ export default props => {
                       width: 160,
                       flexDirection: 'row',
                       flexWrap: 'wrap',
-                      justifyContent: 'space-between',
                     }}>
                     {item.subCategory.length !== 0 &&
                       [1, 2, 3, 4].map((i, index) => {
@@ -178,6 +178,7 @@ export default props => {
                               source={{
                                 uri: item.subCategory[index]?.itemImageUrl,
                               }}
+                              resizeMode="contain"
                               style={{width: '95%', height: '95%'}}
                             />
                           </View>
@@ -188,9 +189,10 @@ export default props => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
+                      margin: 8,
                     }}>
-                    <Text style={{marginTop: 8}}>{item.category}</Text>
-                    <Text style={{marginTop: 8}}>{item.total}</Text>
+                    <Text>{item.category}</Text>
+                    <Text>{item.total}</Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -316,7 +318,7 @@ export default props => {
         title="Closet"
         showMenu
         navigation={props.navigation}
-        showSwitch
+        showSwitch={getcloset.length > 0}
         showFilter={gridType}
         switchValue={switchValue}
         showFilterFunction={showFilterFunction}

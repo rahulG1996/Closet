@@ -59,6 +59,7 @@ export function openClosetDetails(data) {
 export function deleteClosetData(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('removeClosetItem', 'POST', data);
+    console.warn('data dlete', data);
     console.warn('apiResponse dlete', apiResponse);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'DELETE_CLOSET', value: apiResponse});

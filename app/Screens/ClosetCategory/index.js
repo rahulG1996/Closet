@@ -59,6 +59,7 @@ const ClosetCategory = props => {
                 <Image
                   source={{uri: item.itemImageUrl}}
                   style={{width: 150, height: 140}}
+                  resizeMode="contain"
                 />
               </TouchableOpacity>
             );

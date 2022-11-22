@@ -175,7 +175,7 @@ const AddCloset = props => {
           </View>
         </ImageBackground>
       ) : (
-        <View ref={captureViewRef}>
+        <View style={{backgroundColor: Colors.grey1}} ref={captureViewRef}>
           <App outfitImages={outfitImages} imageLocations={imageLocations} />
         </View>
       )}
@@ -239,7 +239,7 @@ const AddCloset = props => {
           width: '100%',
           paddingHorizontal: 16,
         }}>
-        {closetIds.length >= 2 && <Buttons text="next" onPress={onCapture} />}
+        {closetIds.length >= 1 && <Buttons text="next" onPress={onCapture} />}
       </View>
     </View>
   );

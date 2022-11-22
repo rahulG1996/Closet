@@ -27,7 +27,7 @@ const EditCloset = props => {
   );
 
   useEffect(() => {
-    if (Object.keys(removeBgResponse)) {
+    if (Object.keys(removeBgResponse).length) {
       if (removeBgResponse.statusCode == 200) {
         dispatch({type: 'REMOVE_BG_IMAGE', value: {}});
         setRemovedImg(removeBgResponse?.imageData);
@@ -48,6 +48,7 @@ const EditCloset = props => {
           : props?.route?.params?.imgSource?.path,
         width: 300,
         height: 400,
+        includeBase64: true,
       }).then(image => {
         setImageEdit(true);
         setImage(image);

@@ -34,9 +34,8 @@ const ClosetInfo = props => {
   const deleteClosetResponse = useSelector(
     state => state.ClosetReducer.deleteClosetResponse,
   );
-  const findOutFitList = useSelector(
-    state => state.OutfitReducer.findOutfitListRepsponse,
-  );
+  const findOutFitList =
+    useSelector(state => state.OutfitReducer.findOutfitListRepsponse) || [];
   const [activeOutfit, setActiveOutfit] = useState(true);
   const [showModal, setModal] = useState(false);
   const [showDeleteModal, setDeleteModal] = useState(false);
@@ -53,6 +52,9 @@ const ClosetInfo = props => {
         closetItemId: props.route?.params?.apiData?.closetItemId,
       }),
     );
+  }, [dispatch]);
+
+  useEffect(() => {
     if (Object.keys(deleteClosetResponse).length) {
       if (deleteClosetResponse.statusCode === 200) {
         dispatch({type: 'DELETE_CLOSET', value: {}});

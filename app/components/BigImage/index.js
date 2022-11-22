@@ -15,6 +15,7 @@ const BigImage = ({showEdit = false, imgSource = '', editImage = () => {}}) => {
           imgSource ? {uri: imgSource} : require('../../assets/sweatshirt.webp')
         }
         style={{width: '80%', height: 375}}
+        resizeMode="contain"
       />
       {showEdit && (
         <TouchableOpacity
