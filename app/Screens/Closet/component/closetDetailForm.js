@@ -214,7 +214,7 @@ const ClosetDetailsFrom = props => {
             marginBottom: 20,
           }}>
           <Image
-            source={require('../../../assets//cross.webp')}
+            source={require('../../../assets/cross.webp')}
             style={{
               height: '100%',
               width: '100%',

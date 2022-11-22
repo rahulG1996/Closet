@@ -11,7 +11,14 @@ import {
   Linking,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import {Buttons, Header, VText, VView} from '../../components';
+import {
+  Buttons,
+  Header,
+  Input,
+  OverlayModal,
+  VText,
+  VView,
+} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -21,10 +28,13 @@ import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 import WebView from 'react-native-webview';
 import ViewShot, {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
+import Modal from 'react-native-modal';
+import {FONTS_SIZES} from '../../fonts';
 
 export default props => {
   const dispatch = useDispatch();
   const captureViewRef = useRef();
+  const [showModal, setModal] = useState(false);
   const [showWebView, setWebView] = useState(false);
   const [gridType, setGrid] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
@@ -296,6 +306,10 @@ export default props => {
     );
   };
 
+  const showFilterFunction = value => {
+    setModal(true);
+  };
+
   return (
     <VView style={styles.container}>
       <Header
@@ -303,7 +317,9 @@ export default props => {
         showMenu
         navigation={props.navigation}
         showSwitch
+        showFilter={gridType}
         switchValue={switchValue}
+        showFilterFunction={showFilterFunction}
       />
       {getcloset.length === 0 ? (
         emptyScreen()
@@ -384,7 +400,290 @@ export default props => {
           />
         </View>
       )}
+      {
+        <FilterModal
+          showModal={showModal}
+          categoryDataArray={gridClosetData}
+          hideModal={() => setModal(false)}
+        />
+      }
     </VView>
+  );
+};
+
+const FilterModal = ({
+  showModal = false,
+  categoryDataArray = [],
+  hideModal = () => {},
+}) => {
+  const [selectedFilter, setSelectedFilter] = useState('Category');
+  const categoryData = useSelector(state => state.ClosetReducer.categoryData);
+  const brandData = useSelector(state => state.ClosetReducer.brandData);
+  const [brandList, setBrandList] = useState(brandData);
+  const [brandSearchKey, setBrandSearchKey] = useState('');
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState([]);
+  const [seasonData, setSeasonData] = useState([]);
+
+  const setSeasonDataFunction = item => {
+    let selectedSeason1 = [...seasonData];
+    if (!seasonData.includes(item)) {
+      selectedSeason1.push(item);
+    } else {
+      selectedSeason1 = selectedSeason1.filter(i => i !== item);
+    }
+    setSeasonData(selectedSeason1);
+  };
+
+  const searchBrand = e => {
+    setBrandSearchKey(e);
+    let allBrandList = brandData;
+    allBrandList = allBrandList.filter(i => {
+      return i.brandName.toLowerCase().includes(e.toLowerCase());
+    });
+    setBrandList(allBrandList);
+  };
+
+  const setBrandsFilter = item => {
+    let selectedBrands1 = [...selectedBrands];
+    if (selectedBrands.includes(item.brandName)) {
+      selectedBrands1 = selectedBrands1.filter(i => i !== item.brandName);
+    } else {
+      selectedBrands1.push(item.brandName);
+    }
+    setSelectedBrands(selectedBrands1);
+  };
+
+  const handleCategoryFilter = (item, i) => {
+    let selectedCategory1 = [...selectedCategory];
+    let selectedSubCategory1 = [...selectedSubCategory];
+    selectedCategory1.push(item.categoryId);
+    setSelectedCategory(selectedCategory1);
+    if (selectedSubCategory1.includes(i.subCategoryId)) {
+      selectedSubCategory1 = selectedSubCategory1.filter(
+        data => data !== i.subCategoryId,
+      );
+    } else {
+      selectedSubCategory1.push(i.subCategoryId);
+    }
+    setSelectedSubCategory(selectedSubCategory1);
+  };
+
+  console.log('setSelectedCategory', selectedSubCategory);
+
+  return (
+    <View>
+      <Modal
+        animationIn="fadeInUpBig"
+        avoidKeyboard
+        animationInTiming={400}
+        animationOutTiming={900}
+        isVisible={showModal}
+        style={{
+          margin: 0,
+        }}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            paddingVertical: 30,
+            paddingHorizontal: 16,
+            flex: 1,
+          }}>
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 24,
+            }}>
+            <Text style={{fontSize: FONTS_SIZES.s3, fontWeight: 'bold'}}>
+              Filters
+            </Text>
+            <TouchableOpacity
+              onPress={hideModal}
+              style={{
+                height: 32,
+                width: 32,
+                zIndex: 600,
+                borderRadius: 50,
+                alignSelf: 'flex-end',
+              }}>
+              <Image
+                source={require('../../assets/cross.webp')}
+                style={{
+                  height: '100%',
+                  width: '100%',
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{flexDirection: 'row', flex: 1}}>
+            <View style={{width: '30%', alignItems: 'flex-start'}}>
+              {['Category', 'Brand', 'Season', 'Color'].map(item => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => setSelectedFilter(item)}
+                    style={{
+                      paddingVertical: 12,
+                      width: '80%',
+                      paddingHorizontal: 8,
+                      alignItems: 'center',
+                      backgroundColor:
+                        item === selectedFilter ? Colors.grey1 : 'transparent',
+                    }}>
+                    <Text>{item}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+            <View style={{width: '70%'}}>
+              <ScrollView>
+                {selectedFilter === 'Category' ? (
+                  <View>
+                    {categoryData.map(item => {
+                      return (
+                        <View>
+                          <Text style={{marginVertical: 8, fontWeight: 'bold'}}>
+                            {item.categoryName}
+                          </Text>
+                          <View
+                            style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                            {item.subCategory.map(i => {
+                              return (
+                                <TouchableOpacity
+                                  onPress={() => handleCategoryFilter(item, i)}
+                                  style={{
+                                    borderWidth: 1,
+                                    padding: 8,
+                                    borderColor: Colors.greyBorder,
+                                    marginRight: 8,
+                                    marginBottom: 8,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    backgroundColor:
+                                      selectedSubCategory.includes(
+                                        i.subCategoryId,
+                                      )
+                                        ? '#DBDBDB'
+                                        : 'transparent',
+                                    alignItems: 'center',
+                                  }}>
+                                  <Text>{i.subCategoryName}</Text>
+                                  {selectedSubCategory.includes(
+                                    i.subCategoryId,
+                                  ) ? (
+                                    <Image
+                                      source={require('../../assets/crossIcon.png')}
+                                      style={{
+                                        width: 12,
+                                        height: 12,
+                                        marginLeft: 8,
+                                      }}
+                                    />
+                                  ) : null}
+                                </TouchableOpacity>
+                              );
+                            })}
+                          </View>
+                        </View>
+                      );
+                    })}
+                  </View>
+                ) : selectedFilter === 'Brand' ? (
+                  <View>
+                    <Input
+                      placeholder="Search Brands"
+                      onChangeText={e => searchBrand(e)}
+                      value={brandSearchKey}
+                    />
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {brandList.map(item => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => setBrandsFilter(item)}
+                            style={{
+                              borderWidth: 1,
+                              padding: 8,
+                              marginRight: 8,
+                              borderColor: Colors.greyBorder,
+                              marginBottom: 8,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              backgroundColor: selectedBrands.includes(
+                                item.brandName,
+                              )
+                                ? '#DBDBDB'
+                                : 'transparent',
+                              alignItems: 'center',
+                            }}>
+                            <Text>{item.brandName}</Text>
+                            {selectedBrands.includes(item.brandName) ? (
+                              <Image
+                                source={require('../../assets/crossIcon.png')}
+                                style={{width: 12, height: 12, marginLeft: 8}}
+                              />
+                            ) : null}
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  </View>
+                ) : selectedFilter === 'Season' ? (
+                  <>
+                    <Text style={{marginVertical: 8, fontWeight: 'bold'}}>
+                      Season
+                    </Text>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {['spring', 'summer', 'fall', 'winter'].map(
+                        (item, index) => {
+                          return (
+                            <TouchableOpacity
+                              onPress={() => setSeasonDataFunction(item)}
+                              style={{
+                                borderWidth: 1,
+                                padding: 8,
+                                marginRight: 8,
+                                borderColor: Colors.greyBorder,
+                                marginBottom: 8,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                backgroundColor: seasonData.includes(item)
+                                  ? '#DBDBDB'
+                                  : 'transparent',
+                                alignItems: 'center',
+                              }}>
+                              <VText
+                                style={{textTransform: 'capitalize'}}
+                                text={item}
+                              />
+                              {seasonData.includes(item) ? (
+                                <Image
+                                  source={require('../../assets/crossIcon.png')}
+                                  style={{width: 12, height: 12, marginLeft: 8}}
+                                />
+                              ) : null}
+                            </TouchableOpacity>
+                          );
+                        },
+                      )}
+                    </View>
+                  </>
+                ) : null}
+              </ScrollView>
+            </View>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{width: '45%'}}>
+              <Buttons text="reset" isInverse />
+            </View>
+            <View style={{width: '45%'}}>
+              <Buttons text="apply" />
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 

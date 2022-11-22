@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {VView, VText, Buttons} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import {
@@ -12,6 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {sendOtp, verifyOtp} from '../../redux/actions/sendOtpAction';
 import Toast from 'react-native-simple-toast';
 import {Colors} from '../../colors';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 const VerifyEmail = propsData => {
   const dispatch = useDispatch();
@@ -118,92 +119,99 @@ const VerifyEmail = propsData => {
   };
 
   return (
-    <VView
+    <View
       style={{
         flex: 1,
         paddingHorizontal: 16,
         justifyContent: 'center',
         backgroundColor: 'white',
       }}>
-      <VText
-        text="Verify your email"
-        style={{
-          fontSize: FONTS_SIZES.s3,
-          fontWeight: '700',
-          textAlign: 'center',
-        }}
-      />
-      <VView
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flex: 1,
           justifyContent: 'center',
-          marginBottom: 56,
         }}>
         <VText
-          text="We have sent you a 4 digit OTP to your given email id "
+          text="Verify your email"
           style={{
-            marginVertical: 8,
+            fontSize: FONTS_SIZES.s3,
+            fontWeight: '700',
             textAlign: 'center',
-            lineHeight: 24,
-            color: Colors.black60,
           }}
         />
-        <VText
-          text={propsData?.route?.params?.email}
-          style={{fontWeight: '700', textAlign: 'center'}}
-        />
-      </VView>
-      <CodeField
-        ref={ref}
-        {...props}
-        value={value}
-        onChangeText={setValue}
-        cellCount={CELL_COUNT}
-        rootStyle={styles.codeFieldRoot}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        renderCell={({index, symbol, isFocused}) => (
-          <Text
-            key={index}
-            style={[styles.cell, isFocused && styles.focusCell]}
-            onLayout={getCellOnLayoutHandler(index)}>
-            {symbol || (isFocused ? <Cursor /> : null)}
-          </Text>
-        )}
-      />
-      {errorText && (
-        <VText
-          text={'Enter a valid OTP'}
-          style={{color: 'red', textAlign: 'right', marginTop: 8}}
-        />
-      )}
-      {seconds != 0 ? (
-        <VView style={{alignItems: 'flex-end', margin: 8}}>
+        <VView
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            marginBottom: 56,
+          }}>
           <VText
-            style={{color: Colors.black60}}
-            text={`OTP will be expired after ${minutes} : ${seconds}`}
+            text="We have sent you a 4 digit OTP to your given email id "
+            style={{
+              marginVertical: 8,
+              textAlign: 'center',
+              lineHeight: 24,
+              color: Colors.black60,
+            }}
+          />
+          <VText
+            text={propsData?.route?.params?.email}
+            style={{fontWeight: '700', textAlign: 'center'}}
           />
         </VView>
-      ) : null}
-      <VView style={{marginTop: 56}}>
-        <Buttons text="Verify" onPress={verifyOtpData} />
-        <Buttons
-          disabled={count > 0 ? true : false}
-          onPress={sendOtpAgain}
-          text={
-            count > 0 ? `Send otp again in ${count} secs` : 'Send otp again'
-          }
-          isInverse
+        <CodeField
+          ref={ref}
+          {...props}
+          value={value}
+          onChangeText={setValue}
+          cellCount={CELL_COUNT}
+          rootStyle={styles.codeFieldRoot}
+          keyboardType="number-pad"
+          textContentType="oneTimeCode"
+          renderCell={({index, symbol, isFocused}) => (
+            <Text
+              key={index}
+              style={[styles.cell, isFocused && styles.focusCell]}
+              onLayout={getCellOnLayoutHandler(index)}>
+              {symbol || (isFocused ? <Cursor /> : null)}
+            </Text>
+          )}
         />
-        <Buttons
-          text="change email ID"
-          isInverse
-          noBorder
-          onPress={() => propsData.navigation.goBack()}
-        />
-      </VView>
-    </VView>
+        {errorText && (
+          <VText
+            text={'Enter a valid OTP'}
+            style={{color: 'red', textAlign: 'right', marginTop: 8}}
+          />
+        )}
+        {seconds != 0 ? (
+          <VView style={{alignItems: 'flex-end', margin: 8}}>
+            <VText
+              style={{color: Colors.black60}}
+              text={`OTP will be expired after ${minutes} : ${seconds}`}
+            />
+          </VView>
+        ) : null}
+        <VView style={{marginTop: 56}}>
+          <Buttons text="Verify" onPress={verifyOtpData} />
+          <Buttons
+            disabled={count > 0 ? true : false}
+            onPress={sendOtpAgain}
+            text={
+              count > 0 ? `Send otp again in ${count} secs` : 'Send otp again'
+            }
+            isInverse
+          />
+          <Buttons
+            text="change email ID"
+            isInverse
+            noBorder
+            onPress={() => propsData.navigation.goBack()}
+          />
+        </VView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
 

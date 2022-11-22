@@ -18,6 +18,7 @@ const Header = ({
   openMenu = () => {},
   handleSorting = () => {},
   showSort = false,
+  showFilterFunction = () => {},
 }) => {
   const [switchIcon, setSwitch] = useState(false);
   const toggleSwitch = () => {
@@ -63,7 +64,12 @@ const Header = ({
           />
         )}
       </VView>
-      <VView style={{flexDirection: 'row', alignItems: 'center'}}>
+      <VView
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
         {showshare && (
           <VView style={{flexDirection: 'row'}}>
             <TouchableOpacity>
@@ -90,7 +96,9 @@ const Header = ({
           </VView>
         )}
         {showFilter && (
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => showFilterFunction(true)}
+            style={{paddingHorizontal: 10}}>
             <Image
               resizeMode="stretch"
               source={require('../../assets/iFilter.webp')}
@@ -123,7 +131,7 @@ const Header = ({
         {showMenu && (
           <TouchableOpacity
             onPress={() => navigation.navigate('Menu')}
-            style={{paddingHorizontal: 10}}>
+            style={{paddingLeft: 10}}>
             <Image
               resizeMode="contain"
               source={Images.menuBar}
