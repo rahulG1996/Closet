@@ -7,6 +7,7 @@ const initialState = {
   deleteClosetResponse: {},
   editClosetResponse: {},
   removeBgResponse: {},
+  getFilterClosetResponse: [],
 };
 
 const ClosetReducer = (state = initialState, action) => {
@@ -24,7 +25,6 @@ const ClosetReducer = (state = initialState, action) => {
       };
     }
     case 'CLOSET_DATA': {
-      console.warn('redux closet', action.value);
       return {
         ...state,
         getcloset: action.value,
@@ -58,6 +58,12 @@ const ClosetReducer = (state = initialState, action) => {
       return {
         ...state,
         removeBgResponse: action.value,
+      };
+    }
+    case 'FILTER_CLOSET': {
+      return {
+        ...state,
+        getFilterClosetResponse: action.value,
       };
     }
     default:

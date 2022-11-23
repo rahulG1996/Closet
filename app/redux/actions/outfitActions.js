@@ -40,7 +40,6 @@ export function getOutfitDetail(data) {
 export function deleteOutfit(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('removeOutfitItem', 'POST', data);
-    console.warn('delete outfit', apiResponse);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'OUTFIT_DELETE', value: apiResponse});
     }

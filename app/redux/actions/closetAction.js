@@ -40,7 +40,6 @@ export function addDataInCloset(data) {
 export function editDataInCloset(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('editClosetDetails', 'POST', data);
-    console.warn('edit closet Action', apiResponse);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'EDIT_CLOSET', value: apiResponse});
     }
@@ -59,8 +58,6 @@ export function openClosetDetails(data) {
 export function deleteClosetData(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('removeClosetItem', 'POST', data);
-    console.warn('data dlete', data);
-    console.warn('apiResponse dlete', apiResponse);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'DELETE_CLOSET', value: apiResponse});
     }
@@ -73,6 +70,15 @@ export function removeBackgroundFromImage(data) {
     dispatch({type: 'COMMON_LOADER', value: false});
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'REMOVE_BG_IMAGE', value: apiResponse});
+    }
+  };
+}
+
+export function getFilterCloset(data) {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('filterCloset', 'POST', data);
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'FILTER_CLOSET', value: apiResponse?.filterData});
     }
   };
 }

@@ -24,22 +24,20 @@ const Outfits = props => {
       title: 'Alphabetical (Z to A)',
       isSelected: false,
     },
-    // {
-    //   type: 'asc1',
-    //   title: 'Date added',
-    //   isSelected: false,
-    // },
-    // {
-    //   type: 'asc2',
-    //   title: 'Date modified',
-    //   isSelected: false,
-    // },
+    {
+      type: 'dateAsc',
+      title: 'Date added',
+      isSelected: false,
+    },
+    {
+      type: 'dateDesc',
+      title: 'Date modified',
+      isSelected: false,
+    },
   ];
 
   const getOutfitData =
     useSelector(state => state.OutfitReducer.getOutfitData) || [];
-
-  console.warn('getOutfitData', getOutfitData);
 
   // useEffect(() => {
   //   if (Object.keys(getOutfitData).length) {
@@ -157,6 +155,16 @@ const Outfits = props => {
     } else if (selectedSort?.type == 'desc') {
       getOutfitData.sort((a, b) =>
         a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1,
+      );
+      setSelectedSort(0);
+    } else if (selectedSort?.type == 'dateAsc' || selectedSortIndex == 0) {
+      getOutfitData.sort((a, b) =>
+        new Date(a.createdDate) < new Date(b.createdDate) ? 1 : -1,
+      );
+      setSelectedSort(0);
+    } else if (selectedSort?.type == 'dateDesc') {
+      getOutfitData.sort((a, b) =>
+        new Date(a.modifiedDate) < new Date(b.modifiedDate) ? 1 : -1,
       );
       setSelectedSort(0);
     }

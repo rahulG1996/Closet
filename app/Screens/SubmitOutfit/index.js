@@ -44,13 +44,6 @@ const SubmitOutfit = props => {
   }, [editOutfitRepsponse]);
 
   useEffect(() => {
-    console.warn(
-      JSON.stringify(
-        props?.route?.params?.editOutfitData?.seasons,
-        undefined,
-        2,
-      ),
-    );
     if (props?.route?.params?.editOutfitData) {
       setOutfitName(props?.route?.params?.editOutfitData?.name);
       let closetIds1 = [];

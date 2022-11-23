@@ -97,7 +97,6 @@ const AddCloset = props => {
   };
 
   const imageLocations = value => {
-    console.warn('value', JSON.stringify(value, undefined, 2));
     setImageData(value);
   };
 

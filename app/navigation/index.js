@@ -29,6 +29,7 @@ import AddOutfit from '../screens/AddOutfit';
 import SubmitOutfit from '../screens/SubmitOutfit';
 import OutfitDetail from '../screens/OutfitDetail';
 import {getOutfitsList} from '../redux/actions/outfitActions';
+import ClosetFilter from '../screens/ClosetFilter';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -56,7 +57,6 @@ function ShopStack() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="ViewProduct" component={ViewProduct} />
       <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
-      {/* <Stack.Screen name="ClosetDetailsFrom" component={ClosetDetailsFrom} /> */}
     </Stack.Navigator>
   );
 }
@@ -70,6 +70,7 @@ const ClosetStack = () => {
       <Stack.Screen name="ClosetCategory" component={ClosetCategory} />
       <Stack.Screen name="ClosetInfo" component={ClosetInfo} />
       <Stack.Screen name="EditCloset" component={EditCloset} />
+      <Stack.Screen name="ClosetFilter" component={ClosetFilter} />
     </Stack.Navigator>
   );
 };
@@ -123,8 +124,6 @@ function AppNavigation() {
   const isProfileCreated = useSelector(
     state => state.AuthReducer.isProfileCreated,
   );
-  const categoryData = useSelector(state => state.ClosetReducer.categoryData);
-  console.warn(JSON.stringify(categoryData, undefined, 2));
 
   useEffect(() => {
     if (userId) {

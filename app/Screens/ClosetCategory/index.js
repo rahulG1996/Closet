@@ -11,7 +11,6 @@ const ClosetCategory = props => {
   const singleClosetReponse = useSelector(
     state => state.ClosetReducer.singleClosetReponse,
   );
-  console.warn(props?.route?.params?.categoryType);
 
   useEffect(() => {
     if (Object.keys(singleClosetReponse).length) {

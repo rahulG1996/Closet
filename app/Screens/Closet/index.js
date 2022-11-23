@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   Image,
@@ -8,23 +8,16 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
-  Linking,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import {
-  Buttons,
-  Header,
-  Input,
-  OverlayModal,
-  VText,
-  VView,
-} from '../../components';
+import {Buttons, Header, Input, VText, VView} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
 import {useDispatch, useSelector} from 'react-redux';
-import PhotoEditor from 'react-native-photo-editor';
-import {openClosetDetails} from '../../redux/actions/closetAction';
-import {InAppBrowser} from 'react-native-inappbrowser-reborn';
+import {
+  getFilterCloset,
+  openClosetDetails,
+} from '../../redux/actions/closetAction';
 import WebView from 'react-native-webview';
 import ViewShot, {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
@@ -60,7 +53,6 @@ export default props => {
   }, [dispatch, props.navigation, singleClosetReponse]);
 
   useEffect(() => {
-    console.warn('re-render');
     let categoryArray = [...new Set(getcloset.map(item => item.categoryName))];
 
     let finalArray = [];
@@ -102,7 +94,6 @@ export default props => {
       cropping: true,
       includeBase64: true,
     }).then(img => {
-      console.warn('comp', JSON.stringify(img.path, undefined, 2));
       props.navigation.navigate('EditCloset', {
         imgSource: img,
       });
@@ -144,7 +135,6 @@ export default props => {
       <View
         style={{
           flexDirection: 'row',
-          // justifyContent: 'space-between',
           flexWrap: 'wrap',
           paddingHorizontal: 16,
         }}>
@@ -168,19 +158,22 @@ export default props => {
                       [1, 2, 3, 4].map((i, index) => {
                         return (
                           <View
+                            key={i.closetItemId}
                             style={{
                               width: '45%',
                               height: 80,
                               backgroundColor: Colors.grey1,
                               margin: 2,
                             }}>
-                            <Image
-                              source={{
-                                uri: item.subCategory[index]?.itemImageUrl,
-                              }}
-                              resizeMode="contain"
-                              style={{width: '95%', height: '95%'}}
-                            />
+                            {item.subCategory[index]?.itemImageUrl && (
+                              <Image
+                                source={{
+                                  uri: item.subCategory[index]?.itemImageUrl,
+                                }}
+                                resizeMode="contain"
+                                style={{width: '95%', height: '95%'}}
+                              />
+                            )}
                           </View>
                         );
                       })}
@@ -299,7 +292,6 @@ export default props => {
             from: 'google',
           });
           setWebView(false);
-          console.warn('urlString', uri);
         });
 
         // console.warn(uri);
@@ -310,6 +302,21 @@ export default props => {
 
   const showFilterFunction = value => {
     setModal(true);
+  };
+
+  const setFilter = data => {
+    setModal(false);
+    let dataObj = {
+      categoryIds: data.selectedCategory,
+      subCategoryIds: data.selectedSubCategory,
+      brandIds: data.selectedBrands,
+      seasons: data.seasonData,
+      colorCodes: [],
+      userId: userId,
+    };
+    props.navigation.navigate('ClosetFilter', {
+      filterData: dataObj,
+    });
   };
 
   return (
@@ -407,6 +414,7 @@ export default props => {
           showModal={showModal}
           categoryDataArray={gridClosetData}
           hideModal={() => setModal(false)}
+          setFilter={setFilter}
         />
       }
     </VView>
@@ -417,6 +425,7 @@ const FilterModal = ({
   showModal = false,
   categoryDataArray = [],
   hideModal = () => {},
+  setFilter = () => {},
 }) => {
   const [selectedFilter, setSelectedFilter] = useState('Category');
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
@@ -449,10 +458,10 @@ const FilterModal = ({
 
   const setBrandsFilter = item => {
     let selectedBrands1 = [...selectedBrands];
-    if (selectedBrands.includes(item.brandName)) {
-      selectedBrands1 = selectedBrands1.filter(i => i !== item.brandName);
+    if (selectedBrands.includes(item.brandId)) {
+      selectedBrands1 = selectedBrands1.filter(i => i !== item.brandId);
     } else {
-      selectedBrands1.push(item.brandName);
+      selectedBrands1.push(item.brandId);
     }
     setSelectedBrands(selectedBrands1);
   };
@@ -460,8 +469,7 @@ const FilterModal = ({
   const handleCategoryFilter = (item, i) => {
     let selectedCategory1 = [...selectedCategory];
     let selectedSubCategory1 = [...selectedSubCategory];
-    selectedCategory1.push(item.categoryId);
-    setSelectedCategory(selectedCategory1);
+
     if (selectedSubCategory1.includes(i.subCategoryId)) {
       selectedSubCategory1 = selectedSubCategory1.filter(
         data => data !== i.subCategoryId,
@@ -469,10 +477,23 @@ const FilterModal = ({
     } else {
       selectedSubCategory1.push(i.subCategoryId);
     }
+    if (selectedCategory1.includes(item.categoryId)) {
+      selectedCategory1 = selectedCategory1.filter(
+        data => data !== item.categoryId,
+      );
+    } else {
+      selectedCategory1.push(item.categoryId);
+    }
+    setSelectedCategory(selectedCategory1);
     setSelectedSubCategory(selectedSubCategory1);
   };
 
-  console.log('setSelectedCategory', selectedSubCategory);
+  const resetFilterValues = () => {
+    setSelectedBrands([]);
+    setSelectedCategory([]);
+    setSelectedSubCategory([]);
+    setSeasonData([]);
+  };
 
   return (
     <View>
@@ -613,14 +634,14 @@ const FilterModal = ({
                               flexDirection: 'row',
                               justifyContent: 'space-between',
                               backgroundColor: selectedBrands.includes(
-                                item.brandName,
+                                item.brandId,
                               )
                                 ? '#DBDBDB'
                                 : 'transparent',
                               alignItems: 'center',
                             }}>
                             <Text>{item.brandName}</Text>
-                            {selectedBrands.includes(item.brandName) ? (
+                            {selectedBrands.includes(item.brandId) ? (
                               <Image
                                 source={require('../../assets/crossIcon.png')}
                                 style={{width: 12, height: 12, marginLeft: 8}}
@@ -675,14 +696,30 @@ const FilterModal = ({
               </ScrollView>
             </View>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{width: '45%'}}>
-              <Buttons text="reset" isInverse />
+          {(selectedBrands.length > 0 ||
+            selectedCategory.length > 0 ||
+            selectedSubCategory.length > 0 ||
+            seasonData.length > 0) && (
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View style={{width: '45%'}}>
+                <Buttons text="reset" isInverse onPress={resetFilterValues} />
+              </View>
+              <View style={{width: '45%'}}>
+                <Buttons
+                  text="apply"
+                  onPress={() =>
+                    setFilter({
+                      selectedBrands,
+                      selectedCategory,
+                      selectedSubCategory,
+                      seasonData,
+                    })
+                  }
+                />
+              </View>
             </View>
-            <View style={{width: '45%'}}>
-              <Buttons text="apply" />
-            </View>
-          </View>
+          )}
         </View>
       </Modal>
     </View>
