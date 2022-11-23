@@ -123,7 +123,7 @@ const EditCloset = props => {
               );
             })}
           </View>
-          <View style={{marginBottom: 8}}>
+          <View style={{marginBottom: 12}}>
             <Buttons text="remove background" isInverse onPress={removeBg} />
           </View>
           <Buttons

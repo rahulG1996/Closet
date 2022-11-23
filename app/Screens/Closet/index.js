@@ -206,7 +206,13 @@ export default props => {
           borderBottomColor:
             activeTab === item.categoryName ? Colors.black60 : 'transparent',
         }}>
-        <Text>{item.categoryName}</Text>
+        <Text
+          style={{
+            fontSize: 15,
+            color: activeTab === item.categoryName ? '#000' : Colors.black60,
+          }}>
+          {item.categoryName}
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -241,6 +247,8 @@ export default props => {
             alignItems: 'center',
             flexDirection: 'row',
             flexWrap: 'wrap',
+            paddingHorizontal: 8,
+            marginTop: 16,
           }}>
           {filterClosetData.length > 0 ? (
             filterClosetData.map(item => {
@@ -250,9 +258,7 @@ export default props => {
                     width: '45%',
                     alignItems: 'center',
                     backgroundColor: Colors.grey1,
-                    paddingHorizontal: 7,
-                    paddingVertical: 12,
-                    margin: 8,
+                    marginHorizontal: 8,
                   }}
                   onPress={() => openClosetInfo(item.closetItemId)}>
                   <Image
@@ -376,19 +382,31 @@ export default props => {
             underlayColor={'rgba(0,0,0,0.1)'}
             onPress={handleCamera}
             style={styles.footerImageContainer}>
-            <Image source={Images.camera} style={styles.footerImage} />
+            <Image
+              source={Images.camera}
+              style={styles.footerImage}
+              resizeMode="contain"
+            />
           </TouchableHighlight>
           <TouchableHighlight
             underlayColor={'rgba(0,0,0,0.1)'}
             onPress={handleGallery}
             style={styles.footerImageContainer}>
-            <Image source={Images.photos} style={styles.footerImage} />
+            <Image
+              source={Images.photos}
+              style={styles.footerImage}
+              resizeMode="contain"
+            />
           </TouchableHighlight>
           <TouchableHighlight
             underlayColor={'rgba(0,0,0,0.1)'}
             onPress={() => setWebView(true)}
             style={styles.footerImageContainer}>
-            <Image source={Images.googleIcon} style={styles.footerImage} />
+            <Image
+              source={Images.googleIcon}
+              style={styles.footerImage}
+              resizeMode="contain"
+            />
           </TouchableHighlight>
         </VView>
       )}

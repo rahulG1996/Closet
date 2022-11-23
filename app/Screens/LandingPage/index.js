@@ -205,7 +205,11 @@ class LandingPage extends React.Component {
     return (
       <View style={{backgroundColor: 'white', flex: 1}}>
         <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
-          <View style={{backgroundColor: Colors.grey1}}>
+          <View
+            style={{
+              backgroundColor: Colors.grey1,
+              paddingTop: 36,
+            }}>
             <Carousel
               loop={true}
               autoplay={true}
@@ -230,7 +234,7 @@ class LandingPage extends React.Component {
               tappableDots={true}
             />
           </View>
-          <View style={{paddingHorizontal: 16, marginTop: 32}}>
+          <View style={{paddingHorizontal: 16, marginTop: 36}}>
             <Text style={styles.headingStyle}>Log in or sign up</Text>
             <Input
               placeholder="Email Id"
@@ -239,7 +243,12 @@ class LandingPage extends React.Component {
               value={this.state.email}
               showIcon
             />
-            <Buttons text="continue" onPress={this.login} />
+            <View
+              style={{
+                marginTop: 4,
+              }}>
+              <Buttons text="continue" onPress={this.login} />
+            </View>
             <View style={styles.orContainer}>
               <View style={styles.line} />
               <Text>or</Text>
@@ -301,7 +310,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey1,
     borderRadius: 8,
     width: ITEM_WIDTH,
-    paddingBottom: 40,
+    paddingBottom: 16,
   },
   image: {
     width: ITEM_WIDTH,
@@ -354,18 +363,16 @@ const styles = StyleSheet.create({
   socialIconContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 32,
-    paddingBottom: 16,
-    paddingHorizontal: 70,
+    paddingVertical: 16,
   },
   orContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 28,
+    marginTop: 16,
   },
   tncText: {
-    color: 'rgba(33, 122, 255, 1)',
+    color: '#217AFF',
   },
 });
 

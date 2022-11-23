@@ -58,7 +58,7 @@ const ClosetInfo = props => {
     if (Object.keys(deleteClosetResponse).length) {
       if (deleteClosetResponse.statusCode === 200) {
         dispatch({type: 'DELETE_CLOSET', value: {}});
-        Toast.show('Closet Removed Successfuly');
+        Toast.show('Closet successfully removed from closet');
         props.navigation.navigate('ClosetScreen');
         dispatch(getClosetData());
       }

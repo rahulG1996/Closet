@@ -8,6 +8,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import {Provider} from 'react-redux';
 import {Platform, StatusBar, View} from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import {Colors} from './app/colors';
 
 let isNoch = DeviceInfo.hasNotch();
 
@@ -23,6 +24,7 @@ class App extends Component {
           style={{
             flex: 1,
             marginTop: isNoch ? 32 : 10,
+            backgroundColor: Colors.grey1,
           }}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>

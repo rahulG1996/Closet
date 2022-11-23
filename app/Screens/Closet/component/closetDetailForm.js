@@ -84,7 +84,7 @@ const ClosetDetailsFrom = props => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
-        Toast.show('Closet added successfully');
+        Toast.show('Closet successfully added in closet');
         dispatch(getClosetData());
         props.navigation.navigate('ClosetScreen');
       }
@@ -349,7 +349,7 @@ const ClosetDetailsFrom = props => {
               }}
               items={state.brandDataUpdated}
               defaultIndex={2}
-              placeholder="Tops, Pants, Shorts..."
+              placeholder="H&M, Zara, Nike..."
               resPtValue={false}
               underlineColorAndroid="transparent"
             />

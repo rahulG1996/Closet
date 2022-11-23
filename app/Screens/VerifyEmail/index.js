@@ -36,6 +36,12 @@ const VerifyEmail = propsData => {
   );
 
   useEffect(() => {
+    if (value) {
+      setErrorText(false);
+    }
+  }, [value]);
+
+  useEffect(() => {
     if (Object.keys(verifyOtpResponse).length) {
       dispatch({type: 'VERIFY_OTP', value: ''});
       if (verifyOtpResponse.statusCode === 200) {
@@ -173,7 +179,11 @@ const VerifyEmail = propsData => {
           renderCell={({index, symbol, isFocused}) => (
             <Text
               key={index}
-              style={[styles.cell, isFocused && styles.focusCell]}
+              style={[
+                styles.cell,
+                isFocused && styles.focusCell,
+                {borderColor: errorText ? Colors.red : Colors.black30},
+              ]}
               onLayout={getCellOnLayoutHandler(index)}>
               {symbol || (isFocused ? <Cursor /> : null)}
             </Text>
