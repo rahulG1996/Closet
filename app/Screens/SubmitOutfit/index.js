@@ -62,7 +62,7 @@ const SubmitOutfit = props => {
     if (Object.keys(addOutfitReponse).length) {
       dispatch({type: 'ADD_OUTFIT', value: {}});
       if (addOutfitReponse.statusCode === 200) {
-        Toast.show('Outfit added successfully');
+        Toast.show('Cloth successfully added in Outfit');
         dispatch(getOutfitsList());
         setLoading(false);
         props.navigation.navigate('Outfit');
@@ -140,7 +140,7 @@ const SubmitOutfit = props => {
           }
         />
         <View style={{paddingHorizontal: 16}}>
-          <Text style={styles.headingStyle}>Name</Text>
+          <Text style={{...styles.headingStyle, marginTop: 16}}>Name</Text>
           <Input
             placeholder="Name"
             onChangeText={e => {
@@ -192,7 +192,7 @@ export default SubmitOutfit;
 
 const styles = StyleSheet.create({
   headingStyle: {
-    marginTop: 16,
+    // marginTop: 1,
   },
   seasonContainer: {
     borderWidth: 1,

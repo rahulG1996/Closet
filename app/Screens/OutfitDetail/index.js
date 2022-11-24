@@ -50,7 +50,7 @@ const OutfitDetail = props => {
     if (Object.keys(deleteOutfitRepsponse).length) {
       dispatch({type: 'OUTFIT_DELETE', value: {}});
       if (deleteOutfitRepsponse.statusCode === 200) {
-        SimpleToast.show('Outfit delete successfully');
+        SimpleToast.show('Cloth successfully removed from outfit');
         dispatch(getOutfitsList());
         props.navigation.navigate('Outfit');
       }

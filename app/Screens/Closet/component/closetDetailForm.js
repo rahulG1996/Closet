@@ -84,7 +84,7 @@ const ClosetDetailsFrom = props => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
-        Toast.show('Closet successfully added in closet');
+        Toast.show('Cloth successfully added in closet');
         dispatch(getClosetData());
         props.navigation.navigate('ClosetScreen');
       }

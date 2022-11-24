@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import {Buttons, Header, Input, VText, VView} from '../../components';
@@ -24,6 +25,7 @@ import RNFS from 'react-native-fs';
 import Modal from 'react-native-modal';
 import {FONTS_SIZES} from '../../fonts';
 
+const {height} = Dimensions.get('screen');
 export default props => {
   const dispatch = useDispatch();
   const captureViewRef = useRef();
@@ -142,7 +144,10 @@ export default props => {
           ? gridClosetData.map(item => {
               return (
                 <TouchableOpacity
-                  style={{margin: 8}}
+                  style={{
+                    width: '50%',
+                    marginVertical: 8,
+                  }}
                   onPress={() =>
                     props.navigation.navigate('ClosetCategory', {
                       categoryType: item,
@@ -150,9 +155,10 @@ export default props => {
                   }>
                   <View
                     style={{
-                      width: 160,
+                      width: '100%',
                       flexDirection: 'row',
                       flexWrap: 'wrap',
+                      justifyContent: 'space-evenly',
                     }}>
                     {item.subCategory.length !== 0 &&
                       [1, 2, 3, 4].map((i, index) => {
@@ -163,7 +169,8 @@ export default props => {
                               width: '45%',
                               height: 80,
                               backgroundColor: Colors.grey1,
-                              margin: 2,
+                              marginVertical: 3,
+                              justifyContent: 'center',
                             }}>
                             {item.subCategory[index]?.itemImageUrl && (
                               <Image
@@ -269,8 +276,20 @@ export default props => {
               );
             })
           ) : (
-            <View style={{alignItems: 'center'}}>
-              <Text>No Data Found</Text>
+            <View
+              style={{
+                alignItems: 'center',
+                flex: 1,
+                height: height * 0.6,
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={{
+                  color: Colors.black60,
+                  fontSize: 15,
+                }}>
+                Umm, nothing is here...
+              </Text>
             </View>
           )}
         </View>

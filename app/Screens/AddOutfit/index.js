@@ -206,13 +206,16 @@ const AddCloset = props => {
                     style={{
                       alignItems: 'center',
                       backgroundColor: Colors.grey1,
-                      paddingHorizontal: 7,
-                      paddingVertical: 12,
+                      paddingHorizontal: 3,
+                      paddingVertical: 5,
                       margin: 8,
+                      height: 80,
+                      width: 80,
                     }}>
                     <Image
                       source={{uri: item.itemImageUrl}}
-                      style={{width: 50, height: 50}}
+                      style={{width: 70, height: 70}}
+                      resizeMode="contain"
                     />
                     <View style={{position: 'absolute', right: 5, top: 5}}>
                       <Image
