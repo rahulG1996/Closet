@@ -188,7 +188,7 @@ const Outfits = props => {
         <FlatList
           data={getOutfitData}
           numColumns={2}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => item.outfitId}
           renderItem={({item, index}) => renderItem(item, index)}
           contentContainerStyle={{
             paddingVertical: 16,

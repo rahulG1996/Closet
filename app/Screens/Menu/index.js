@@ -12,6 +12,7 @@ import {Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
 import {deleteAccount} from '../../redux/actions/profileAction';
 import Toast from 'react-native-simple-toast';
+import {FONTS_SIZES} from '../../fonts';
 
 const Menu = props => {
   const userProfileResponse = useSelector(
@@ -119,7 +120,7 @@ const Menu = props => {
             />
           </View>
           <View style={styles.profileDataContainer}>
-            <Text style={{fontWeight: 'bold'}}>
+            <Text style={{fontWeight: 'bold', fontSize: FONTS_SIZES.s3}}>
               {userProfileResponse?.name}
             </Text>
             <Text style={{textTransform: 'capitalize'}}>

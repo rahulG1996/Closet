@@ -21,6 +21,7 @@ import {
   getBrandData,
   getCategoryData,
   getClosetData,
+  getColorData,
 } from '../redux/actions/closetAction';
 import ClosetCategory from '../screens/ClosetCategory';
 import ClosetInfo from '../screens/ClosetInfo';
@@ -132,6 +133,7 @@ function AppNavigation() {
       dispatch(getCategoryData());
       dispatch(getClosetData());
       dispatch(getOutfitsList());
+      dispatch(getColorData());
     }
   }, [dispatch, userId]);
   return !userId ? (

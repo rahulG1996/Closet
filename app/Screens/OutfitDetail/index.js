@@ -197,7 +197,7 @@ const OutfitDetail = props => {
               <FlatList
                 data={getOutfitDetailData?.closetDetailsList}
                 numColumns={2}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={item => item.closetItemId}
                 renderItem={({item, index}) => renderItem(item, index)}
                 contentContainerStyle={{
                   paddingVertical: 16,

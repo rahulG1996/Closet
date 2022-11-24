@@ -9,6 +9,15 @@ export function getBrandData() {
   };
 }
 
+export function getColorData() {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('getColors', 'GET');
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'GET_COLORS', value: apiResponse.data});
+    }
+  };
+}
+
 export function getCategoryData() {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('getCategories', 'GET');

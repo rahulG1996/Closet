@@ -248,6 +248,7 @@ export default props => {
           horizontal
           renderItem={renderItem}
           showsHorizontalScrollIndicator={false}
+          keyExtractor={item => item.categoryName}
         />
         <View
           style={{
@@ -265,7 +266,7 @@ export default props => {
                     width: '45%',
                     alignItems: 'center',
                     backgroundColor: Colors.grey1,
-                    marginHorizontal: 8,
+                    margin: 8,
                   }}
                   onPress={() => openClosetInfo(item.closetItemId)}>
                   <Image
@@ -336,9 +337,10 @@ export default props => {
       subCategoryIds: data.selectedSubCategory,
       brandIds: data.selectedBrands,
       seasons: data.seasonData,
-      colorCodes: [],
+      colorCodes: data.colorsFilter,
       userId: userId,
     };
+    console.log('dataObj', JSON.stringify(dataObj, undefined, 2));
     props.navigation.navigate('ClosetFilter', {
       filterData: dataObj,
     });
@@ -452,27 +454,50 @@ export default props => {
           categoryDataArray={gridClosetData}
           hideModal={() => setModal(false)}
           setFilter={setFilter}
+          filterValue={{
+            selectedCategory: [],
+            setSeasonData: [],
+            selectedBrands: [],
+            selectedSubCategory: [],
+            colorsFilter: [],
+          }}
         />
       }
     </VView>
   );
 };
 
-const FilterModal = ({
+export const FilterModal = ({
   showModal = false,
-  categoryDataArray = [],
   hideModal = () => {},
   setFilter = () => {},
+  filterValue = {},
+  onResetFilter = () => {},
 }) => {
+  console.log('previousFilter', filterValue);
   const [selectedFilter, setSelectedFilter] = useState('Category');
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const brandData = useSelector(state => state.ClosetReducer.brandData);
+  const getColorsResponse = useSelector(
+    state => state.ClosetReducer.getColorsResponse,
+  );
   const [brandList, setBrandList] = useState(brandData);
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedSubCategory, setSelectedSubCategory] = useState([]);
   const [seasonData, setSeasonData] = useState([]);
+  const [colorsFilter, setColors] = useState([]);
+
+  useEffect(() => {
+    if (Object.keys(filterValue).length) {
+      setSelectedCategory(filterValue?.selectedCategory);
+      setSelectedSubCategory(filterValue?.selectedSubCategory);
+      setSelectedBrands(filterValue?.selectedBrands);
+      setSeasonData(filterValue?.setSeasonData);
+      setColors(filterValue?.colorsFilter);
+    }
+  }, [filterValue]);
 
   const setSeasonDataFunction = item => {
     let selectedSeason1 = [...seasonData];
@@ -530,6 +555,18 @@ const FilterModal = ({
     setSelectedCategory([]);
     setSelectedSubCategory([]);
     setSeasonData([]);
+    setColors([]);
+    onResetFilter();
+  };
+
+  const setColorsFilter = colorCode => {
+    let colorsFilter1 = [...colorsFilter];
+    if (!colorsFilter1.includes(colorCode)) {
+      colorsFilter1.push(colorCode);
+    } else {
+      colorsFilter1 = colorsFilter1.filter(i => i !== colorCode);
+    }
+    setColors(colorsFilter1);
   };
 
   return (
@@ -729,6 +766,51 @@ const FilterModal = ({
                       )}
                     </View>
                   </>
+                ) : selectedFilter === 'Color' ? (
+                  <>
+                    <Text style={{marginVertical: 8, fontWeight: 'bold'}}>
+                      Colors
+                    </Text>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {getColorsResponse?.map((item, index) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => setColorsFilter(item.colorCode)}
+                            style={{
+                              borderWidth: 1,
+                              padding: 8,
+                              marginRight: 8,
+                              borderColor: Colors.greyBorder,
+                              marginBottom: 8,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              backgroundColor: colorsFilter.includes(
+                                item.colorCode,
+                              )
+                                ? Colors.grey2
+                                : 'transparent',
+                              alignItems: 'center',
+                            }}>
+                            <View
+                              style={{
+                                width: 24,
+                                height: 24,
+                                backgroundColor: item.colorCode,
+                                borderWidth: 1,
+                                borderColor: Colors.greyBorder,
+                              }}
+                            />
+                            {colorsFilter.includes(item.colorCode) ? (
+                              <Image
+                                source={require('../../assets/crossIcon.png')}
+                                style={{width: 12, height: 12, marginLeft: 8}}
+                              />
+                            ) : null}
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  </>
                 ) : null}
               </ScrollView>
             </View>
@@ -736,7 +818,8 @@ const FilterModal = ({
           {(selectedBrands.length > 0 ||
             selectedCategory.length > 0 ||
             selectedSubCategory.length > 0 ||
-            seasonData.length > 0) && (
+            seasonData.length > 0 ||
+            colorsFilter.length > 0) && (
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{width: '45%'}}>
@@ -751,6 +834,7 @@ const FilterModal = ({
                       selectedCategory,
                       selectedSubCategory,
                       seasonData,
+                      colorsFilter,
                     })
                   }
                 />

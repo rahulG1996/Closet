@@ -62,22 +62,21 @@ const AddCloset = props => {
     }
     setClosetIds(closetIds1);
 
-    if (!outfitImages.some(i => i.closetItemId === item.closetItemId)) {
-      setOutfitImages(oldArray => [
-        ...oldArray,
-        {
-          pan: new Animated.ValueXY(0, 0),
-          imageSrc: item.itemImageUrl,
-          closetItemId: item.closetItemId,
-        },
-      ]);
+    let outfitImages1 = [...outfitImages];
+
+    if (!outfitImages1.some(i => i.closetItemId === item.closetItemId)) {
+      outfitImages1.push({
+        pan: new Animated.ValueXY(0, 0),
+        imageSrc: item.itemImageUrl,
+        closetItemId: item.closetItemId,
+      });
     } else {
       //remove image logic
-      const filteredOutFitImage = outfitImages.filter(
+      outfitImages1 = outfitImages1.filter(
         i => i.closetItemId !== item.closetItemId,
       );
-      setOutfitImages(filteredOutFitImage);
     }
+    setOutfitImages(outfitImages1);
   };
 
   const renderItem = ({item, index}) => {
@@ -169,12 +168,14 @@ const AddCloset = props => {
           source={require('../../assets/bg.png')}
           resizeMode="contain"
           style={{height: Dimensions.get('window').height * 0.5}}>
-          <View ref={captureViewRef}>
+          <View ref={captureViewRef} style={{overflow: 'hidden'}}>
             <App outfitImages={outfitImages} imageLocations={imageLocations} />
           </View>
         </ImageBackground>
       ) : (
-        <View style={{backgroundColor: Colors.grey1}} ref={captureViewRef}>
+        <View
+          style={{backgroundColor: Colors.grey1, overflow: 'hidden'}}
+          ref={captureViewRef}>
           <App outfitImages={outfitImages} imageLocations={imageLocations} />
         </View>
       )}
@@ -191,6 +192,7 @@ const AddCloset = props => {
               horizontal
               renderItem={renderItem}
               showsHorizontalScrollIndicator={false}
+              keyExtractor={item => item.categoryName}
             />
             <View
               style={{
@@ -314,7 +316,7 @@ class App extends Component {
       <View style={styles.container}>
         {this.props.outfitImages.map((i, index) => {
           return (
-            <View style={{width: 100, height: 100}}>
+            <View style={{width: 100, height: 100}} key={i.closetItemId}>
               <PinchGestureHandler
                 onGestureEvent={this.onPinchEvent(i)}
                 onHandlerStateChange={this.onPinchStateChange}>
