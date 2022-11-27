@@ -17,6 +17,9 @@ import {
   loginAction,
   googleLoginAction,
   storeUserId,
+  appleLoginAction,
+  emptyAppleResponse,
+  emptyGoogleResponse,
 } from '../../redux/actions/authActions';
 import {Colors} from '../../colors';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -82,9 +85,17 @@ class LandingPage extends React.Component {
       }
     }
     if (prevProps.googleLoginResponse !== this.props.googleLoginResponse) {
+      this.props.emptyGoogleResponse();
       this.props.storeUserId({
         userId: this.props.googleLoginResponse?.userId,
         isProfileCreated: this.props.googleLoginResponse?.isProfileCreated,
+      });
+    }
+    if (prevProps.appleLoginResponse !== this.props.appleLoginResponse) {
+      this.props.emptyAppleResponse();
+      this.props.storeUserId({
+        userId: this.props.appleLoginResponse?.userId,
+        isProfileCreated: this.props.appleLoginResponse?.isProfileCreated,
       });
     }
   }
@@ -144,7 +155,7 @@ class LandingPage extends React.Component {
     try {
       const appleAuthRequestResponse = await appleAuth.performRequest({
         requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+        requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
       });
 
       const {
@@ -156,7 +167,6 @@ class LandingPage extends React.Component {
       } = appleAuthRequestResponse;
 
       user = newUser;
-      alert(JSON.stringify(user));
 
       this.fetchAndUpdateCredentialState(updateCredentialStateForUser).catch(
         error => updateCredentialStateForUser(`Error: ${error.code}`),
@@ -164,21 +174,21 @@ class LandingPage extends React.Component {
 
       if (identityToken) {
         // e.g. sign in with Firebase Auth using `nonce` & `identityToken`
-        console.warn('token', nonce, identityToken);
+        this.props.appleLoginAction({identityToken: identityToken});
       } else {
         // no token - failed sign-in?
       }
 
       if (realUserStatus === appleAuth.UserStatus.LIKELY_REAL) {
-        console.warn("I'm a real person!");
+        console.log("I'm a real person!");
       }
 
-      console.warn(`Apple Authentication Completed, ${user}, ${email}`);
+      console.log(`Apple Authentication Completed, ${user}, ${email}`);
     } catch (error) {
       if (error.code === appleAuth.Error.CANCELED) {
-        console.warn('User canceled Apple Sign in.');
+        console.log('User canceled Apple Sign in.');
       } else {
-        console.error(error);
+        console.log(error);
       }
     }
   };
@@ -292,6 +302,7 @@ export default connect(
     googleLoginResponse: state.AuthReducer.googleLoginResponse,
     userId: state.AuthReducer.userId,
     isProfileCreated: state.AuthReducer.isProfileCreated,
+    appleLoginResponse: state.AuthReducer.appleLoginResponse,
   }),
   dispatch =>
     bindActionCreators(
@@ -300,6 +311,9 @@ export default connect(
         loginAction,
         googleLoginAction,
         storeUserId,
+        appleLoginAction,
+        emptyAppleResponse,
+        emptyGoogleResponse,
       },
       dispatch,
     ),

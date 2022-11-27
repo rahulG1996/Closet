@@ -216,7 +216,7 @@ const AddCloset = props => {
                     }}>
                     <Image
                       source={{uri: item.itemImageUrl}}
-                      style={{width: 70, height: 70}}
+                      style={{width: 80, height: 80}}
                       resizeMode="contain"
                     />
                     <View style={{position: 'absolute', right: 5, top: 5}}>

@@ -27,6 +27,15 @@ export function googleLoginAction(data) {
     }
   };
 }
+export function appleLoginAction(data) {
+  return async dispatch => {
+    const response = await NoAuthAPI('appleLogin', 'POST', data);
+    if (Object.keys(response).length && response?.statusCode == 200) {
+      dispatch({type: 'APPLE_LOGIN', value: response});
+    }
+  };
+}
+
 export function signupAction(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('signUp', 'POST', data);
@@ -41,5 +50,17 @@ export function emptyLoginResponse() {
     dispatch({type: 'LOGIN', value: ''});
     dispatch({type: 'USERID', value: ''});
     dispatch({type: 'GOOGLE_LOGIN', value: ''});
+  };
+}
+
+export function emptyGoogleResponse() {
+  return dispatch => {
+    dispatch({type: 'GOOGLE_LOGIN', value: {}});
+  };
+}
+
+export function emptyAppleResponse() {
+  return dispatch => {
+    dispatch({type: 'APPLE_LOGIN', value: {}});
   };
 }

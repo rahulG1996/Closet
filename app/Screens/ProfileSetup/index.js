@@ -12,9 +12,8 @@ import Toast from 'react-native-simple-toast';
 
 const ProfileSetup = props => {
   const [isImageRemove, setImage] = useState(false);
-  const userProfileResponse = useSelector(
-    state => state.ProfileReducer.userProfileResponse,
-  );
+  const userProfileResponse =
+    useSelector(state => state.ProfileReducer.userProfileResponse) || {};
   const udpateProfileRepose = useSelector(
     state => state.ProfileReducer.udpateProfileRepose,
   );
@@ -29,6 +28,34 @@ const ProfileSetup = props => {
     name: userProfileResponse?.name,
     fromLocal: false,
   });
+
+  useEffect(() => {
+    return () => {
+      setState({
+        ...state,
+        page1: true,
+        page2: false,
+        page3: false,
+        currentActiveTab: 0,
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    if (Object.keys(userProfileResponse).length) {
+      setState({
+        ...state,
+        genderSelected: userProfileResponse?.gender,
+        userImage: userProfileResponse?.profilePicUrl,
+        name: userProfileResponse?.name,
+      });
+    }
+  }, [userProfileResponse]);
+
+  console.log(
+    'state',
+    JSON.stringify({state, userProfileResponse}, undefined, 2),
+  );
 
   const dispatch = useDispatch();
 
@@ -175,10 +202,12 @@ const ProfileSetup = props => {
       name: state.name,
       gender: state.genderSelected.toLowerCase(),
       userId: userId,
-      base64ImgString: `data:image/png;base64,${state.userImage?.data}`,
     };
-    if (isProfileCreated && !state.fromLocal) {
+    if (!state.fromLocal) {
       data.base64ImgString = null;
+    }
+    if (state.fromLocal) {
+      data.base64ImgString = `data:image/png;base64,${state.userImage?.data}`;
     }
     if (isProfileCreated && isImageRemove) {
       data.base64ImgString = null;
@@ -191,6 +220,7 @@ const ProfileSetup = props => {
       props.navigation.navigate('TabData');
       return;
     }
+    console.log('profile data', JSON.stringify(data, undefined, 2));
     dispatch(updateUserProfile(data));
   };
 

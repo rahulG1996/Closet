@@ -37,7 +37,7 @@ let NoAuthAPI = (apiName, apiMethod, data) => {
     })
     .catch(err => {
       console.warn('err', err);
-      //   ToastMessage('Server encounter an error, please try after some time');
+      Toast.show('Server encounter an error, please try after some time');
       return false;
     });
 };

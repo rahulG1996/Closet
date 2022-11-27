@@ -120,7 +120,9 @@ const Menu = props => {
             />
           </View>
           <View style={styles.profileDataContainer}>
-            <Text style={{fontWeight: 'bold', fontSize: FONTS_SIZES.s3}}>
+            <Text
+              style={{fontWeight: 'bold', fontSize: FONTS_SIZES.s3}}
+              numberOfLines={1}>
               {userProfileResponse?.name}
             </Text>
             <Text style={{textTransform: 'capitalize'}}>
@@ -176,6 +178,8 @@ const styles = StyleSheet.create({
   profileDataContainer: {
     height: 80,
     justifyContent: 'space-between',
+    flex: 1,
+    paddingRight: 16,
   },
   menuContainer: {
     flexDirection: 'row',

@@ -70,6 +70,7 @@ const Outfits = props => {
             marginBottom: 8,
           }}>
           <Image
+            resizeMode="contain"
             source={{uri: item.outfitImageType}}
             style={{
               height: 200,
