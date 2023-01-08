@@ -8,13 +8,17 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
+  View,
 } from 'react-native';
 import {Colors} from '../../colors';
 import Categories from './components/Categories';
 import {useDispatch, useSelector} from 'react-redux';
+import {WebView} from 'react-native-webview';
+import Lottie from 'lottie-react-native';
 
 const Home = props => {
   const dispatch = useDispatch();
+  const [showBambuser, setShowBambuser] = useState(false);
   const isProfileCreated = useSelector(
     state => state.AuthReducer.isProfileCreated,
   );
@@ -86,6 +90,41 @@ const Home = props => {
         </VView>
       </VView>
       <ScrollView showsVerticalScrollIndicator={false} onScroll={onScroll}>
+        <Lottie
+          source={require('../../assets/ripple.json')}
+          autoPlay
+          loop
+          style={{
+            height: 100,
+            width: 100,
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: -99,
+          }}>
+          <TouchableOpacity
+            style={{
+              height: 64,
+              width: 64,
+              borderRadius: 32,
+              backgroundColor: Colors.grey1,
+              margin: 20,
+              zIndex: 99,
+            }}
+            onPress={() => setShowBambuser(true)}>
+            <Image
+              resizeMode="contain"
+              source={require('../../assets/live.png')}
+              style={{width: '100%', height: '100%'}}
+            />
+            <View style={{position: 'absolute', bottom: -10, left: 13}}>
+              <Image
+                source={require('../../assets/livetext.png')}
+                style={{width: 40, height: 24}}
+              />
+            </View>
+          </TouchableOpacity>
+        </Lottie>
+
         <VView style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -96,6 +135,31 @@ const Home = props => {
           return renderItem(item);
         })}
       </ScrollView>
+
+      {showBambuser && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}>
+          <TouchableOpacity
+            style={{position: 'absolute', top: 16, right: 16, zIndex: 999}}
+            onPress={() => setShowBambuser(false)}>
+            <Image
+              source={require('../../assets/cross.webp')}
+              style={{width: 44, height: 44}}
+            />
+          </TouchableOpacity>
+          <WebView
+            source={{
+              uri: 'https://demo.bambuser.shop/content/webview-landing-v2.html',
+            }}
+          />
+        </View>
+      )}
     </VView>
   );
 };
