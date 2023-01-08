@@ -48,8 +48,6 @@ export function signupAction(data) {
 export function emptyLoginResponse() {
   return dispatch => {
     dispatch({type: 'LOGIN', value: ''});
-    dispatch({type: 'USERID', value: ''});
-    dispatch({type: 'GOOGLE_LOGIN', value: ''});
   };
 }
 
