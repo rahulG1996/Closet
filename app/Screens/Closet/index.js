@@ -24,6 +24,7 @@ import ViewShot, {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import Modal from 'react-native-modal';
 import {FONTS_SIZES} from '../../fonts';
+import PriceRangeSlider from './component/slider';
 
 const {height} = Dimensions.get('screen');
 export default props => {
@@ -873,7 +874,7 @@ export const FilterModal = ({
                     </View>
                   </>
                 ) : selectedFilter === 'Price' ? (
-                  <Text>Price</Text>
+                  <PriceRangeSlider />
                 ) : null}
               </ScrollView>
             </View>

@@ -22,7 +22,7 @@ const Home = props => {
   const [showBambuser, setShowBambuser] = useState(false);
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
-  const homeResponse = useSelector(state => state.HomeReducer.homeResponse);
+  const homeResponse = useSelector(state => state?.HomeReducer?.homeResponse);
   const productDetailResponse = useSelector(
     state => state.HomeReducer.productDetailResponse,
   );
@@ -125,7 +125,7 @@ const Home = props => {
             placeholder="Search jeans, top, hats..."
           />
         </VView>
-        {homeResponse.map(item => {
+        {homeResponse?.map(item => {
           return renderItem(item);
         })}
       </ScrollView>
