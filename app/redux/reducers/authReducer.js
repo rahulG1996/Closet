@@ -16,7 +16,6 @@ const AuthReducer = (state = initialState, action) => {
       };
     }
     case 'USERID': {
-      console.log('redux', action.value);
       return {
         ...state,
         userId: action.value,

@@ -1,6 +1,6 @@
 import Home from '../screens/Home';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text, Image} from 'react-native';
+import {Image, AppState} from 'react-native';
 import React, {useEffect} from 'react';
 import {VText, VView} from '../components';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -32,6 +32,7 @@ import OutfitDetail from '../screens/OutfitDetail';
 import {getOutfitsList} from '../redux/actions/outfitActions';
 import ClosetFilter from '../screens/ClosetFilter';
 import {getHomePageData} from '../redux/actions/homeActions';
+import {NoAuthAPI} from '../services';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -126,6 +127,26 @@ function AppNavigation() {
   const isProfileCreated = useSelector(
     state => state.AuthReducer.isProfileCreated,
   );
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'inactive') {
+        getLastActiveSession();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getLastActiveSession = async () => {
+    const data = {
+      userId: userId,
+    };
+    const response = await NoAuthAPI('user/track/lastActive', 'POST', data);
+  };
 
   useEffect(() => {
     if (userId) {

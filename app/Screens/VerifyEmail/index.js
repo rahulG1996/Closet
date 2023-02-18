@@ -85,7 +85,6 @@ const VerifyEmail = propsData => {
 
   useEffect(() => {
     if (countDown < 0 && runTimer) {
-      console.log('expired');
       setRunTimer(false);
       setCountDown(0);
     }

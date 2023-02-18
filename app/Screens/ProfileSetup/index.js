@@ -52,11 +52,6 @@ const ProfileSetup = props => {
     }
   }, [userProfileResponse]);
 
-  console.log(
-    'state',
-    JSON.stringify({state, userProfileResponse}, undefined, 2),
-  );
-
   const dispatch = useDispatch();
 
   const userId = useSelector(state => state.AuthReducer.userId);
@@ -220,7 +215,6 @@ const ProfileSetup = props => {
       props.navigation.navigate('TabData');
       return;
     }
-    console.log('profile data', JSON.stringify(data, undefined, 2));
     dispatch(updateUserProfile(data));
   };
 

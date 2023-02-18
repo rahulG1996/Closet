@@ -340,7 +340,6 @@ export default props => {
       colorCodes: data.colorsFilter,
       userId: userId,
     };
-    console.log('dataObj', JSON.stringify(dataObj, undefined, 2));
     props.navigation.navigate('ClosetFilter', {
       filterData: dataObj,
     });
@@ -474,7 +473,6 @@ export const FilterModal = ({
   filterValue = {},
   onResetFilter = () => {},
 }) => {
-  console.log('previousFilter', filterValue);
   const [selectedFilter, setSelectedFilter] = useState('Category');
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const brandData = useSelector(state => state.ClosetReducer.brandData);

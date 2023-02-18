@@ -52,7 +52,6 @@ const EditCloset = props => {
       }).then(image => {
         setImageEdit(true);
         setImage(image);
-        console.log(image);
         setBgRemoval(false);
       });
     }
@@ -70,7 +69,6 @@ const EditCloset = props => {
       }).then(image => {
         setImageEdit(true);
         setImage(image);
-        console.log(image);
         setBgRemoval(false);
       });
     }

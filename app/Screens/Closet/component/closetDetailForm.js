@@ -282,7 +282,6 @@ const ClosetDetailsFrom = props => {
     }).then(image => {
       setImageEdit(true);
       setImage(image);
-      console.log(image);
       setBgImag(image.path);
     });
   };
