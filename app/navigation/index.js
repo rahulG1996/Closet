@@ -31,6 +31,7 @@ import SubmitOutfit from '../screens/SubmitOutfit';
 import OutfitDetail from '../screens/OutfitDetail';
 import {getOutfitsList} from '../redux/actions/outfitActions';
 import ClosetFilter from '../screens/ClosetFilter';
+import {getHomePageData} from '../redux/actions/homeActions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -128,6 +129,7 @@ function AppNavigation() {
 
   useEffect(() => {
     if (userId) {
+      dispatch(getHomePageData());
       dispatch(getUserProfile());
       dispatch(getBrandData());
       dispatch(getCategoryData());

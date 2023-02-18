@@ -19,11 +19,9 @@ import Lottie from 'lottie-react-native';
 const Home = props => {
   const dispatch = useDispatch();
   const [showBambuser, setShowBambuser] = useState(false);
-  const isProfileCreated = useSelector(
-    state => state.AuthReducer.isProfileCreated,
-  );
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
+  const homeResponse = useSelector(state => state.HomeReducer.homeResponse);
   const onScroll = ({
     nativeEvent: {
       contentOffset: {y},
@@ -36,36 +34,10 @@ const Home = props => {
     }
   };
 
+  console.warn('homeResponse', homeResponse);
+
   const renderItem = item => {
-    switch (item) {
-      case 1:
-        return <Categories {...props} />;
-      case 2:
-        return (
-          <VView
-            style={{
-              backgroundColor: Colors.grey1,
-              padding: 16,
-              margin: 16,
-            }}>
-            <VText
-              text="For You"
-              style={{fontSize: FONTS_SIZES.s3, fontWeight: '700'}}
-            />
-            <VText
-              text="Description of the first above heading will go here"
-              style={{
-                marginVertical: 8,
-                paddingRight: 8,
-                color: Colors.black60,
-              }}
-            />
-            <Buttons text="Set your preferences" />
-          </VView>
-        );
-      case 3:
-        return <Categories />;
-    }
+    return <Categories data={item} />;
   };
   return (
     <VView style={styles.conatiner}>
@@ -131,7 +103,7 @@ const Home = props => {
             placeholder="Search jeans, top, hats..."
           />
         </VView>
-        {[1, 2, 3].map(item => {
+        {homeResponse.map(item => {
           return renderItem(item);
         })}
       </ScrollView>

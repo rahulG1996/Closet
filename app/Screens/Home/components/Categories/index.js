@@ -5,28 +5,29 @@ import {VText, VView} from '../../../../components';
 import {FONTS_SIZES} from '../../../../fonts';
 
 const Categories = props => {
-  const {navigation} = props;
+  const {categoryName = '', subCategory = []} = props.data || {};
   const renderCategory = ({item, index}) => {
     return (
       <TouchableOpacity
         style={{backgroundColor: Colors.grey1, marginLeft: 16}}
         onPress={() => props.navigation.navigate('ViewProduct')}>
         <Image
-          source={require('../../../../assets/sweatshirt.webp')}
+          source={{uri: item.subCategoryImage}}
           style={{height: 192, width: 128}}
         />
       </TouchableOpacity>
     );
   };
   return (
-    <VView sty>
+    <VView>
       <VView style={styles.headingContainer}>
-        <VText text="Category Name" style={styles.headingLeftText} />
-        <TouchableOpacity onPress={() => navigation.navigate('CategoryScreen')}>
+        <VText text={categoryName} style={styles.headingLeftText} />
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('CategoryScreen')}>
           <VText text="VIEW ALL" />
         </TouchableOpacity>
       </VView>
-      <FlatList data={[1, 2, 3, 4, 5]} horizontal renderItem={renderCategory} />
+      <FlatList data={subCategory} horizontal renderItem={renderCategory} />
     </VView>
   );
 };
