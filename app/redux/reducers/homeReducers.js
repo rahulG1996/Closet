@@ -1,5 +1,6 @@
 const initialState = {
   homeResponse: {},
+  productDetailResponse: {},
 };
 
 const HomeReducer = (state = initialState, action) => {
@@ -8,6 +9,13 @@ const HomeReducer = (state = initialState, action) => {
       return {
         ...state,
         homeResponse: action.value,
+      };
+    }
+
+    case 'GET_PRODUCT_DETAILS': {
+      return {
+        ...state,
+        productDetailResponse: action.value,
       };
     }
 

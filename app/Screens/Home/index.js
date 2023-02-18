@@ -15,6 +15,7 @@ import Categories from './components/Categories';
 import {useDispatch, useSelector} from 'react-redux';
 import {WebView} from 'react-native-webview';
 import Lottie from 'lottie-react-native';
+import {getProductDetailsApi} from '../../redux/actions/homeActions';
 
 const Home = props => {
   const dispatch = useDispatch();
@@ -22,6 +23,19 @@ const Home = props => {
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
   const homeResponse = useSelector(state => state.HomeReducer.homeResponse);
+  const productDetailResponse = useSelector(
+    state => state.HomeReducer.productDetailResponse,
+  );
+
+  useEffect(() => {
+    if (Object.keys(productDetailResponse).length) {
+      props.navigation.navigate('ViewProduct', {
+        data: productDetailResponse.productDetails,
+      });
+      dispatch({type: 'GET_PRODUCT_DETAILS', value: {}});
+    }
+  }, [productDetailResponse]);
+
   const onScroll = ({
     nativeEvent: {
       contentOffset: {y},
@@ -34,10 +48,18 @@ const Home = props => {
     }
   };
 
-  console.warn('homeResponse', homeResponse);
-
   const renderItem = item => {
-    return <Categories data={item} />;
+    return (
+      <Categories
+        data={item}
+        {...props}
+        getProductDetails={getProductDetails}
+      />
+    );
+  };
+
+  const getProductDetails = productId => {
+    dispatch(getProductDetailsApi(productId));
   };
   return (
     <VView style={styles.conatiner}>

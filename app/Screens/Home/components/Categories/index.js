@@ -5,19 +5,21 @@ import {VText, VView} from '../../../../components';
 import {FONTS_SIZES} from '../../../../fonts';
 
 const Categories = props => {
-  const {categoryName = '', subCategory = []} = props.data || {};
+  const {categoryName = '', products = []} = props.data || {};
+
   const renderCategory = ({item, index}) => {
     return (
       <TouchableOpacity
         style={{backgroundColor: Colors.grey1, marginLeft: 16}}
-        onPress={() => props.navigation.navigate('ViewProduct')}>
+        onPress={() => props.getProductDetails(item.productId)}>
         <Image
-          source={{uri: item.subCategoryImage}}
+          source={{uri: item.productImage}}
           style={{height: 192, width: 128}}
         />
       </TouchableOpacity>
     );
   };
+
   return (
     <VView>
       <VView style={styles.headingContainer}>
@@ -27,7 +29,7 @@ const Categories = props => {
           <VText text="VIEW ALL" />
         </TouchableOpacity>
       </VView>
-      <FlatList data={subCategory} horizontal renderItem={renderCategory} />
+      <FlatList data={products} horizontal renderItem={renderCategory} />
     </VView>
   );
 };

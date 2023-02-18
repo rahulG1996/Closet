@@ -72,20 +72,14 @@ const Header = ({
         }}>
         {showshare && (
           <VView style={{flexDirection: 'row'}}>
-            <TouchableOpacity>
+            <TouchableOpacity style={{marginRight: 20}}>
               <Image
                 resizeMode="stretch"
                 source={require('../../assets/iAdd.webp')}
                 style={{width: 24, height: 24}}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={{paddingHorizontal: 20}}>
-              <Image
-                resizeMode="stretch"
-                source={require('../../assets/iAddCloset.webp')}
-                style={{width: 24, height: 24}}
-              />
-            </TouchableOpacity>
+
             <TouchableOpacity>
               <Image
                 resizeMode="stretch"

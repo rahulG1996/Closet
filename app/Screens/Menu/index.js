@@ -13,6 +13,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {deleteAccount} from '../../redux/actions/profileAction';
 import Toast from 'react-native-simple-toast';
 import {FONTS_SIZES} from '../../fonts';
+import {NoAuthAPI} from '../../services';
 
 const Menu = props => {
   const userProfileResponse = useSelector(
@@ -64,6 +65,15 @@ const Menu = props => {
     }
   }, [deleteAccountResponse, dispatch]);
 
+  const getLastActiveSession = async () => {
+    const data = {
+      userId: userId,
+    };
+    const response = await NoAuthAPI('user/track/lastActive', 'POST', data);
+    dispatch({type: 'LOGOUT'});
+    dispatch({type: 'PROFILE_DATA', value: ''});
+  };
+
   const menuClick = item => {
     if (item.manuName === 'Logout') {
       Alert.alert('Vetir', 'Are you sure want to logout', [
@@ -75,8 +85,7 @@ const Menu = props => {
         {
           text: 'OK',
           onPress: () => {
-            dispatch({type: 'LOGOUT'});
-            dispatch({type: 'PROFILE_DATA', value: ''});
+            getLastActiveSession();
           },
         },
       ]);

@@ -8,3 +8,16 @@ export function getHomePageData() {
     }
   };
 }
+
+export function getProductDetailsApi(productId) {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI(
+      `get/productDetails?productId=${productId}`,
+      'GET',
+    );
+    console.warn(apiResponse);
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'GET_PRODUCT_DETAILS', value: apiResponse});
+    }
+  };
+}
