@@ -449,6 +449,7 @@ export default props => {
       )}
       {
         <FilterModal
+          from="closet"
           showModal={showModal}
           categoryDataArray={gridClosetData}
           hideModal={() => setModal(false)}
@@ -472,6 +473,7 @@ export const FilterModal = ({
   setFilter = () => {},
   filterValue = {},
   onResetFilter = () => {},
+  from = '',
 }) => {
   const [selectedFilter, setSelectedFilter] = useState('Category');
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
@@ -479,6 +481,10 @@ export const FilterModal = ({
   const getColorsResponse = useSelector(
     state => state.ClosetReducer.getColorsResponse,
   );
+  const getSizeResponse = useSelector(
+    state => state.ClosetReducer.getSizeResponse,
+  );
+  console.warn(getSizeResponse);
   const [brandList, setBrandList] = useState(brandData);
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -486,6 +492,11 @@ export const FilterModal = ({
   const [selectedSubCategory, setSelectedSubCategory] = useState([]);
   const [seasonData, setSeasonData] = useState([]);
   const [colorsFilter, setColors] = useState([]);
+  const [sizeFilter, setSizeFilter] = useState([]);
+  const filterKeys =
+    from !== 'closet'
+      ? ['Category', 'Brand', 'Season', 'Color', 'Size', 'Price']
+      : ['Category', 'Brand', 'Season', 'Color'];
 
   useEffect(() => {
     if (Object.keys(filterValue).length) {
@@ -505,6 +516,16 @@ export const FilterModal = ({
       selectedSeason1 = selectedSeason1.filter(i => i !== item);
     }
     setSeasonData(selectedSeason1);
+  };
+
+  const setSizesData = item => {
+    let sizeFilter1 = [...sizeFilter];
+    if (!sizeFilter1.includes(item.sizeCode)) {
+      sizeFilter1.push(item.sizeCode);
+    } else {
+      sizeFilter1 = sizeFilter1.filter(i => i !== item.sizeCode);
+    }
+    setSizeFilter(sizeFilter1);
   };
 
   const searchBrand = e => {
@@ -615,7 +636,7 @@ export const FilterModal = ({
           </View>
           <View style={{flexDirection: 'row', flex: 1}}>
             <View style={{width: '30%', alignItems: 'flex-start'}}>
-              {['Category', 'Brand', 'Season', 'Color'].map(item => {
+              {filterKeys.map(item => {
                 return (
                   <TouchableOpacity
                     onPress={() => setSelectedFilter(item)}
@@ -796,8 +817,10 @@ export const FilterModal = ({
                                 backgroundColor: item.colorCode,
                                 borderWidth: 1,
                                 borderColor: Colors.greyBorder,
+                                marginRight: 8,
                               }}
                             />
+                            <Text>{item.colorName}</Text>
                             {colorsFilter.includes(item.colorCode) ? (
                               <Image
                                 source={require('../../assets/crossIcon.png')}
@@ -809,6 +832,48 @@ export const FilterModal = ({
                       })}
                     </View>
                   </>
+                ) : selectedFilter === 'Size' ? (
+                  <>
+                    <Text style={{marginVertical: 8, fontWeight: 'bold'}}>
+                      Sizes
+                    </Text>
+                    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                      {getSizeResponse.map((item, index) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => setSizesData(item)}
+                            style={{
+                              borderWidth: 1,
+                              padding: 8,
+                              marginRight: 8,
+                              borderColor: Colors.greyBorder,
+                              marginBottom: 8,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              backgroundColor: sizeFilter.includes(
+                                item.sizeCode,
+                              )
+                                ? '#DBDBDB'
+                                : 'transparent',
+                              alignItems: 'center',
+                            }}>
+                            <VText
+                              style={{textTransform: 'capitalize'}}
+                              text={item.sizeName}
+                            />
+                            {sizeFilter.includes(item.sizeCode) ? (
+                              <Image
+                                source={require('../../assets/crossIcon.png')}
+                                style={{width: 12, height: 12, marginLeft: 8}}
+                              />
+                            ) : null}
+                          </TouchableOpacity>
+                        );
+                      })}
+                    </View>
+                  </>
+                ) : selectedFilter === 'Price' ? (
+                  <Text>Price</Text>
                 ) : null}
               </ScrollView>
             </View>

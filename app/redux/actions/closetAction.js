@@ -18,6 +18,15 @@ export function getColorData() {
   };
 }
 
+export function getSizesData() {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('getSizes', 'GET');
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'GET_SIZES', value: apiResponse.data});
+    }
+  };
+}
+
 export function getCategoryData() {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('getCategories', 'GET');

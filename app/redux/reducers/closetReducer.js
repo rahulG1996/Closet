@@ -9,6 +9,7 @@ const initialState = {
   removeBgResponse: {},
   getFilterClosetResponse: [],
   getColorsResponse: [],
+  getSizeResponse: [],
 };
 
 const ClosetReducer = (state = initialState, action) => {
@@ -71,6 +72,12 @@ const ClosetReducer = (state = initialState, action) => {
       return {
         ...state,
         getColorsResponse: action.value,
+      };
+    }
+    case 'GET_SIZES': {
+      return {
+        ...state,
+        getSizeResponse: action.value,
       };
     }
     default:
