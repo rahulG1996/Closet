@@ -25,12 +25,6 @@ const CategoryScreen = props => {
     }
   }, []);
 
-  useEffect(() => {
-    if (filteredProducts.length) {
-      dispatch({type: 'FILTERED_PRODUCTS', value: []});
-    }
-  }, [filteredProducts, dispatch]);
-
   const getProductDetails = productId => {
     dispatch(getProductDetailsApi(productId));
   };
@@ -49,7 +43,7 @@ const CategoryScreen = props => {
         {...props}
       />
       <FlatList
-        data={filteredProducts?.productDetails || []}
+        data={filteredProducts?.productDetails}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item, index}) => (
