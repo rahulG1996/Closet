@@ -1,5 +1,5 @@
 const initialState = {
-  homeResponse: {},
+  homeResponse: [],
   productDetailResponse: {},
 };
 

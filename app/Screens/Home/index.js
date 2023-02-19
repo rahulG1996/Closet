@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   View,
+  Text,
 } from 'react-native';
 import {Colors} from '../../colors';
 import Categories from './components/Categories';
@@ -22,10 +23,15 @@ const Home = props => {
   const [showBambuser, setShowBambuser] = useState(false);
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
-  const homeResponse = useSelector(state => state.HomeReducer.homeResponse);
+  const homeResponse =
+    useSelector(state => state.HomeReducer.homeResponse) || [];
   const productDetailResponse = useSelector(
     state => state.HomeReducer.productDetailResponse,
   );
+  const isPreferences =
+    useSelector(
+      state => state.ProfileReducer.userProfileResponse.isPreferences,
+    ) || false;
 
   useEffect(() => {
     if (Object.keys(productDetailResponse).length) {
@@ -125,9 +131,26 @@ const Home = props => {
             placeholder="Search jeans, top, hats..."
           />
         </VView>
-        {homeResponse.map(item => {
-          return renderItem(item);
-        })}
+        {homeResponse.length > 0 &&
+          homeResponse.map(item => {
+            return renderItem(item);
+          })}
+        {!isPreferences && (
+          <View
+            style={{padding: 16, backgroundColor: Colors.grey1, margin: 16}}>
+            <Text style={{fontSize: FONTS_SIZES.s1, fontWeight: 'bold'}}>
+              For You
+            </Text>
+            <Text
+              style={{color: Colors.black60, marginTop: 8, marginBottom: 16}}>
+              Description of the first above heading will go here
+            </Text>
+            <Buttons
+              onPress={() => props.navigation.navigate('YourPreferences')}
+              text="Set your preferences"
+            />
+          </View>
+        )}
       </ScrollView>
 
       {showBambuser && (

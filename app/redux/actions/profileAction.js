@@ -35,3 +35,12 @@ export function deleteAccount(data) {
     }
   };
 }
+
+export function getPreferencesQs() {
+  return async (dispatch, getState) => {
+    const apiResponse = await NoAuthAPI('get/preferences', 'GET');
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'PREFERENCES_QS', value: apiResponse});
+    }
+  };
+}

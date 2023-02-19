@@ -16,7 +16,7 @@ import ClosetScreen from '../screens/Closet';
 import ClosetDetailsFrom from '../screens/Closet/component/closetDetailForm';
 import Menu from '../screens/Menu';
 import Outfits from '../screens/Outfits';
-import {getUserProfile} from '../redux/actions/profileAction';
+import {getPreferencesQs, getUserProfile} from '../redux/actions/profileAction';
 import {
   getBrandData,
   getCategoryData,
@@ -34,6 +34,7 @@ import {getOutfitsList} from '../redux/actions/outfitActions';
 import ClosetFilter from '../screens/ClosetFilter';
 import {getHomePageData} from '../redux/actions/homeActions';
 import {NoAuthAPI} from '../services';
+import YourPreferences from '../screens/YourPreferences';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -128,6 +129,10 @@ function AppNavigation() {
   const isProfileCreated = useSelector(
     state => state.AuthReducer.isProfileCreated,
   );
+  const isPreferences =
+    useSelector(
+      state => state.ProfileReducer.userProfileResponse.isPreferences,
+    ) || false;
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -159,6 +164,9 @@ function AppNavigation() {
       dispatch(getOutfitsList());
       dispatch(getColorData());
       dispatch(getSizesData());
+      if (!isPreferences) {
+        dispatch(getPreferencesQs());
+      }
     }
   }, [dispatch, userId]);
   return !userId ? (
@@ -193,6 +201,7 @@ function AppNavigation() {
           <Stack.Screen name="AddOutfit" component={AddOutfit} />
           <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
           <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
+          <Stack.Screen name="YourPreferences" component={YourPreferences} />
         </>
       )}
     </Stack.Navigator>
