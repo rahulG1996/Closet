@@ -45,7 +45,9 @@ const Header = ({
       }}>
       <VView style={{flexDirection: 'row', alignItems: 'center'}}>
         {showBack && (
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={{padding: 5}}
+            onPress={() => navigation.goBack()}>
             <Image
               resizeMode="contain"
               source={require('../../assets/iBack.webp')}

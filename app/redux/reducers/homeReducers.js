@@ -1,6 +1,7 @@
 const initialState = {
   homeResponse: [],
   productDetailResponse: {},
+  filteredProducts: [],
 };
 
 const HomeReducer = (state = initialState, action) => {
@@ -16,6 +17,13 @@ const HomeReducer = (state = initialState, action) => {
       return {
         ...state,
         productDetailResponse: action.value,
+      };
+    }
+
+    case 'FILTERED_PRODUCTS': {
+      return {
+        ...state,
+        filteredProducts: action.value,
       };
     }
 

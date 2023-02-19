@@ -21,3 +21,16 @@ export function getProductDetailsApi(productId) {
     }
   };
 }
+
+export function getFilteredProducts(data) {
+  return async dispatch => {
+    let url = 'get/allProducts?page=1&limit=10&sortBy=latest';
+    if (data.categoryId.length) {
+      url = url + `&categoryIds=${data.categoryId}`;
+    }
+    const apiResponse = await NoAuthAPI(url, 'GET');
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'FILTERED_PRODUCTS', value: apiResponse});
+    }
+  };
+}

@@ -60,6 +60,11 @@ const Home = props => {
         data={item}
         {...props}
         getProductDetails={getProductDetails}
+        viewAll={() =>
+          props.navigation.navigate('CategoryScreen', {
+            data: item,
+          })
+        }
       />
     );
   };

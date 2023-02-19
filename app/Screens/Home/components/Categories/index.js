@@ -24,8 +24,7 @@ const Categories = props => {
     <VView>
       <VView style={styles.headingContainer}>
         <VText text={categoryName} style={styles.headingLeftText} />
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('CategoryScreen')}>
+        <TouchableOpacity onPress={props.viewAll}>
           <VText text="VIEW ALL" />
         </TouchableOpacity>
       </VView>

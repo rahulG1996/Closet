@@ -4,7 +4,7 @@ import {Colors} from '../../../colors';
 import {VView, VText} from '../../../components';
 import {FONTS_SIZES} from '../../../fonts';
 
-export default ({index}) => {
+export default ({item, index, getProductDetails}) => {
   return (
     <>
       <VView
@@ -15,6 +15,7 @@ export default ({index}) => {
           marginHorizontal: 8,
         }}>
         <TouchableOpacity
+          onPress={getProductDetails}
           activeOpacity={0.7}
           style={{
             backgroundColor: Colors.grey1,
@@ -34,7 +35,7 @@ export default ({index}) => {
           />
 
           <Image
-            source={require('../../../assets/sweatshirt.webp')}
+            source={{uri: item?.imageUrls[0]}}
             style={{
               height: 200,
               width: 100,
@@ -47,21 +48,15 @@ export default ({index}) => {
             marginTop: 8,
           }}>
           <VText
-            text="Product Name"
+            text={item.productName}
             style={{
               fontSize: FONTS_SIZES.s4,
+              fontWeight: 'bold',
             }}
           />
+
           <VText
-            text="Description of the Pro..."
-            style={{
-              fontSize: FONTS_SIZES.s4,
-              color: Colors.black60,
-              paddingVertical: 5,
-            }}
-          />
-          <VText
-            text="Price"
+            text={`$${item.productPrice}`}
             style={{
               fontSize: FONTS_SIZES.s4,
             }}

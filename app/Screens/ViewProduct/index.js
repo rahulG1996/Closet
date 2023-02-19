@@ -20,7 +20,6 @@ const ViewProduct = props => {
   }, []);
 
   const _renderItem = ({item, index}) => {
-    console.warn(item);
     return (
       <View style={styles.container} key={index}>
         <Image source={{uri: item}} style={styles.image} resizeMode="contain" />

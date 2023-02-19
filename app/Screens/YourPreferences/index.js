@@ -56,7 +56,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-        <Buttons text="Next" onPress={handleNext} />
       </View>
     );
   };
@@ -67,6 +66,14 @@ const YourPreferences = props => {
       animated: true,
     });
     setCurrentActiveTab(currentActiveTab + 1);
+  };
+
+  const handleBack = () => {
+    ref.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
+    setCurrentActiveTab(currentActiveTab - 1);
   };
 
   const renderList = data => {
@@ -118,7 +125,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-        <Buttons text="Next" onPress={handleNext} />
       </View>
     );
   };
@@ -138,7 +144,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-        <Buttons text="Next" onPress={handleNext} />
       </View>
     );
   };
@@ -158,7 +163,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-        <Buttons text="Next" onPress={handleNext} />
       </View>
     );
   };
@@ -178,7 +182,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-        <Buttons text="Next" onPress={handleNext} />
       </View>
     );
   };
@@ -198,7 +201,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-        <Buttons text="Next" onPress={handleNext} />
       </View>
     );
   };
@@ -218,11 +220,6 @@ const YourPreferences = props => {
           />
           {renderList(brandList)}
         </>
-
-        <Buttons
-          text="Next"
-          onPress={() => props.navigation.navigate('Home')}
-        />
       </View>
     );
   };
@@ -249,7 +246,7 @@ const YourPreferences = props => {
           })}
       </View>
       <View style={{flex: 1}}>
-        <ScrollView style={{paddingTop: 40}} ref={ref}>
+        <ScrollView contentContainerStyle={{paddingTop: 40}} ref={ref}>
           {currentActiveTab === 1
             ? getFirstPage()
             : currentActiveTab === 2
@@ -266,6 +263,11 @@ const YourPreferences = props => {
             ? getSeventhPage()
             : null}
         </ScrollView>
+
+        <Buttons text="next" onPress={handleNext} />
+        {currentActiveTab > 1 && (
+          <Buttons text="back" isInverse onPress={handleBack} />
+        )}
       </View>
     </View>
   );
