@@ -65,6 +65,10 @@ const YourPreferences = props => {
       y: 0,
       animated: true,
     });
+    if (currentActiveTab === 7) {
+      props.navigation.navigate('Home');
+      return;
+    }
     setCurrentActiveTab(currentActiveTab + 1);
   };
 

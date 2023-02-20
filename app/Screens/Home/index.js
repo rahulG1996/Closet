@@ -134,6 +134,7 @@ const Home = props => {
           <TextInput
             style={styles.input}
             placeholder="Search jeans, top, hats..."
+            disabled
           />
         </VView>
         {homeResponse.length > 0 &&

@@ -24,16 +24,17 @@ export default ({item, index, getProductDetails}) => {
             width: '100%',
             alignSelf: 'center',
           }}>
-          <Image
-            source={require('../../../assets/iAdd.webp')}
-            style={{
-              height: 32,
-              width: 32,
-              alignSelf: 'flex-end',
-            }}
-            resizeMode="contain"
-          />
-
+          <TouchableOpacity>
+            <Image
+              source={require('../../../assets/iAdd.webp')}
+              style={{
+                height: 32,
+                width: 32,
+                alignSelf: 'flex-end',
+              }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
           <Image
             source={{uri: item?.imageUrls[0]}}
             style={{

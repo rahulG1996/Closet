@@ -484,11 +484,6 @@ export const FilterModal = ({
   const getSizeResponse = useSelector(
     state => state.ClosetReducer.getSizeResponse,
   );
-  console.warn(
-    'selectedCategory',
-    filterValue?.selectedCategory,
-    selectedCategory,
-  );
   const [brandList, setBrandList] = useState(brandData);
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
@@ -886,7 +881,8 @@ export const FilterModal = ({
             selectedCategory.length > 0 ||
             selectedSubCategory.length > 0 ||
             seasonData.length > 0 ||
-            colorsFilter.length > 0) && (
+            colorsFilter.length > 0 ||
+            sizeFilter.length > 0) && (
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{width: '45%'}}>
