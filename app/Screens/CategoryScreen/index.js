@@ -1,3 +1,4 @@
+import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -36,9 +37,14 @@ const CategoryScreen = props => {
   ];
   const [showModal, setModal] = useState(false);
   const [showSortModal, setSortModal] = useState(false);
-  const [selectedSort, setSelectedSort] = useState({});
+  const [selectedSort, setSelectedSort] = useState({
+    type: 'asc',
+    title: 'Price Low to High',
+    isSelected: true,
+  });
   const [selectedSortIndex, setSelectedSortIndex] = useState(0);
   const dispatch = useDispatch();
+  const [productList, setProducts] = useState([]);
   const filteredProducts = useSelector(
     state => state.HomeReducer.filteredProducts,
   );
@@ -51,6 +57,12 @@ const CategoryScreen = props => {
       dispatch(getFilteredProducts(data));
     }
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(filteredProducts).length) {
+      setProducts(filteredProducts?.productDetails);
+    }
+  }, [filteredProducts]);
 
   const getProductDetails = productId => {
     dispatch(getProductDetailsApi(productId));
@@ -70,8 +82,18 @@ const CategoryScreen = props => {
   };
 
   const handleSorting = () => {
-    // sort logic
     setSortModal(false);
+    let data = filteredProducts?.productDetails;
+    data = data.sort((a, b) => {
+      if (selectedSort.type === 'asc') {
+        return a.productPrice > b.productPrice ? 1 : -1;
+      } else if (selectedSort.type === 'desc') {
+        return a.productPrice < b.productPrice ? 1 : -1;
+      } else if (selectedSort.type === 'dateDesc') {
+        return moment(a.createdOn) < moment(b.createdOn) ? 1 : -1;
+      }
+    });
+    setProducts(data);
   };
 
   return (
@@ -86,7 +108,7 @@ const CategoryScreen = props => {
         {...props}
       />
       <FlatList
-        data={filteredProducts?.productDetails}
+        data={productList}
         numColumns={2}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item, index}) => (
