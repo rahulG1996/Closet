@@ -54,3 +54,15 @@ export function submitPrefernces(data) {
     }
   };
 }
+
+export function getPreferencesAnswers() {
+  return async (dispatch, getState) => {
+    const apiResponse = await NoAuthAPI(
+      `userPrefrences?userId=${getState().AuthReducer.userId}`,
+      'GET',
+    );
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'PREFERENCES_ANSWERS', value: apiResponse.prefrences});
+    }
+  };
+}

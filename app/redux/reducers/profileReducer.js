@@ -3,6 +3,7 @@ const initialState = {
   udpateProfileRepose: {},
   deleteAccountResponse: {},
   preferencesQsResponse: [],
+  preferencesAnswersResp: [],
 };
 
 const ProfileReducer = (state = initialState, action) => {
@@ -29,6 +30,12 @@ const ProfileReducer = (state = initialState, action) => {
       return {
         ...state,
         preferencesQsResponse: action.value,
+      };
+    }
+    case 'PREFERENCES_ANSWERS': {
+      return {
+        ...state,
+        preferencesAnswersResp: action.value,
       };
     }
     default:

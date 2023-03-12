@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Text,
@@ -12,7 +12,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Buttons, Input} from '../../components';
 import Toast from 'react-native-simple-toast';
-import {submitPrefernces} from '../../redux/actions/profileAction';
+import {
+  getPreferencesAnswers,
+  submitPrefernces,
+} from '../../redux/actions/profileAction';
 
 const YourPreferences = props => {
   const ref = useRef(null);
@@ -29,8 +32,70 @@ const YourPreferences = props => {
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const preferencesQsResponse =
     useSelector(state => state.ProfileReducer.preferencesQsResponse) || [];
+  const preferencesAnswersResp =
+    useSelector(state => state.ProfileReducer.preferencesAnswersResp) || [];
   const [brandList, setBrandList] = useState(preferencesQsResponse[0].options);
   const userId = useSelector(state => state.AuthReducer.userId);
+
+  useEffect(() => {
+    dispatch(getPreferencesAnswers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (preferencesAnswersResp.length) {
+      let firstQuestionData1 = [];
+      let secondQuestionData1 = [];
+      let thirdQuestionData1 = [];
+      let forthQuestionData1 = [];
+      let fifthQuestionData1 = [];
+      let sixthQuestionData1 = [];
+      let seventhQuestionData1 = [];
+      preferencesAnswersResp.map(item => {
+        if (item.questionId === 1) {
+          item.options.forEach(i => {
+            firstQuestionData1.push(i.optionId);
+          });
+        }
+        if (item.questionId === 2) {
+          item.options.forEach(i => {
+            secondQuestionData1.push(i.optionId);
+          });
+        }
+        if (item.questionId === 3) {
+          item.options.forEach(i => {
+            thirdQuestionData1.push(i.optionId);
+          });
+        }
+        if (item.questionId === 4) {
+          item.options.forEach(i => {
+            forthQuestionData1.push(i.optionId);
+          });
+        }
+        if (item.questionId === 5) {
+          item.options.forEach(i => {
+            fifthQuestionData1.push(i.optionId);
+          });
+        }
+        if (item.questionId === 6) {
+          item.options.forEach(i => {
+            sixthQuestionData1.push(i.optionId);
+          });
+        }
+        if (item.questionId === 7) {
+          item.options.forEach(i => {
+            seventhQuestionData1.push(i.optionId);
+          });
+        }
+      });
+      setFirstQuestions(firstQuestionData1);
+      setsecondQuestionData(secondQuestionData1);
+      setThirdQuestions(thirdQuestionData1);
+      setForthQuestions(forthQuestionData1);
+      setFifthQuestions(fifthQuestionData1);
+      setSixthQuestions(sixthQuestionData1);
+      setSeventhQuestions(seventhQuestionData1);
+    }
+  }, [preferencesAnswersResp]);
 
   const setBrandsFilter = item => {
     if (currentActiveTab === 1) {

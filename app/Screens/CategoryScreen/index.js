@@ -10,6 +10,7 @@ import {
   SortComponent,
 } from '../../components';
 import {FONTS_SIZES} from '../../fonts';
+import {addDataInCloset} from '../../redux/actions/closetAction';
 import {
   getFilteredProducts,
   getProductDetailsApi,
@@ -48,6 +49,10 @@ const CategoryScreen = props => {
   const filteredProducts = useSelector(
     state => state.HomeReducer.filteredProducts,
   );
+  const addClosetResponse = useSelector(
+    state => state.ClosetReducer.addClosetResponse,
+  );
+  const userId = useSelector(state => state.AuthReducer.userId);
 
   useEffect(() => {
     if (props.route.params.data) {
@@ -96,6 +101,19 @@ const CategoryScreen = props => {
     setProducts(data);
   };
 
+  const addToCloset = item => {
+    let data = {
+      userId: userId,
+      categoryId: item.categoryId,
+      subCategoryId: item.subCategoryId,
+      brandId: item.brandId,
+      season: item.seasons,
+      colorCode: [item.productColor],
+      itemImageUrl: item.imageUrls[0],
+    };
+    dispatch(addDataInCloset(data));
+  };
+
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <Header
@@ -116,6 +134,7 @@ const CategoryScreen = props => {
             index={index}
             item={item}
             getProductDetails={() => getProductDetails(item.productId)}
+            addToCloset={() => addToCloset(item)}
           />
         )}
         contentContainerStyle={{
