@@ -4,7 +4,7 @@ import {Colors} from '../../../colors';
 import {VView, VText} from '../../../components';
 import {FONTS_SIZES} from '../../../fonts';
 
-export default ({item, index, getProductDetails}) => {
+export default ({item, index, getProductDetails, addToCloset}) => {
   return (
     <>
       <VView
@@ -24,7 +24,7 @@ export default ({item, index, getProductDetails}) => {
             width: '100%',
             alignSelf: 'center',
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={addToCloset}>
             <Image
               source={require('../../../assets/iAdd.webp')}
               style={{

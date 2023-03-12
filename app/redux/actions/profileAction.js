@@ -44,3 +44,13 @@ export function getPreferencesQs() {
     }
   };
 }
+
+export function submitPrefernces(data) {
+  return async (dispatch, getState) => {
+    const apiResponse = await NoAuthAPI('savePreferences', 'POST', data);
+    console.warn('submit', apiResponse);
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'SUBMIT_PREFERENCES', value: apiResponse});
+    }
+  };
+}

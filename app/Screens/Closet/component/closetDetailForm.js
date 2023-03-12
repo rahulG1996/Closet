@@ -1,6 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  View,
+  Text,
+} from 'react-native';
 import {
   VView,
   VText,
@@ -42,6 +49,10 @@ const ClosetDetailsFrom = props => {
   const userId = useSelector(state => state.AuthReducer.userId);
   const [isImageEdit, setImageEdit] = useState(false);
   const [newImage, setImage] = useState(null);
+  const getColorsResponse = useSelector(
+    state => state.ClosetReducer.getColorsResponse,
+  );
+  const [colorsFilter, setColors] = useState([]);
 
   const addClosetResponse = useSelector(
     state => state.ClosetReducer.addClosetResponse,
@@ -165,7 +176,7 @@ const ClosetDetailsFrom = props => {
       Toast.show('Please select Category from given options');
       return;
     }
-    if (!selectedColors.length) {
+    if (!colorsFilter.length) {
       Toast.show('Please select one color');
       return;
     }
@@ -177,7 +188,7 @@ const ClosetDetailsFrom = props => {
       subCategoryId: categorySelected[1],
       brandId: state.brandSelected?.id,
       season: selectedSeason,
-      colorCode: selectedColors,
+      colorCode: colorsFilter,
       itemImageUrl: isImageEdit
         ? `data:image/jpeg;base64,${newImage?.data}`
         : props?.route?.params?.editCloset
@@ -194,80 +205,6 @@ const ClosetDetailsFrom = props => {
 
   const onColorSelect = clr => {
     setGetColor(clr);
-  };
-
-  const renderColorPalette = () => {
-    return (
-      <VView
-        style={{
-          height: '60%',
-          zIndex: 99,
-        }}>
-        <TouchableOpacity
-          onPress={() => setShowModal(false)}
-          style={{
-            height: 50,
-            width: 50,
-            zIndex: 600,
-            borderRadius: 50,
-            alignSelf: 'flex-end',
-            marginBottom: 20,
-          }}>
-          <Image
-            source={require('../../../assets/cross.webp')}
-            style={{
-              height: '100%',
-              width: '100%',
-            }}
-          />
-        </TouchableOpacity>
-        <ColorPicker
-          color={currentColor}
-          swatchesOnly={swatchesOnly}
-          onColorChangeComplete={onColorSelect}
-          noSnap={false}
-          row={true}
-          vertical={false}
-          swatchesLast={swatchesLast}
-          swatches={swatchesEnabled}
-          discrete={disc}
-          sliderHidden={false}
-        />
-        <VView
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginVertical: 20,
-          }}>
-          <VText text="Selected Color" />
-          <VView
-            style={{
-              paddingVertical: 14,
-              backgroundColor: getColor,
-              marginLeft: 10,
-              borderWidth: 1,
-              borderColor: Colors.greyBorder,
-              borderRadius: 5,
-              width: 50,
-            }}
-          />
-        </VView>
-        <Buttons
-          text="Add Color"
-          // isInverse
-          onPress={() => {
-            let checkColorExist = selectedColors.includes(getColor);
-            if (!checkColorExist) {
-              setSelectedColors(oldArray => [...oldArray, getColor]);
-              setShowModal(false);
-              setGetColor('');
-            } else {
-              Toast.show('Color already added');
-            }
-          }}
-        />
-      </VView>
-    );
   };
 
   const editImage = () => {
@@ -295,6 +232,16 @@ const ClosetDetailsFrom = props => {
     }
 
     setSeason(selectedSeason1);
+  };
+
+  const setColorsFilter = colorCode => {
+    let colorsFilter1 = [...colorsFilter];
+    if (!colorsFilter1.includes(colorCode)) {
+      colorsFilter1.push(colorCode);
+    } else {
+      colorsFilter1 = colorsFilter1.filter(i => i !== colorCode);
+    }
+    setColors(colorsFilter1);
   };
 
   return (
@@ -379,50 +326,50 @@ const ClosetDetailsFrom = props => {
                   marginBottom: 8,
                 }}
               />
-              <VView
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                }}>
-                {selectedColors?.map((colr, index) => {
+              <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+                {getColorsResponse?.map((item, index) => {
                   return (
-                    <VView
+                    <TouchableOpacity
+                      onPress={() => setColorsFilter(item.colorCode)}
                       style={{
-                        height: 40,
-                        width: 40,
-                        backgroundColor: colr,
-                        marginRight: 8,
-                        marginBottom: 8,
                         borderWidth: 1,
-                        borderRadius: 5,
+                        padding: 8,
+                        marginRight: 8,
                         borderColor: Colors.greyBorder,
-                      }}
-                    />
+                        marginBottom: 8,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        backgroundColor: colorsFilter.includes(item.colorCode)
+                          ? Colors.grey2
+                          : 'transparent',
+                        alignItems: 'center',
+                      }}>
+                      <View
+                        style={{
+                          width: 24,
+                          height: 24,
+                          backgroundColor: item.colorCode,
+                          borderWidth: 1,
+                          borderColor: Colors.greyBorder,
+                          marginRight: 8,
+                        }}
+                      />
+                      <Text>{item.colorName}</Text>
+                      {colorsFilter.includes(item.colorCode) ? (
+                        <Image
+                          source={require('../../../assets/crossIcon.png')}
+                          style={{width: 12, height: 12, marginLeft: 8}}
+                        />
+                      ) : null}
+                    </TouchableOpacity>
                   );
                 })}
-
-                <TouchableOpacity
-                  activeOpacity={0.6}
-                  onPress={() => setShowModal(true)}>
-                  <Image
-                    source={require('../../../assets/color.png')}
-                    style={{
-                      height: 40,
-                      width: 40,
-                    }}
-                  />
-                </TouchableOpacity>
-              </VView>
+              </View>
             </VView>
             <Buttons text="Add" onPress={addCloset} />
           </VView>
         </VView>
       </KeyboardAwareScrollView>
-      <OverlayModal
-        showModal={showModal}
-        component={renderColorPalette()}
-        isScrollEnabled={false}
-      />
     </VView>
   );
 };

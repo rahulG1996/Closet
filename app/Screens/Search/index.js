@@ -9,10 +9,12 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
+import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Header, OverlayModal, SortComponent} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
+import {addDataInCloset} from '../../redux/actions/closetAction';
 import {
   getFilteredProducts,
   getProductDetailsApi,
@@ -58,6 +60,10 @@ const Search = props => {
   const productDetailResponse = useSelector(
     state => state.HomeReducer.productDetailResponse,
   );
+  const addClosetResponse = useSelector(
+    state => state.ClosetReducer.addClosetResponse,
+  );
+  const userId = useSelector(state => state.AuthReducer.userId);
 
   const showFilterFunction = value => {
     setModal(true);
@@ -116,34 +122,76 @@ const Search = props => {
     dispatch(getFilteredProducts(data));
   };
 
+  useEffect(() => {
+    if (Object.keys(addClosetResponse).length) {
+      if (addClosetResponse.statusCode == 200) {
+        dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        Toast.show('Cloth successfully added in closet');
+      }
+    }
+  }, [addClosetResponse, dispatch, props.navigation]);
+
+  const addToCloset = item => {
+    let data = {
+      userId: userId,
+      categoryId: item.categoryId,
+      subCategoryId: item.subCategoryId,
+      brandId: item.brandId,
+      season: item.seasons,
+      colorCode: [item.productColor],
+      itemImageUrl: item.imageUrls[0],
+    };
+    console.log('data', JSON.stringify(data, undefined, 2));
+    dispatch(addDataInCloset(data));
+  };
+
+  const setFilter = data => {};
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {showSearch ? (
-        <View
-          style={{
-            marginVertical: 20,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-          }}>
-          <View style={{width: '75%'}}>
-            <TextInput
-              style={{
-                paddingVertical: 16,
-                backgroundColor: Colors.grey1,
-                paddingLeft: 16,
-              }}
-              onChangeText={e => setSearchKey(e)}
-              placeholder="Search jeans, top, hats..."
-              autoFocus
-              returnKeyLabel="Search"
-              onSubmitEditing={searchProduct}
-            />
+        <>
+          <View
+            style={{
+              marginVertical: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}>
+            <View style={{width: '75%'}}>
+              <TextInput
+                style={{
+                  paddingVertical: 16,
+                  backgroundColor: Colors.grey1,
+                  paddingLeft: 16,
+                }}
+                onChangeText={e => setSearchKey(e)}
+                placeholder="Search jeans, top, hats..."
+                autoFocus
+                returnKeyLabel="Search"
+                onSubmitEditing={searchProduct}
+              />
+            </View>
+            <TouchableOpacity onPress={() => props.navigation.goBack()}>
+              <Text>CANCEL</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => props.navigation.goBack()}>
-            <Text>CANCEL</Text>
-          </TouchableOpacity>
-        </View>
+          <View
+            style={{flex: 1, justifyContent: 'center', paddingHorizontal: 16}}>
+            <Text style={{textAlign: 'center', color: Colors.black30}}>
+              "If you love something, wear it all the time... Find things that
+              suit you. That's how you look extraordinary."
+            </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                paddingTop: 32,
+                color: Colors.black30,
+              }}>
+              – Vivienne Westwood
+            </Text>
+          </View>
+        </>
       ) : (
         <View>
           <Header
@@ -171,6 +219,7 @@ const Search = props => {
                   index={index}
                   item={item}
                   getProductDetails={() => getProductDetails(item.productId)}
+                  addToCloset={() => addToCloset(item)}
                 />
               )}
               contentContainerStyle={{
@@ -198,6 +247,7 @@ const Search = props => {
           showModal={showModal}
           from="home"
           hideModal={() => setModal(false)}
+          setFilter={setFilter}
           filterValue={{
             selectedCategory: [],
             setSeasonData: [],

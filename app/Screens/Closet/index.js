@@ -24,6 +24,7 @@ import ViewShot, {captureRef} from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import Modal from 'react-native-modal';
 import {FONTS_SIZES} from '../../fonts';
+import CheckBox from '@react-native-community/checkbox';
 
 const {height} = Dimensions.get('screen');
 export default props => {
@@ -497,6 +498,22 @@ export const FilterModal = ({
       ? ['Category', 'Brand', 'Season', 'Color', 'Size', 'Price']
       : ['Category', 'Brand', 'Season', 'Color'];
 
+  const [priceFilter, setPriceFilter] = useState([
+    {isChecked: false, min: 0, max: 1000},
+    {isChecked: false, min: 1000, max: 2000},
+    {isChecked: false, min: 2000, max: 3000},
+    {isChecked: false, min: 3000, max: 4000},
+    {isChecked: false, min: 4000, max: 5000},
+    {isChecked: false, min: 5000, max: 6000},
+    {isChecked: false, min: 6000, max: 'and above'},
+  ]);
+
+  const handleCheckBox = (item, index) => {
+    let priceFilter1 = [...priceFilter];
+    priceFilter1[index].isChecked = !priceFilter1[index].isChecked;
+    setPriceFilter(priceFilter1);
+  };
+
   useEffect(() => {
     if (Object.keys(filterValue).length) {
       setSelectedCategory(filterValue?.selectedCategory);
@@ -554,16 +571,14 @@ export const FilterModal = ({
       selectedSubCategory1 = selectedSubCategory1.filter(
         data => data !== i.subCategoryId,
       );
+      if (selectedCategory1.includes(item.categoryId)) {
+        selectedCategory1.pop();
+      }
     } else {
       selectedSubCategory1.push(i.subCategoryId);
-    }
-    if (selectedCategory1.includes(item.categoryId)) {
-      selectedCategory1 = selectedCategory1.filter(
-        data => data !== item.categoryId,
-      );
-    } else {
       selectedCategory1.push(item.categoryId);
     }
+
     setSelectedCategory(selectedCategory1);
     setSelectedSubCategory(selectedSubCategory1);
   };
@@ -876,6 +891,26 @@ export const FilterModal = ({
                     <Text style={{marginVertical: 8, fontWeight: 'bold'}}>
                       Price
                     </Text>
+                    {priceFilter.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginBottom: 16,
+                          }}
+                          onPress={() => handleCheckBox(item, index)}>
+                          <CheckBox
+                            disabled={false}
+                            boxType="square"
+                            value={item.isChecked}
+                          />
+                          <Text style={{paddingLeft: 8}}>
+                            {item.min + '-' + item.max}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
                   </>
                 ) : null}
               </ScrollView>
@@ -898,10 +933,12 @@ export const FilterModal = ({
                   onPress={() =>
                     setFilter({
                       selectedBrands,
-                      selectedCategory,
+                      selectedCategory: [...new Set(selectedCategory)],
                       selectedSubCategory,
                       seasonData,
                       colorsFilter,
+                      sizeFilter,
+                      priceFilter,
                     })
                   }
                 />

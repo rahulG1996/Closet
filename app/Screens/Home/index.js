@@ -80,12 +80,14 @@ const Home = props => {
         <VText style={styles.headingText} text="Shop" />
         <VView style={{flexDirection: 'row'}}>
           {searchIcon && (
-            <VView style={{paddingRight: 20}}>
+            <TouchableOpacity
+              style={{paddingRight: 20}}
+              onPress={() => props.navigation.navigate('Search')}>
               <Image
                 source={require('../../assets/search.webp')}
                 style={styles.menuIcon}
               />
-            </VView>
+            </TouchableOpacity>
           )}
           <TouchableOpacity onPress={() => props.navigation.navigate('Menu')}>
             <Image

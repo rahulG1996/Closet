@@ -8,12 +8,15 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Buttons, Input} from '../../components';
+import Toast from 'react-native-simple-toast';
+import {submitPrefernces} from '../../redux/actions/profileAction';
 
 const YourPreferences = props => {
   const ref = useRef(null);
+  const dispatch = useDispatch();
   const [currentActiveTab, setCurrentActiveTab] = useState(1);
   const [firstQuestionData, setFirstQuestions] = useState([]);
   const [secondQuestionData, setsecondQuestionData] = useState([]);
@@ -27,80 +30,93 @@ const YourPreferences = props => {
   const preferencesQsResponse =
     useSelector(state => state.ProfileReducer.preferencesQsResponse) || [];
   const [brandList, setBrandList] = useState(preferencesQsResponse[0].options);
+  const userId = useSelector(state => state.AuthReducer.userId);
 
   const setBrandsFilter = item => {
     if (currentActiveTab === 1) {
       let firstQuestionData1 = [...firstQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setFirstQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 2) {
       let firstQuestionData1 = [...secondQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setsecondQuestionData(firstQuestionData1);
     }
     if (currentActiveTab === 3) {
       let firstQuestionData1 = [...thirdQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setThirdQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 4) {
       let firstQuestionData1 = [...forthQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setForthQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 5) {
       let firstQuestionData1 = [...fifthQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setFifthQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 6) {
       let firstQuestionData1 = [...sixthQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setSixthQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 7) {
       let firstQuestionData1 = [...seventhQuestionData];
-      if (firstQuestionData1.includes(item.brandId)) {
-        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      if (firstQuestionData1.includes(item.optionId)) {
+        firstQuestionData1 = firstQuestionData1.filter(
+          i => i !== item.optionId,
+        );
       } else {
-        firstQuestionData1.push(item.brandId);
+        firstQuestionData1.push(item.optionId);
       }
       setSeventhQuestions(firstQuestionData1);
     }
   };
 
-  console.log('@@ firstQuestionData', firstQuestionData);
-
   const searchBrand = (e, type) => {
     setBrandSearchKey(e);
     let allBrandList = preferencesQsResponse[type].options;
     allBrandList = allBrandList.filter(i => {
-      return i.brandName.toLowerCase().includes(e.toLowerCase());
+      return i.optionName.toLowerCase().includes(e.toLowerCase());
     });
     setBrandList(allBrandList);
   };
@@ -125,12 +141,74 @@ const YourPreferences = props => {
   };
 
   const handleNext = () => {
+    if (currentActiveTab === 1 && firstQuestionData.length < 5) {
+      Toast.show('Please select minimum 5 brands');
+      return;
+    }
+    if (currentActiveTab === 2 && secondQuestionData.length < 5) {
+      Toast.show('Please select minimum 5 denim brands');
+      return;
+    }
+    if (currentActiveTab === 3 && thirdQuestionData.length < 5) {
+      Toast.show('Please select minimum 5 shoe brands');
+      return;
+    }
+    if (currentActiveTab === 4 && forthQuestionData.length < 5) {
+      Toast.show('Please select minimum 5 dress brands');
+      return;
+    }
+    if (currentActiveTab === 5 && fifthQuestionData.length < 5) {
+      Toast.show('Please select minimum 5 handbags brands');
+      return;
+    }
+    if (currentActiveTab === 6 && sixthQuestionData.length < 3) {
+      Toast.show('Please select minimum 3 colors');
+      return;
+    }
+    if (currentActiveTab === 7 && seventhQuestionData.length < 3) {
+      Toast.show('Please select minimum 3 colors not like to wear');
+      return;
+    }
     ref.current?.scrollTo({
       y: 0,
       animated: true,
     });
     if (currentActiveTab === 7) {
-      props.navigation.navigate('Home');
+      let data = {
+        userId: '037f26ea-60cd-4041-ae69-26b6348d6397',
+        prefrences: [
+          {
+            questionId: preferencesQsResponse[0].questionId,
+            optionIds: firstQuestionData,
+          },
+          {
+            questionId: preferencesQsResponse[1].questionId,
+            optionIds: secondQuestionData,
+          },
+          {
+            questionId: preferencesQsResponse[2].questionId,
+            optionIds: thirdQuestionData,
+          },
+          {
+            questionId: preferencesQsResponse[3].questionId,
+            optionIds: forthQuestionData,
+          },
+          {
+            questionId: preferencesQsResponse[4].questionId,
+            optionIds: fifthQuestionData,
+          },
+          {
+            questionId: preferencesQsResponse[5].questionId,
+            optionIds: sixthQuestionData,
+          },
+          {
+            questionId: preferencesQsResponse[6].questionId,
+            optionIds: seventhQuestionData,
+          },
+        ],
+      };
+      console.log('@@', JSON.stringify(data, undefined, 2));
+      dispatch(submitPrefernces(data));
       return;
     }
     setCurrentActiveTab(currentActiveTab + 1);
@@ -144,15 +222,16 @@ const YourPreferences = props => {
       animated: true,
     });
     setCurrentActiveTab(currentActiveTab - 1);
-    setBrandList(preferencesQsResponse[currentActiveTab - 1].options);
+    setBrandList(preferencesQsResponse[currentActiveTab - 2].options);
   };
 
   const renderList = (data, answers) => {
     return (
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        {data.map(item => {
+        {data.map((item, index) => {
           return (
             <TouchableOpacity
+              key={index}
               onPress={() => setBrandsFilter(item)}
               style={{
                 borderWidth: 1,
@@ -162,13 +241,13 @@ const YourPreferences = props => {
                 marginBottom: 8,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                backgroundColor: answers.includes(item.brandId)
+                backgroundColor: answers.includes(item.optionId)
                   ? '#DBDBDB'
                   : 'transparent',
                 alignItems: 'center',
               }}>
-              <Text>{item.brandName}</Text>
-              {answers.includes(item.brandId) ? (
+              <Text>{item.optionName}</Text>
+              {answers.includes(item.optionId) ? (
                 <Image
                   source={require('../../assets/crossIcon.png')}
                   style={{width: 12, height: 12, marginLeft: 8}}
@@ -303,6 +382,7 @@ const YourPreferences = props => {
           preferencesQsResponse.map((item, index) => {
             return (
               <View
+                key={index}
                 style={{
                   width: Dimensions.get('window').width / 9,
                   borderWidth: 1,
