@@ -2,6 +2,7 @@ const initialState = {
   homeResponse: [],
   productDetailResponse: {},
   filteredProducts: [],
+  searchAPiResponse: [],
 };
 
 const HomeReducer = (state = initialState, action) => {
@@ -24,6 +25,13 @@ const HomeReducer = (state = initialState, action) => {
       return {
         ...state,
         filteredProducts: action.value,
+      };
+    }
+
+    case 'GET_SEARCH_RESULT': {
+      return {
+        ...state,
+        searchAPiResponse: action.value,
       };
     }
 

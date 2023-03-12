@@ -19,6 +19,7 @@ const Header = ({
   handleSorting = () => {},
   showSort = false,
   showFilterFunction = () => {},
+  onBack = null,
 }) => {
   const [switchIcon, setSwitch] = useState(false);
   const toggleSwitch = () => {
@@ -47,7 +48,7 @@ const Header = ({
         {showBack && (
           <TouchableOpacity
             style={{padding: 5}}
-            onPress={() => navigation.goBack()}>
+            onPress={() => (onBack ? onBack() : navigation.goBack())}>
             <Image
               resizeMode="contain"
               source={require('../../assets/iBack.webp')}
@@ -62,6 +63,7 @@ const Header = ({
               paddingLeft: !showBack || 20,
               fontSize: FONTS_SIZES.s3,
               fontWeight: '700',
+              width: 200,
             }}
           />
         )}

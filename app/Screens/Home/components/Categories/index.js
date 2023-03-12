@@ -5,7 +5,7 @@ import {VText, VView} from '../../../../components';
 import {FONTS_SIZES} from '../../../../fonts';
 
 const Categories = props => {
-  const {categoryName = '', products = []} = props.data || {};
+  const {optionName = '', products = []} = props.data || {};
 
   const renderCategory = ({item, index}) => {
     return (
@@ -15,6 +15,7 @@ const Categories = props => {
         <Image
           source={{uri: item.productImage}}
           style={{height: 192, width: 128}}
+          resizeMode="contain"
         />
       </TouchableOpacity>
     );
@@ -23,12 +24,17 @@ const Categories = props => {
   return (
     <VView>
       <VView style={styles.headingContainer}>
-        <VText text={categoryName} style={styles.headingLeftText} />
+        <VText text={optionName} style={styles.headingLeftText} />
         <TouchableOpacity onPress={props.viewAll}>
           <VText text="VIEW ALL" />
         </TouchableOpacity>
       </VView>
-      <FlatList data={products} horizontal renderItem={renderCategory} />
+      <FlatList
+        data={products}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        renderItem={renderCategory}
+      />
     </VView>
   );
 };

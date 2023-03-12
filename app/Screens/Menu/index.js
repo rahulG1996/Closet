@@ -32,7 +32,8 @@ const Menu = props => {
     },
     {
       icon: require('../../assets/preferences.png'),
-      manuName: 'Preferences',
+      manuName: 'YourPreferences',
+      route: 'YourPreferences',
     },
     {
       icon: require('../../assets/t&c.png'),

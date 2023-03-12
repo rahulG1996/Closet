@@ -37,6 +37,7 @@ export default ({item, index, getProductDetails}) => {
           </TouchableOpacity>
           <Image
             source={{uri: item?.imageUrls[0]}}
+            resizeMode="contain"
             style={{
               height: 200,
               width: 100,

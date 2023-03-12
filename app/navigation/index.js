@@ -35,6 +35,7 @@ import ClosetFilter from '../screens/ClosetFilter';
 import {getHomePageData} from '../redux/actions/homeActions';
 import {NoAuthAPI} from '../services';
 import YourPreferences from '../screens/YourPreferences';
+import Search from '../screens/Search';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -137,7 +138,9 @@ function AppNavigation() {
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
       if (nextAppState === 'inactive') {
-        getLastActiveSession();
+        if (userId) {
+          getLastActiveSession();
+        }
       }
     });
 
@@ -202,6 +205,7 @@ function AppNavigation() {
           <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
           <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
           <Stack.Screen name="YourPreferences" component={YourPreferences} />
+          <Stack.Screen name="Search" component={Search} />
         </>
       )}
     </Stack.Navigator>

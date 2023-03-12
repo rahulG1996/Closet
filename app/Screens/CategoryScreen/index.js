@@ -100,7 +100,7 @@ const CategoryScreen = props => {
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <Header
         showSort
-        title={props?.route?.params?.data?.categoryName}
+        title={props?.route?.params?.title}
         showFilter
         showBack
         showFilterFunction={showFilterFunction}

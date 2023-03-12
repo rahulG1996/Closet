@@ -15,7 +15,6 @@ export function getProductDetailsApi(productId) {
       `get/productDetails?productId=${productId}`,
       'GET',
     );
-    console.warn(apiResponse);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'GET_PRODUCT_DETAILS', value: apiResponse});
     }
@@ -24,13 +23,19 @@ export function getProductDetailsApi(productId) {
 
 export function getFilteredProducts(data) {
   return async dispatch => {
-    let url = 'get/allProducts?page=1&limit=10&sortBy=latest';
-    if (data.categoryId.length) {
-      url = url + `&categoryIds=${data.categoryId}`;
-    }
-    const apiResponse = await NoAuthAPI(url, 'GET');
+    let url = 'get/allProducts/v1';
+    const apiResponse = await NoAuthAPI(url, 'POST', data);
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'FILTERED_PRODUCTS', value: apiResponse});
+    }
+  };
+}
+
+export function getSearchResult(key) {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI(`search?key=${key}`, 'GET');
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'GET_SEARCH_RESULT', value: apiResponse});
     }
   };
 }

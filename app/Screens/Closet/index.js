@@ -872,7 +872,11 @@ export const FilterModal = ({
                     </View>
                   </>
                 ) : selectedFilter === 'Price' ? (
-                  <Text>Price</Text>
+                  <>
+                    <Text style={{marginVertical: 8, fontWeight: 'bold'}}>
+                      Price
+                    </Text>
+                  </>
                 ) : null}
               </ScrollView>
             </View>

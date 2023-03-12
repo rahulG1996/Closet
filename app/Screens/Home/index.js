@@ -28,6 +28,7 @@ const Home = props => {
   const productDetailResponse = useSelector(
     state => state.HomeReducer.productDetailResponse,
   );
+
   const isPreferences =
     useSelector(
       state => state.ProfileReducer.userProfileResponse.isPreferences,
@@ -63,6 +64,7 @@ const Home = props => {
         viewAll={() =>
           props.navigation.navigate('CategoryScreen', {
             data: item,
+            title: item.optionName,
           })
         }
       />
@@ -130,13 +132,19 @@ const Home = props => {
           </TouchableOpacity>
         </Lottie>
 
-        <VView style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Search jeans, top, hats..."
-            disabled
-          />
-        </VView>
+        <TouchableOpacity
+          style={styles.inputContainer}
+          onPress={() => props.navigation.navigate('Search')}>
+          <View style={{paddingHorizontal: 18}}>
+            <Image
+              source={require('../../assets/search.webp')}
+              style={styles.menuIcon}
+            />
+          </View>
+          <Text style={{color: Colors.black60}}>
+            Search jeans, top, hats...
+          </Text>
+        </TouchableOpacity>
         {homeResponse.length > 0 &&
           homeResponse.map(item => {
             return renderItem(item);
@@ -212,6 +220,9 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     marginTop: 16,
     marginHorizontal: 16,
+    paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   input: {
     padding: 16,

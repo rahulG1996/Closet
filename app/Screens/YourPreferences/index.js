@@ -16,25 +16,89 @@ const YourPreferences = props => {
   const ref = useRef(null);
   const [currentActiveTab, setCurrentActiveTab] = useState(1);
   const [firstQuestionData, setFirstQuestions] = useState([]);
-
+  const [secondQuestionData, setsecondQuestionData] = useState([]);
+  const [thirdQuestionData, setThirdQuestions] = useState([]);
+  const [forthQuestionData, setForthQuestions] = useState([]);
+  const [fifthQuestionData, setFifthQuestions] = useState([]);
+  const [sixthQuestionData, setSixthQuestions] = useState([]);
+  const [seventhQuestionData, setSeventhQuestions] = useState([]);
+  const [preferencesObj, setPreferencesObj] = useState([]);
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const preferencesQsResponse =
     useSelector(state => state.ProfileReducer.preferencesQsResponse) || [];
   const [brandList, setBrandList] = useState(preferencesQsResponse[0].options);
 
   const setBrandsFilter = item => {
-    let firstQuestionData1 = [...firstQuestionData];
-    if (firstQuestionData1.includes(item.brandId)) {
-      firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
-    } else {
-      firstQuestionData1.push(item.brandId);
+    if (currentActiveTab === 1) {
+      let firstQuestionData1 = [...firstQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setFirstQuestions(firstQuestionData1);
     }
-    setFirstQuestions(firstQuestionData1);
+    if (currentActiveTab === 2) {
+      let firstQuestionData1 = [...secondQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setsecondQuestionData(firstQuestionData1);
+    }
+    if (currentActiveTab === 3) {
+      let firstQuestionData1 = [...thirdQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setThirdQuestions(firstQuestionData1);
+    }
+    if (currentActiveTab === 4) {
+      let firstQuestionData1 = [...forthQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setForthQuestions(firstQuestionData1);
+    }
+    if (currentActiveTab === 5) {
+      let firstQuestionData1 = [...fifthQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setFifthQuestions(firstQuestionData1);
+    }
+    if (currentActiveTab === 6) {
+      let firstQuestionData1 = [...sixthQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setSixthQuestions(firstQuestionData1);
+    }
+    if (currentActiveTab === 7) {
+      let firstQuestionData1 = [...seventhQuestionData];
+      if (firstQuestionData1.includes(item.brandId)) {
+        firstQuestionData1 = firstQuestionData1.filter(i => i !== item.brandId);
+      } else {
+        firstQuestionData1.push(item.brandId);
+      }
+      setSeventhQuestions(firstQuestionData1);
+    }
   };
 
-  const searchBrand = e => {
+  console.log('@@ firstQuestionData', firstQuestionData);
+
+  const searchBrand = (e, type) => {
     setBrandSearchKey(e);
-    let allBrandList = preferencesQsResponse[0].options;
+    let allBrandList = preferencesQsResponse[type].options;
     allBrandList = allBrandList.filter(i => {
       return i.brandName.toLowerCase().includes(e.toLowerCase());
     });
@@ -51,10 +115,10 @@ const YourPreferences = props => {
           </Text>
           <Input
             placeholder="Search Brands"
-            onChangeText={e => searchBrand(e)}
+            onChangeText={e => searchBrand(e, 0)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, firstQuestionData)}
         </>
       </View>
     );
@@ -70,6 +134,8 @@ const YourPreferences = props => {
       return;
     }
     setCurrentActiveTab(currentActiveTab + 1);
+    setBrandSearchKey('');
+    setBrandList(preferencesQsResponse[currentActiveTab].options);
   };
 
   const handleBack = () => {
@@ -78,9 +144,10 @@ const YourPreferences = props => {
       animated: true,
     });
     setCurrentActiveTab(currentActiveTab - 1);
+    setBrandList(preferencesQsResponse[currentActiveTab - 1].options);
   };
 
-  const renderList = data => {
+  const renderList = (data, answers) => {
     return (
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         {data.map(item => {
@@ -95,13 +162,13 @@ const YourPreferences = props => {
                 marginBottom: 8,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                backgroundColor: firstQuestionData.includes(item.brandId)
+                backgroundColor: answers.includes(item.brandId)
                   ? '#DBDBDB'
                   : 'transparent',
                 alignItems: 'center',
               }}>
               <Text>{item.brandName}</Text>
-              {firstQuestionData.includes(item.brandId) ? (
+              {answers.includes(item.brandId) ? (
                 <Image
                   source={require('../../assets/crossIcon.png')}
                   style={{width: 12, height: 12, marginLeft: 8}}
@@ -124,10 +191,10 @@ const YourPreferences = props => {
           </Text>
           <Input
             placeholder="Search Brands"
-            onChangeText={e => searchBrand(e)}
+            onChangeText={e => searchBrand(e, 1)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, secondQuestionData)}
         </>
       </View>
     );
@@ -146,7 +213,7 @@ const YourPreferences = props => {
             onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, thirdQuestionData)}
         </>
       </View>
     );
@@ -165,7 +232,7 @@ const YourPreferences = props => {
             onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, forthQuestionData)}
         </>
       </View>
     );
@@ -184,7 +251,7 @@ const YourPreferences = props => {
             onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, fifthQuestionData)}
         </>
       </View>
     );
@@ -203,7 +270,7 @@ const YourPreferences = props => {
             onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, sixthQuestionData)}
         </>
       </View>
     );
@@ -222,7 +289,7 @@ const YourPreferences = props => {
             onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
-          {renderList(brandList)}
+          {renderList(brandList, seventhQuestionData)}
         </>
       </View>
     );
