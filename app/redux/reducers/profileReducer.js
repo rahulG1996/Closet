@@ -4,6 +4,7 @@ const initialState = {
   deleteAccountResponse: {},
   preferencesQsResponse: [],
   preferencesAnswersResp: [],
+  submitPrefResp: [],
 };
 
 const ProfileReducer = (state = initialState, action) => {
@@ -36,6 +37,12 @@ const ProfileReducer = (state = initialState, action) => {
       return {
         ...state,
         preferencesAnswersResp: action.value,
+      };
+    }
+    case 'SUBMIT_PREFERENCES': {
+      return {
+        ...state,
+        submitPrefResp: action.value,
       };
     }
     default:

@@ -14,6 +14,7 @@ import {Buttons, Input} from '../../components';
 import Toast from 'react-native-simple-toast';
 import {
   getPreferencesAnswers,
+  getUserProfile,
   submitPrefernces,
 } from '../../redux/actions/profileAction';
 
@@ -34,12 +35,23 @@ const YourPreferences = props => {
     useSelector(state => state.ProfileReducer.preferencesQsResponse) || [];
   const preferencesAnswersResp =
     useSelector(state => state.ProfileReducer.preferencesAnswersResp) || [];
+  const submitPrefResp =
+    useSelector(state => state.ProfileReducer.submitPrefResp) || [];
   const [brandList, setBrandList] = useState(preferencesQsResponse[0].options);
   const userId = useSelector(state => state.AuthReducer.userId);
 
   useEffect(() => {
     dispatch(getPreferencesAnswers());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (submitPrefResp.length) {
+      dispatch({type: 'SUBMIT_PREFERENCES', value: []});
+      dispatch(getUserProfile());
+      Toast.show('Your preferences added successfully');
+      props.navigation.navigate('Home');
+    }
+  }, [submitPrefResp]);
 
   useEffect(() => {
     if (preferencesAnswersResp.length) {

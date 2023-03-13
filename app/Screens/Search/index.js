@@ -193,7 +193,7 @@ const Search = props => {
           </View>
         </>
       ) : (
-        <View>
+        <View style={{flex: 1}}>
           <Header
             showBack
             title={searchKey}
