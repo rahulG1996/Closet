@@ -521,6 +521,7 @@ export const FilterModal = ({
       setSelectedBrands(filterValue?.selectedBrands);
       setSeasonData(filterValue?.setSeasonData);
       setColors(filterValue?.colorsFilter);
+      setSizeFilter(filterValue?.sizeFilter);
     }
   }, [filterValue]);
 
@@ -921,7 +922,8 @@ export const FilterModal = ({
             selectedSubCategory.length > 0 ||
             seasonData.length > 0 ||
             colorsFilter.length > 0 ||
-            sizeFilter.length > 0) && (
+            (from !== 'closet' && sizeFilter.length > 0) ||
+            priceFilter.length) && (
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{width: '45%'}}>
@@ -938,7 +940,7 @@ export const FilterModal = ({
                       seasonData,
                       colorsFilter,
                       sizeFilter,
-                      // priceFilter,
+                      priceFilter,
                     })
                   }
                 />

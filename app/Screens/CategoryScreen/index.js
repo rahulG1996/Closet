@@ -1,7 +1,15 @@
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
+import {Colors} from '../../colors';
 import {
   VView,
   Header,
@@ -43,6 +51,7 @@ const CategoryScreen = props => {
     title: 'Price Low to High',
     isSelected: true,
   });
+  const [showLoader, setLoader] = useState(true);
   const [selectedSortIndex, setSelectedSortIndex] = useState(0);
   const dispatch = useDispatch();
   const [productList, setProducts] = useState([]);
@@ -65,6 +74,7 @@ const CategoryScreen = props => {
 
   useEffect(() => {
     if (Object.keys(filteredProducts).length) {
+      setLoader(false);
       setProducts(filteredProducts?.productDetails);
     }
   }, [filteredProducts]);
@@ -108,14 +118,16 @@ const CategoryScreen = props => {
       subCategoryId: item.subCategoryId,
       brandId: item.brandId,
       season: item.seasons,
-      colorCode: [item.productColor],
+      colorCode: [item.productColorCode],
       itemImageUrl: item.imageUrls[0],
+      isImageBase64: false,
     };
     dispatch(addDataInCloset(data));
   };
 
   const setFilter = data => {
     setModal(false);
+    setLoader(true);
     let data1 = {};
     if (data.selectedCategory.length) {
       data1.categoryIds = data.selectedCategory;
@@ -127,16 +139,35 @@ const CategoryScreen = props => {
       data1.subCategoryIds = data.selectedSubCategory;
     }
     if (data.seasonData.length) {
-      data1.seasonData = data.seasonData;
+      data1.season = data.seasonData;
     }
     if (data.colorsFilter.length) {
-      data1.colorsFilter = data.colorsFilter;
+      data1.color = data.colorsFilter;
     }
     if (data.sizeFilter.length) {
-      data1.sizeFilter = data.sizeFilter;
+      data1.size = data.sizeFilter;
     }
+    let priceFilters = [];
+    data.priceFilter.map(item => {
+      if (item.isChecked) {
+        priceFilters.push(item.min);
+        priceFilters.push(item.max);
+      }
+    });
+    priceFilters = [...new Set(priceFilters)];
+    priceFilters = [priceFilters[0], priceFilters[priceFilters.length - 1]];
+    if (priceFilters.length && !priceFilters.includes(null)) {
+      data1.price = priceFilters;
+    }
+    console.log('@@', JSON.stringify({data1, priceFilters}, undefined, 2));
     dispatch(getFilteredProducts(data1));
-    console.log('@@ data', JSON.stringify(data1, undefined, 2));
+  };
+
+  const onResetFilter = () => {
+    const data = {
+      categoryId: props.route.params.data.categoryId,
+    };
+    dispatch(getFilteredProducts(data));
   };
 
   return (
@@ -150,29 +181,44 @@ const CategoryScreen = props => {
         handleSorting={handleSortingModal}
         {...props}
       />
-      <FlatList
-        data={productList}
-        numColumns={2}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item, index}) => (
-          <CategoryCard
-            index={index}
-            item={item}
-            getProductDetails={() => getProductDetails(item.productId)}
-            addToCloset={() => addToCloset(item)}
-          />
-        )}
-        contentContainerStyle={{
-          paddingVertical: 16,
-          paddingHorizontal: 8,
-        }}
-      />
+      {productList.length > 0 ? (
+        <FlatList
+          data={productList}
+          numColumns={2}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item, index}) => (
+            <CategoryCard
+              index={index}
+              item={item}
+              getProductDetails={() => getProductDetails(item.productId)}
+              addToCloset={() => addToCloset(item)}
+            />
+          )}
+          contentContainerStyle={{
+            paddingVertical: 16,
+            paddingHorizontal: 8,
+          }}
+        />
+      ) : showLoader ? (
+        <ActivityIndicator />
+      ) : (
+        <View style={{alignSelf: 'center', paddingTop: 100}}>
+          <Text
+            style={{
+              color: Colors.black60,
+              fontSize: 15,
+            }}>
+            Umm, nothing is here...
+          </Text>
+        </View>
+      )}
       {
         <FilterModal
           showModal={showModal}
           from="home"
           hideModal={() => setModal(false)}
           setFilter={setFilter}
+          onResetFilter={onResetFilter}
         />
       }
       <OverlayModal

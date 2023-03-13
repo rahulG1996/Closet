@@ -189,6 +189,7 @@ const ClosetDetailsFrom = props => {
       brandId: state.brandSelected?.id,
       season: selectedSeason,
       colorCode: colorsFilter,
+      isImageBase64: true,
       itemImageUrl: isImageEdit
         ? `data:image/jpeg;base64,${newImage?.data}`
         : props?.route?.params?.editCloset
@@ -200,6 +201,7 @@ const ClosetDetailsFrom = props => {
       dispatch(editDataInCloset(data));
       return;
     }
+    console.log('@@ data', data);
     dispatch(addDataInCloset(data));
   };
 

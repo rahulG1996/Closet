@@ -56,6 +56,7 @@ const Search = props => {
   const filteredProducts = useSelector(
     state => state.HomeReducer.filteredProducts,
   );
+  const [filterValue, setFilterDefault] = useState([]);
   const [showLoader, setLoader] = useState(true);
   const productDetailResponse = useSelector(
     state => state.HomeReducer.productDetailResponse,
@@ -138,8 +139,9 @@ const Search = props => {
       subCategoryId: item.subCategoryId,
       brandId: item.brandId,
       season: item.seasons,
-      colorCode: [item.productColor],
+      colorCode: [item.productColorCode],
       itemImageUrl: item.imageUrls[0],
+      isImageBase64: false,
     };
     console.log('data', JSON.stringify(data, undefined, 2));
     dispatch(addDataInCloset(data));
@@ -158,16 +160,36 @@ const Search = props => {
       data1.subCategoryIds = data.selectedSubCategory;
     }
     if (data.seasonData.length) {
-      data1.seasonData = data.seasonData;
+      data1.season = data.seasonData;
     }
     if (data.colorsFilter.length) {
-      data1.colorsFilter = data.colorsFilter;
+      data1.color = data.colorsFilter;
     }
     if (data.sizeFilter.length) {
-      data1.sizeFilter = data.sizeFilter;
+      data1.size = data.sizeFilter;
     }
+    let priceFilters = [];
+    data.priceFilter.map(item => {
+      if (item.isChecked) {
+        priceFilters.push(item.min);
+        priceFilters.push(item.max);
+      }
+    });
+    priceFilters = [...new Set(priceFilters)];
+    priceFilters = [priceFilters[0], priceFilters[priceFilters.length - 1]];
+    if (priceFilters.length && !priceFilters.includes(null)) {
+      data1.price = priceFilters;
+    }
+    data1.key = searchKey;
     dispatch(getFilteredProducts(data1));
     console.log('@@ data', JSON.stringify(data1, undefined, 2));
+  };
+
+  const onResetFilter = () => {
+    const data = {
+      key: searchKey,
+    };
+    dispatch(getFilteredProducts(data));
   };
 
   return (
@@ -230,6 +252,14 @@ const Search = props => {
               setProducts([]);
               dispatch({type: 'FILTERED_PRODUCTS', value: {}});
               setLoader(true);
+              setFilterDefault({
+                selectedCategory: [],
+                setSeasonData: [],
+                selectedBrands: [],
+                selectedSubCategory: [],
+                colorsFilter: [],
+                sizeFilter: [],
+              });
             }}
           />
           {productList.length > 0 ? (
@@ -271,6 +301,8 @@ const Search = props => {
           from="home"
           hideModal={() => setModal(false)}
           setFilter={setFilter}
+          filterValue={filterValue}
+          onResetFilter={onResetFilter}
         />
       }
       <OverlayModal
