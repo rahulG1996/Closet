@@ -25,6 +25,7 @@ export function getFilteredProducts(data) {
   return async dispatch => {
     let url = 'get/allProducts/v1';
     const apiResponse = await NoAuthAPI(url, 'POST', data);
+    console.log('@@ filter res', JSON.stringify(apiResponse, undefined, 2));
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'FILTERED_PRODUCTS', value: apiResponse});
     }

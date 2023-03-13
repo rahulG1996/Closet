@@ -114,6 +114,31 @@ const CategoryScreen = props => {
     dispatch(addDataInCloset(data));
   };
 
+  const setFilter = data => {
+    setModal(false);
+    let data1 = {};
+    if (data.selectedCategory.length) {
+      data1.categoryIds = data.selectedCategory;
+    }
+    if (data.selectedBrands.length) {
+      data1.brandIds = data.selectedCategory;
+    }
+    if (data.selectedSubCategory.length) {
+      data1.subCategoryIds = data.selectedSubCategory;
+    }
+    if (data.seasonData.length) {
+      data1.seasonData = data.seasonData;
+    }
+    if (data.colorsFilter.length) {
+      data1.colorsFilter = data.colorsFilter;
+    }
+    if (data.sizeFilter.length) {
+      data1.sizeFilter = data.sizeFilter;
+    }
+    dispatch(getFilteredProducts(data1));
+    console.log('@@ data', JSON.stringify(data1, undefined, 2));
+  };
+
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <Header
@@ -147,13 +172,7 @@ const CategoryScreen = props => {
           showModal={showModal}
           from="home"
           hideModal={() => setModal(false)}
-          filterValue={{
-            selectedCategory: [],
-            setSeasonData: [],
-            selectedBrands: [],
-            selectedSubCategory: [],
-            colorsFilter: [],
-          }}
+          setFilter={setFilter}
         />
       }
       <OverlayModal
