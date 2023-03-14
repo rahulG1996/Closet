@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, Image} from 'react-native';
+import {TouchableOpacity, Image, Text} from 'react-native';
 import {Colors} from '../../../colors';
 import {VView, VText} from '../../../components';
 import {FONTS_SIZES} from '../../../fonts';
@@ -39,9 +39,8 @@ export default ({item, index, getProductDetails, addToCloset}) => {
             source={{uri: item?.imageUrls[0]}}
             resizeMode="contain"
             style={{
-              height: 200,
-              width: 100,
-              alignSelf: 'center',
+              height: 192,
+              width: 144,
             }}
           />
         </TouchableOpacity>
@@ -49,13 +48,14 @@ export default ({item, index, getProductDetails, addToCloset}) => {
           style={{
             marginTop: 8,
           }}>
-          <VText
-            text={item.productName}
+          <Text
+            numberOfLines={1}
             style={{
               fontSize: FONTS_SIZES.s4,
               fontWeight: 'bold',
-            }}
-          />
+            }}>
+            {item.productName}
+          </Text>
 
           <VText
             text={`$${item.productPrice}`}

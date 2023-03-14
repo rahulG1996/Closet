@@ -13,7 +13,7 @@ import {VText, VView, Buttons, Header} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {InAppBrowser} from 'react-native-inappbrowser-reborn';
-import {addDataInCloset} from '../../redux/actions/closetAction';
+import {addDataInCloset, getClosetData} from '../../redux/actions/closetAction';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 
@@ -34,6 +34,7 @@ const ViewProduct = props => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        dispatch(getClosetData());
         Toast.show('Cloth successfully added in closet');
       }
     }
@@ -63,8 +64,8 @@ const ViewProduct = props => {
         const result = await InAppBrowser.open(url, {
           // iOS Properties
           dismissButtonStyle: 'cancel',
-          preferredBarTintColor: '#453AA4',
-          preferredControlTintColor: 'white',
+          preferredBarTintColor: '#fff',
+          preferredControlTintColor: 'black',
           readerMode: false,
           animated: true,
           modalPresentationStyle: 'fullScreen',
@@ -114,7 +115,10 @@ const ViewProduct = props => {
     dispatch(addDataInCloset(data));
   };
 
-  console.log('@@ productData', JSON.stringify(productData, undefined, 2));
+  console.log(
+    '@@ productData',
+    JSON.stringify(productData?.imageUrls?.length, undefined, 2),
+  );
 
   if (Object.keys(productData).length === 0) {
     return null;
@@ -154,8 +158,8 @@ const ViewProduct = props => {
             activeDotIndex={currentActiveIndex}
             carouselRef={_slider1Ref}
             dotStyle={styles.dotStyle}
-            inactiveDotOpacity={1}
-            inactiveDotScale={1}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
             tappableDots={true}
           />
         </VView>
@@ -199,10 +203,10 @@ const styles = StyleSheet.create({
     height: 300,
   },
   dotStyle: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     marginHorizontal: 0,
-    backgroundColor: 'red',
+    backgroundColor: 'rgba(0, 0, 0, 0.92)',
   },
 });

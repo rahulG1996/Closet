@@ -62,6 +62,7 @@ const Menu = props => {
         Toast.show('Your Account Delete Successfuly');
         dispatch({type: 'LOGOUT'});
         dispatch({type: 'PROFILE_DATA', value: ''});
+        dispatch({type: 'PREFERENCES_ANSWERS', value: []});
       }
     }
   }, [deleteAccountResponse, dispatch]);

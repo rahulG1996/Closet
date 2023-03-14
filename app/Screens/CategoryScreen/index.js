@@ -19,7 +19,7 @@ import {
 } from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import Toast from 'react-native-simple-toast';
-import {addDataInCloset} from '../../redux/actions/closetAction';
+import {addDataInCloset, getClosetData} from '../../redux/actions/closetAction';
 import {
   getFilteredProducts,
   getProductDetailsApi,
@@ -68,6 +68,7 @@ const CategoryScreen = props => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        dispatch(getClosetData());
         Toast.show('Cloth successfully added in closet');
       }
     }

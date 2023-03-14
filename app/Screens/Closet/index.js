@@ -497,6 +497,7 @@ export const FilterModal = ({
     from !== 'closet'
       ? ['Category', 'Brand', 'Season', 'Color', 'Size', 'Price']
       : ['Category', 'Brand', 'Season', 'Color'];
+  const [priceFilterObj, setPriceObj] = useState([]);
 
   const [priceFilter, setPriceFilter] = useState([
     {isChecked: false, min: 0, max: 1000, id: '1'},
@@ -602,6 +603,16 @@ export const FilterModal = ({
     }
     setColors(colorsFilter1);
   };
+
+  useEffect(() => {
+    let priceFilterObj1 = [];
+    priceFilter.map(item => {
+      if (item.isChecked) {
+        priceFilterObj1.push(item);
+      }
+    });
+    setPriceObj(priceFilterObj1);
+  }, [priceFilter]);
 
   return (
     <View>
@@ -923,7 +934,7 @@ export const FilterModal = ({
             seasonData.length > 0 ||
             colorsFilter.length > 0 ||
             (from !== 'closet' && sizeFilter.length > 0) ||
-            priceFilter.length) && (
+            priceFilterObj.length > 0) && (
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <View style={{width: '45%'}}>
@@ -940,7 +951,7 @@ export const FilterModal = ({
                       seasonData,
                       colorsFilter,
                       sizeFilter,
-                      priceFilter,
+                      priceFilter: priceFilterObj,
                     })
                   }
                 />
