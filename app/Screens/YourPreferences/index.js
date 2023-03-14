@@ -323,6 +323,16 @@ const YourPreferences = props => {
                   : 'transparent',
                 alignItems: 'center',
               }}>
+              {item.colorCode ? (
+                <View
+                  style={{
+                    backgroundColor: item.colorCode,
+                    height: 40,
+                    width: 40,
+                    marginRight: 4,
+                  }}
+                />
+              ) : null}
               <Text>{item.optionName}</Text>
               {answers.includes(item.optionId) ? (
                 <Image

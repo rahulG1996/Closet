@@ -14,7 +14,7 @@ const Categories = props => {
         onPress={() => props.getProductDetails(item.productId)}>
         <Image
           source={{uri: item.productImage}}
-          style={{height: 192, width: 128}}
+          style={{height: 192, width: 144}}
           resizeMode="contain"
         />
       </TouchableOpacity>
