@@ -18,6 +18,7 @@ import {
   SortComponent,
 } from '../../components';
 import {FONTS_SIZES} from '../../fonts';
+import Toast from 'react-native-simple-toast';
 import {addDataInCloset} from '../../redux/actions/closetAction';
 import {
   getFilteredProducts,
@@ -62,6 +63,15 @@ const CategoryScreen = props => {
     state => state.ClosetReducer.addClosetResponse,
   );
   const userId = useSelector(state => state.AuthReducer.userId);
+
+  useEffect(() => {
+    if (Object.keys(addClosetResponse).length) {
+      if (addClosetResponse.statusCode == 200) {
+        dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        Toast.show('Cloth successfully added in closet');
+      }
+    }
+  }, [addClosetResponse, dispatch, props.navigation]);
 
   useEffect(() => {
     if (props.route.params.data) {

@@ -123,6 +123,8 @@ const Search = props => {
     dispatch(getFilteredProducts(data));
   };
 
+  console.log('cmp', addClosetResponse.statusCode);
+
   useEffect(() => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {

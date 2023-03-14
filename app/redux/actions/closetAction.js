@@ -50,6 +50,7 @@ export function addDataInCloset(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('addToCloset', 'POST', data);
     if (Object.keys(apiResponse).length) {
+      console.log('Closet add', apiResponse);
       dispatch({type: 'ADD_TO_CLOSET', value: apiResponse});
     }
   };
