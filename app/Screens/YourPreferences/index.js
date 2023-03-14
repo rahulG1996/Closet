@@ -189,9 +189,9 @@ const YourPreferences = props => {
     }
   };
 
-  const searchBrand = (e, type) => {
+  const searchBrand = e => {
     setBrandSearchKey(e);
-    let allBrandList = preferencesQsResponse[type].options;
+    let allBrandList = preferencesQsResponse[currentActiveTab - 1].options;
     allBrandList = allBrandList.filter(i => {
       return i.optionName.toLowerCase().includes(e.toLowerCase());
     });
@@ -208,7 +208,7 @@ const YourPreferences = props => {
           </Text>
           <Input
             placeholder="Search Brands"
-            onChangeText={e => searchBrand(e, 0)}
+            onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
           {renderList(brandList, firstQuestionData)}
@@ -357,7 +357,7 @@ const YourPreferences = props => {
           </Text>
           <Input
             placeholder="Search Brands"
-            onChangeText={e => searchBrand(e, 1)}
+            onChangeText={e => searchBrand(e)}
             value={brandSearchKey}
           />
           {renderList(brandList, secondQuestionData)}

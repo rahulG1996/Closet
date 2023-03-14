@@ -1,17 +1,43 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+  Linking,
+  Alert,
+} from 'react-native';
 import {Colors} from '../../colors';
 import {VText, VView, Buttons, Header} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
+import {InAppBrowser} from 'react-native-inappbrowser-reborn';
+import {addDataInCloset} from '../../redux/actions/closetAction';
+import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
 
 const ViewProduct = props => {
+  const dispatch = useDispatch();
   let _slider1Ref = useRef(null);
   const [currentActiveIndex, setCurrentActiveIndex] = useState(0);
   const [productData, setProductData] = useState({});
+  const addClosetResponse = useSelector(
+    state => state.ClosetReducer.addClosetResponse,
+  );
+  const userId = useSelector(state => state.AuthReducer.userId);
+
+  useEffect(() => {
+    if (Object.keys(addClosetResponse).length) {
+      if (addClosetResponse.statusCode == 200) {
+        dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        Toast.show('Cloth successfully added in closet');
+      }
+    }
+  }, [addClosetResponse, dispatch, props.navigation]);
 
   useEffect(() => {
     if (props?.route?.params?.data) {
@@ -27,13 +53,76 @@ const ViewProduct = props => {
     );
   };
 
+  const sleep = async timeout => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+  const openLink = async () => {
+    try {
+      const url = productData?.productButtonLink;
+      if (await InAppBrowser.isAvailable()) {
+        const result = await InAppBrowser.open(url, {
+          // iOS Properties
+          dismissButtonStyle: 'cancel',
+          preferredBarTintColor: '#453AA4',
+          preferredControlTintColor: 'white',
+          readerMode: false,
+          animated: true,
+          modalPresentationStyle: 'fullScreen',
+          modalTransitionStyle: 'coverVertical',
+          modalEnabled: true,
+          enableBarCollapsing: false,
+          // Android Properties
+          showTitle: true,
+          toolbarColor: '#6200EE',
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: true,
+          enableDefaultShare: true,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right',
+          },
+          headers: {
+            'my-custom-header': 'my custom header value',
+          },
+        });
+        await this.sleep(800);
+      } else Linking.openURL(url);
+    } catch (error) {
+      // Alert.alert(error.message);
+    }
+  };
+
+  const addToCloset = () => {
+    let data = {
+      userId: userId,
+      categoryId: productData.categoryId,
+      subCategoryId: productData.subCategoryId,
+      brandId: productData.brandId,
+      season: productData.seasons,
+      colorCode: [productData.productColorCode],
+      itemImageUrl: productData.imageUrls[0],
+      isImageBase64: false,
+    };
+    console.log('data', JSON.stringify(data, undefined, 2));
+    dispatch(addDataInCloset(data));
+  };
+
+  console.log('@@ productData', JSON.stringify(productData, undefined, 2));
+
   if (Object.keys(productData).length === 0) {
     return null;
   }
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <VView>
-        <Header showshare {...props} showBack />
+        <Header showshare {...props} showBack addToCloset={addToCloset} />
       </VView>
       <ScrollView>
         <VView
@@ -88,7 +177,7 @@ const ViewProduct = props => {
               style={{color: Colors.black60, marginBottom: 16}}
               text={productData.productDescription}
             />
-            <Buttons text="buy from the store" />
+            <Buttons text="buy from the store" onPress={openLink} />
           </VView>
         </VView>
       </ScrollView>
