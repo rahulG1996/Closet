@@ -117,7 +117,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (firstQuestionData.length < 5) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setFirstQuestions(firstQuestionData1);
     }
@@ -128,7 +130,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (secondQuestionData.length < 5) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setsecondQuestionData(firstQuestionData1);
     }
@@ -139,7 +143,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (thirdQuestionData.length < 5) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setThirdQuestions(firstQuestionData1);
     }
@@ -150,7 +156,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (forthQuestionData.length < 5) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setForthQuestions(firstQuestionData1);
     }
@@ -161,7 +169,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (fifthQuestionData.length < 5) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setFifthQuestions(firstQuestionData1);
     }
@@ -172,7 +182,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (sixthQuestionData.length < 3) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setSixthQuestions(firstQuestionData1);
     }
@@ -183,7 +195,9 @@ const YourPreferences = props => {
           i => i !== item.optionId,
         );
       } else {
-        firstQuestionData1.push(item.optionId);
+        if (seventhQuestionData.length < 3) {
+          firstQuestionData1.push(item.optionId);
+        }
       }
       setSeventhQuestions(firstQuestionData1);
     }

@@ -594,7 +594,16 @@ export const FilterModal = ({
     setSelectedSubCategory([]);
     setSeasonData([]);
     setColors([]);
-    onResetFilter();
+    setSizeFilter([]);
+    setPriceFilter([
+      {isChecked: false, min: 0, max: 1000, id: '1'},
+      {isChecked: false, min: 1000, max: 2000, id: '2'},
+      {isChecked: false, min: 2000, max: 3000, id: '3'},
+      {isChecked: false, min: 3000, max: 4000, id: '4'},
+      {isChecked: false, min: 4000, max: 5000, id: '5'},
+      {isChecked: false, min: 5000, max: 6000, id: '6'},
+      {isChecked: false, min: 6000, max: 'and above', id: '7'},
+    ]);
   };
 
   const setColorsFilter = colorCode => {

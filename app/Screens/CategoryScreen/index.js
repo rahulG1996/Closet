@@ -174,14 +174,6 @@ const CategoryScreen = props => {
     dispatch(getFilteredProducts(data1));
   };
 
-  const onResetFilter = () => {
-    setModal(false);
-    const data = {
-      categoryId: props.route.params.data.categoryId,
-    };
-    dispatch(getFilteredProducts(data));
-  };
-
   return (
     <VView style={{backgroundColor: 'white', flex: 1}}>
       <Header
@@ -230,7 +222,6 @@ const CategoryScreen = props => {
           from="home"
           hideModal={() => setModal(false)}
           setFilter={setFilter}
-          onResetFilter={onResetFilter}
         />
       }
       <OverlayModal

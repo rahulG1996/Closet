@@ -47,9 +47,9 @@ const Search = props => {
   const [selectedSort, setSelectedSort] = useState({
     type: 'asc',
     title: 'Price Low to High',
-    isSelected: true,
+    isSelected: false,
   });
-  const [selectedSortIndex, setSelectedSortIndex] = useState(0);
+  const [selectedSortIndex, setSelectedSortIndex] = useState(null);
   const [searchKey, setSearchKey] = useState('');
   const dispatch = useDispatch();
   const [productList, setProducts] = useState([]);
@@ -188,13 +188,6 @@ const Search = props => {
     console.log('@@ data', JSON.stringify(data1, undefined, 2));
   };
 
-  const onResetFilter = () => {
-    const data = {
-      key: searchKey,
-    };
-    dispatch(getFilteredProducts(data));
-  };
-
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       {showSearch ? (
@@ -304,8 +297,6 @@ const Search = props => {
           from="home"
           hideModal={() => setModal(false)}
           setFilter={setFilter}
-          filterValue={filterValue}
-          onResetFilter={onResetFilter}
         />
       }
       <OverlayModal
