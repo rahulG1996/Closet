@@ -206,8 +206,8 @@ const Outfits = props => {
             paddingHorizontal: 16,
           }}>
           <Image
-            source={require('../../assets/empty.png')}
-            style={{width: 100, height: 100}}
+            source={require('../../assets/no_outfit.png')}
+            style={{width: 160, height: 160}}
           />
           <Text style={{textAlign: 'center', padding: 16, lineHeight: 24}}>
             No Outfits to show. {'\n'} Create outfits to get more personalised

@@ -159,7 +159,7 @@ const Home = props => {
             </Text>
             <Text
               style={{color: Colors.black60, marginTop: 8, marginBottom: 16}}>
-              Description of the first above heading will go here
+              Products will be shown based on your preferences.
             </Text>
             <Buttons
               onPress={() => props.navigation.navigate('YourPreferences')}

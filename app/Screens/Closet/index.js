@@ -112,7 +112,10 @@ export default props => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Image source={Images.whiteBox} style={styles.whiteBoxStyle} />
+          <Image
+            source={require('../../assets/empty_closet.png')}
+            style={styles.whiteBoxStyle}
+          />
           <VText
             text={'Your closet is empty. Add clothes to get...'}
             style={styles.emptyClosetText}
@@ -981,8 +984,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   whiteBoxStyle: {
-    height: 100,
-    width: 100,
+    height: 160,
+    width: 160,
   },
   emptyClosetText: {
     marginTop: 16,
