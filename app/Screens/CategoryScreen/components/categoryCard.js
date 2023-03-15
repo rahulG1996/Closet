@@ -28,8 +28,8 @@ export default ({item, index, getProductDetails, addToCloset}) => {
             <Image
               source={require('../../../assets/iAdd.webp')}
               style={{
-                height: 32,
-                width: 32,
+                height: 24,
+                width: 24,
                 alignSelf: 'flex-end',
               }}
               resizeMode="contain"

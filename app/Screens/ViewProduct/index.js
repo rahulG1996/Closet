@@ -124,7 +124,7 @@ const ViewProduct = props => {
     return null;
   }
   return (
-    <VView style={{backgroundColor: 'white', flex: 1}}>
+    <VView style={{backgroundColor: 'white', flex: 1, paddingBottom: 80}}>
       <VView>
         <Header showshare {...props} showBack addToCloset={addToCloset} />
       </VView>
@@ -181,10 +181,18 @@ const ViewProduct = props => {
               style={{color: Colors.black60, marginBottom: 16}}
               text={productData.productDescription}
             />
-            <Buttons text="buy from the store" onPress={openLink} />
           </VView>
         </VView>
       </ScrollView>
+      <View
+        style={{
+          position: 'absolute',
+          bottom: 16,
+          width: '100%',
+          paddingHorizontal: 16,
+        }}>
+        <Buttons text="buy from the store" onPress={openLink} />
+      </View>
     </VView>
   );
 };

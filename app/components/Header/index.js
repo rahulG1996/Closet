@@ -79,7 +79,7 @@ const Header = ({
           <VView style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{marginRight: 20}} onPress={addToCloset}>
               <Image
-                resizeMode="stretch"
+                resizeMode="contain"
                 source={require('../../assets/iAdd.webp')}
                 style={{width: 24, height: 24}}
               />

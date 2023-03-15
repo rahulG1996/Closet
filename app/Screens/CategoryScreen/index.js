@@ -50,10 +50,10 @@ const CategoryScreen = props => {
   const [selectedSort, setSelectedSort] = useState({
     type: 'asc',
     title: 'Price Low to High',
-    isSelected: true,
+    isSelected: false,
   });
   const [showLoader, setLoader] = useState(true);
-  const [selectedSortIndex, setSelectedSortIndex] = useState(0);
+  const [selectedSortIndex, setSelectedSortIndex] = useState(null);
   const dispatch = useDispatch();
   const [productList, setProducts] = useState([]);
   const filteredProducts = useSelector(
@@ -175,6 +175,7 @@ const CategoryScreen = props => {
   };
 
   const onResetFilter = () => {
+    setModal(false);
     const data = {
       categoryId: props.route.params.data.categoryId,
     };
