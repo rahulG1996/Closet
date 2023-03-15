@@ -172,15 +172,15 @@ const Search = props => {
       data1.size = data.sizeFilter;
     }
     let priceFilters = [];
-    data.priceFilter.map(item => {
-      if (item.isChecked) {
-        priceFilters.push(item.min);
-        priceFilters.push(item.max);
-      }
-    });
-    priceFilters = [...new Set(priceFilters)];
-    priceFilters = [priceFilters[0], priceFilters[priceFilters.length - 1]];
-    if (priceFilters.length && !priceFilters.includes(null)) {
+    if (data.priceFilter.length > 0) {
+      data.priceFilter.map(item => {
+        if (item.isChecked) {
+          priceFilters.push(item.min);
+          priceFilters.push(item.max);
+        }
+      });
+      priceFilters = [...new Set(priceFilters)];
+      priceFilters = [priceFilters[0], priceFilters[priceFilters.length - 1]];
       data1.price = priceFilters;
     }
     data1.key = searchKey;

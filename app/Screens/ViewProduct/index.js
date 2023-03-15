@@ -7,6 +7,7 @@ import {
   View,
   Linking,
   Alert,
+  Text,
 } from 'react-native';
 import {Colors} from '../../colors';
 import {VText, VView, Buttons, Header} from '../../components';
@@ -177,8 +178,53 @@ const ViewProduct = props => {
                 paddingVertical: 8,
               }}
             />
+            <Text style={styles.titleStyle}>Color</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 16,
+              }}>
+              <View
+                style={{
+                  backgroundColor: productData.productColorCode,
+                  width: 40,
+                  height: 40,
+                  marginTop: 8,
+                  marginRight: 8,
+                }}
+              />
+              <Text>{productData.productColor}</Text>
+            </View>
+            <Text style={styles.titleStyle}>Category</Text>
+            <Text style={styles.subitleStyle}>{productData.categoryName}</Text>
+            <Text style={styles.titleStyle}>Sub Category</Text>
+            <Text style={styles.subitleStyle}>
+              {productData.subCategoryName}
+            </Text>
+            <Text style={styles.titleStyle}>Season</Text>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {productData.seasons.map(item => {
+                return (
+                  <Text style={[styles.subitleStyle, {marginRight: 4}]}>
+                    {item}
+                  </Text>
+                );
+              })}
+            </View>
+            <Text style={styles.titleStyle}>Size</Text>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {productData.productSizes.map(item => {
+                return (
+                  <Text style={[styles.subitleStyle, {marginRight: 4}]}>
+                    {item}
+                  </Text>
+                );
+              })}
+            </View>
+            <Text>Description</Text>
             <VText
-              style={{color: Colors.black60, marginBottom: 16}}
+              style={{color: Colors.black60, marginBottom: 16, marginTop: 8}}
               text={productData.productDescription}
             />
           </VView>
@@ -216,5 +262,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.92)',
+  },
+  subitleStyle: {
+    color: Colors.black60,
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  titleStyle: {
+    marginTop: 8,
   },
 });

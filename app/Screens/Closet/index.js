@@ -940,36 +940,28 @@ export const FilterModal = ({
               </ScrollView>
             </View>
           </View>
-          {(selectedBrands.length > 0 ||
-            selectedCategory.length > 0 ||
-            selectedSubCategory.length > 0 ||
-            seasonData.length > 0 ||
-            colorsFilter.length > 0 ||
-            (from !== 'closet' && sizeFilter.length > 0) ||
-            priceFilterObj.length > 0) && (
-            <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <View style={{width: '45%'}}>
-                <Buttons text="reset" isInverse onPress={resetFilterValues} />
-              </View>
-              <View style={{width: '45%'}}>
-                <Buttons
-                  text="apply"
-                  onPress={() =>
-                    setFilter({
-                      selectedBrands,
-                      selectedCategory: [...new Set(selectedCategory)],
-                      selectedSubCategory,
-                      seasonData,
-                      colorsFilter,
-                      sizeFilter,
-                      priceFilter: priceFilterObj,
-                    })
-                  }
-                />
-              </View>
+
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={{width: '45%'}}>
+              <Buttons text="reset" isInverse onPress={resetFilterValues} />
             </View>
-          )}
+            <View style={{width: '45%'}}>
+              <Buttons
+                text="apply"
+                onPress={() =>
+                  setFilter({
+                    selectedBrands,
+                    selectedCategory: [...new Set(selectedCategory)],
+                    selectedSubCategory,
+                    seasonData,
+                    colorsFilter,
+                    sizeFilter,
+                    priceFilter: priceFilterObj,
+                  })
+                }
+              />
+            </View>
+          </View>
         </View>
       </Modal>
     </View>
