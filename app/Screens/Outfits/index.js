@@ -11,7 +11,7 @@ const Outfits = props => {
   const dispatch = useDispatch();
   const [showModal, setModal] = useState(false);
   const [selectedSort, setSelectedSort] = useState({});
-  const [selectedSortIndex, setSelectedSortIndex] = useState(0);
+  const [selectedSortIndex, setSelectedSortIndex] = useState(null);
 
   const sortingData = [
     {
@@ -38,12 +38,6 @@ const Outfits = props => {
 
   const getOutfitData =
     useSelector(state => state.OutfitReducer.getOutfitData) || [];
-
-  // useEffect(() => {
-  //   if (Object.keys(getOutfitData).length) {
-  //     console.warn('getOutfitData', getOutfitData);
-  //   }
-  // }, [getOutfitData]);
 
   const renderItem = (item, index) => {
     return (
@@ -132,11 +126,9 @@ const Outfits = props => {
           style={{
             paddingVertical: 10,
           }}>
-          <Buttons
-            text="Apply"
-            // isInverse
-            onPress={handleSorting}
-          />
+          {selectedSortIndex !== null && (
+            <Buttons text="Apply" onPress={handleSorting} />
+          )}
         </VView>
       </View>
     );

@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../colors';
 import {Header} from '../../components';
 import {useDispatch, useSelector} from 'react-redux';
 import {openClosetDetails} from '../../redux/actions/closetAction';
+import {FilterModal} from '../Closet';
 
 const ClosetCategory = props => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const ClosetCategory = props => {
   const singleClosetReponse = useSelector(
     state => state.ClosetReducer.singleClosetReponse,
   );
+  const [showModal, setModal] = useState(false);
 
   useEffect(() => {
     if (Object.keys(singleClosetReponse).length) {
@@ -28,11 +30,31 @@ const ClosetCategory = props => {
     dispatch(openClosetDetails(data));
   };
 
+  const showFilterFunction = value => {
+    setModal(true);
+  };
+
+  const setFilter = data => {
+    setModal(false);
+    let dataObj = {
+      categoryIds: data.selectedCategory,
+      subCategoryIds: data.selectedSubCategory,
+      brandIds: data.selectedBrands,
+      seasons: data.seasonData,
+      colorCodes: data.colorsFilter,
+      userId: userId,
+    };
+    props.navigation.navigate('ClosetFilter', {
+      filterData: dataObj,
+    });
+  };
+
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
       <Header
         showBack
         showFilter
+        showFilterFunction={showFilterFunction}
         title={props?.route?.params?.categoryType?.category}
         {...props}
       />
@@ -65,6 +87,14 @@ const ClosetCategory = props => {
           })}
         </View>
       </ScrollView>
+      {
+        <FilterModal
+          from="closet"
+          showModal={showModal}
+          hideModal={() => setModal(false)}
+          setFilter={setFilter}
+        />
+      }
     </View>
   );
 };
