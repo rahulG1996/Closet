@@ -23,6 +23,7 @@ export function getProductDetailsApi(productId) {
 
 export function getFilteredProducts(data) {
   return async dispatch => {
+    console.log('@@ data', data);
     let url = 'get/allProducts/v1';
     const apiResponse = await NoAuthAPI(url, 'POST', data);
     console.log('@@ filter res', JSON.stringify(apiResponse, undefined, 2));

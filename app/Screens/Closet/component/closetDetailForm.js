@@ -308,7 +308,7 @@ const ClosetDetailsFrom = props => {
 
             <VText text="Season" />
             <VView style={{flexDirection: 'row'}}>
-              {['spring', 'summer', 'fall', 'winter'].map((item, index) => {
+              {['spring', 'summer', 'Autumn', 'winter'].map((item, index) => {
                 return (
                   <TouchableOpacity
                     onPress={() => setSeasonData(item)}

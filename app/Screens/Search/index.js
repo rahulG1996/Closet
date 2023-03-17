@@ -115,15 +115,15 @@ const Search = props => {
   }, [dispatch, productDetailResponse, props.navigation]);
 
   const searchProduct = () => {
-    setSearch(false);
-    dispatch({type: 'GET_SEARCH_RESULT', value: []});
-    const data = {
-      key: searchKey,
-    };
-    dispatch(getFilteredProducts(data));
+    if (searchKey.length) {
+      setSearch(false);
+      dispatch({type: 'GET_SEARCH_RESULT', value: []});
+      const data = {
+        key: searchKey,
+      };
+      dispatch(getFilteredProducts(data));
+    }
   };
-
-  console.log('cmp', addClosetResponse.statusCode);
 
   useEffect(() => {
     if (Object.keys(addClosetResponse).length) {
@@ -146,7 +146,6 @@ const Search = props => {
       itemImageUrl: item.imageUrls[0],
       isImageBase64: false,
     };
-    console.log('data', JSON.stringify(data, undefined, 2));
     dispatch(addDataInCloset(data));
   };
 
@@ -209,7 +208,7 @@ const Search = props => {
                 onChangeText={e => setSearchKey(e)}
                 placeholder="Search jeans, top, hats..."
                 autoFocus
-                returnKeyLabel="Search"
+                returnKeyType="go"
                 onSubmitEditing={searchProduct}
               />
             </View>

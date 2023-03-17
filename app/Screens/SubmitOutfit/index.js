@@ -162,7 +162,7 @@ const SubmitOutfit = props => {
           />
           <Text style={styles.headingStyle}>Season</Text>
           <View style={{flexDirection: 'row'}}>
-            {['spring', 'summer', 'fall', 'winter'].map((item, index) => {
+            {['spring', 'summer', 'Autumn', 'winter'].map((item, index) => {
               return (
                 <TouchableOpacity
                   onPress={() => setSeasonData(item)}

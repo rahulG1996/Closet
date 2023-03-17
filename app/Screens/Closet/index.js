@@ -276,6 +276,7 @@ export default props => {
                   <Image
                     source={{uri: item.itemImageUrl}}
                     style={{width: 150, height: 140}}
+                    resizeMode="contain"
                   />
                 </TouchableOpacity>
               );
@@ -606,12 +607,12 @@ export const FilterModal = ({
     ]);
   };
 
-  const setColorsFilter = colorCode => {
+  const setColorsFilter = colorName => {
     let colorsFilter1 = [...colorsFilter];
-    if (!colorsFilter1.includes(colorCode)) {
-      colorsFilter1.push(colorCode);
+    if (!colorsFilter1.includes(colorName)) {
+      colorsFilter1.push(colorName);
     } else {
-      colorsFilter1 = colorsFilter1.filter(i => i !== colorCode);
+      colorsFilter1 = colorsFilter1.filter(i => i !== colorName);
     }
     setColors(colorsFilter1);
   };
@@ -789,7 +790,7 @@ export const FilterModal = ({
                       Season
                     </Text>
                     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-                      {['spring', 'summer', 'fall', 'winter'].map(
+                      {['Spring', 'Summer', 'Autumn', 'Winter'].map(
                         (item, index) => {
                           return (
                             <TouchableOpacity
@@ -832,7 +833,7 @@ export const FilterModal = ({
                       {getColorsResponse?.map((item, index) => {
                         return (
                           <TouchableOpacity
-                            onPress={() => setColorsFilter(item.colorCode)}
+                            onPress={() => setColorsFilter(item.colorName)}
                             style={{
                               borderWidth: 1,
                               padding: 8,
@@ -842,7 +843,7 @@ export const FilterModal = ({
                               flexDirection: 'row',
                               justifyContent: 'space-between',
                               backgroundColor: colorsFilter.includes(
-                                item.colorCode,
+                                item.colorName,
                               )
                                 ? Colors.grey2
                                 : 'transparent',
@@ -852,14 +853,14 @@ export const FilterModal = ({
                               style={{
                                 width: 24,
                                 height: 24,
-                                backgroundColor: item.colorCode,
+                                backgroundColor: item.colorName,
                                 borderWidth: 1,
                                 borderColor: Colors.greyBorder,
                                 marginRight: 8,
                               }}
                             />
                             <Text>{item.colorName}</Text>
-                            {colorsFilter.includes(item.colorCode) ? (
+                            {colorsFilter.includes(item.colorName) ? (
                               <Image
                                 source={require('../../assets/crossIcon.png')}
                                 style={{width: 12, height: 12, marginLeft: 8}}

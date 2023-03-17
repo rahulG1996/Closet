@@ -116,11 +116,6 @@ const ViewProduct = props => {
     dispatch(addDataInCloset(data));
   };
 
-  console.log(
-    '@@ productData',
-    JSON.stringify(productData?.imageUrls?.length, undefined, 2),
-  );
-
   if (Object.keys(productData).length === 0) {
     return null;
   }
@@ -142,11 +137,7 @@ const ViewProduct = props => {
             layout="stack"
             layoutCardOffset={9}
             ref={_slider1Ref}
-            data={[
-              ...productData.imageUrls,
-              ...productData.imageUrls,
-              ...productData.imageUrls,
-            ]}
+            data={productData.imageUrls}
             renderItem={_renderItem}
             sliderWidth={SLIDER_WIDTH}
             itemWidth={ITEM_WIDTH}
@@ -184,13 +175,13 @@ const ViewProduct = props => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 marginBottom: 16,
+                marginTop: 8,
               }}>
               <View
                 style={{
                   backgroundColor: productData.productColorCode,
                   width: 40,
                   height: 40,
-                  marginTop: 8,
                   marginRight: 8,
                 }}
               />
@@ -202,6 +193,8 @@ const ViewProduct = props => {
             <Text style={styles.subitleStyle}>
               {productData.subCategoryName}
             </Text>
+            <Text style={styles.titleStyle}>Brand</Text>
+            <Text style={styles.subitleStyle}>{productData.brandName}</Text>
             <Text style={styles.titleStyle}>Season</Text>
             <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
               {productData.seasons.map(item => {
