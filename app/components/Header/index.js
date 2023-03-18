@@ -21,6 +21,8 @@ const Header = ({
   showFilterFunction = () => {},
   onBack = null,
   addToCloset = () => {},
+  showAdd = false,
+  onShare = () => {},
 }) => {
   const [switchIcon, setSwitch] = useState(false);
   const toggleSwitch = () => {
@@ -75,7 +77,7 @@ const Header = ({
           alignItems: 'center',
           justifyContent: 'space-between',
         }}>
-        {showshare && (
+        {showAdd && (
           <VView style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{marginRight: 20}} onPress={addToCloset}>
               <Image
@@ -84,14 +86,17 @@ const Header = ({
                 style={{width: 24, height: 24}}
               />
             </TouchableOpacity>
-
-            {/* <TouchableOpacity>
+          </VView>
+        )}
+        {showshare && (
+          <VView style={{flexDirection: 'row'}}>
+            <TouchableOpacity style={{marginRight: 20}} onPress={onShare}>
               <Image
                 resizeMode="stretch"
                 source={require('../../assets/iShare.webp')}
                 style={{width: 24, height: 24}}
               />
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </VView>
         )}
         {showFilter && (

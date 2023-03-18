@@ -17,6 +17,7 @@ import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 import {addDataInCloset, getClosetData} from '../../redux/actions/closetAction';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
+import Share from 'react-native-share';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
@@ -116,13 +117,34 @@ const ViewProduct = props => {
     dispatch(addDataInCloset(data));
   };
 
+  const onShare = () => {
+    const url = 'https://awesome.contents.com/';
+    const message = 'Please check this out.';
+    Share.open({
+      message: `${message} ${url}`,
+    })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        err && console.log(err);
+      });
+  };
+
   if (Object.keys(productData).length === 0) {
     return null;
   }
   return (
     <VView style={{backgroundColor: 'white', flex: 1, paddingBottom: 80}}>
       <VView>
-        <Header showshare {...props} showBack addToCloset={addToCloset} />
+        <Header
+          showAdd
+          showshare
+          onShare={onShare}
+          {...props}
+          showBack
+          addToCloset={addToCloset}
+        />
       </VView>
       <ScrollView>
         <VView
