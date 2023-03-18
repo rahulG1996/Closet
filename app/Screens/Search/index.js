@@ -257,6 +257,13 @@ const Search = props => {
               });
             }}
           />
+          {productList?.length > 0 && (
+            <Text
+              style={{
+                padding: 16,
+                color: Colors.black60,
+              }}>{`${productList?.length} results found`}</Text>
+          )}
           {productList.length > 0 ? (
             <FlatList
               data={productList}

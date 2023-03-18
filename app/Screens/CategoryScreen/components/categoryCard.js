@@ -18,7 +18,6 @@ export default ({item, index, getProductDetails, addToCloset}) => {
           onPress={getProductDetails}
           activeOpacity={0.7}
           style={{
-            backgroundColor: Colors.grey1,
             paddingVertical: 10,
             paddingHorizontal: 13,
             width: '100%',

@@ -10,7 +10,7 @@ const Categories = props => {
   const renderCategory = ({item, index}) => {
     return (
       <TouchableOpacity
-        style={{backgroundColor: Colors.grey1, marginLeft: 16}}
+        style={{marginLeft: 16}}
         onPress={() => props.getProductDetails(item.productId)}>
         <Image
           source={{uri: item.productImage}}
