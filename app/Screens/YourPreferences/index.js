@@ -266,7 +266,7 @@ const YourPreferences = props => {
     });
     if (currentActiveTab === 7) {
       let data = {
-        userId: '037f26ea-60cd-4041-ae69-26b6348d6397',
+        userId: userId,
         prefrences: [
           {
             questionId: preferencesQsResponse[0].questionId,
