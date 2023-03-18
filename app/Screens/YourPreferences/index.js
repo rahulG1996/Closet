@@ -44,8 +44,13 @@ const YourPreferences = props => {
     dispatch(getPreferencesAnswers());
   }, [dispatch]);
 
+  console.log('@@ cmp', JSON.stringify(submitPrefResp, undefined, 2));
+
   useEffect(() => {
-    if (submitPrefResp.length) {
+    if (
+      submitPrefResp?.prefrences?.length ||
+      submitPrefResp[0]?.prefrences?.length
+    ) {
       dispatch({type: 'SUBMIT_PREFERENCES', value: []});
       dispatch(getUserProfile());
       Toast.show('Your preferences added successfully');

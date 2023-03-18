@@ -48,7 +48,7 @@ export function getPreferencesQs() {
 export function submitPrefernces(data) {
   return async (dispatch, getState) => {
     const apiResponse = await NoAuthAPI('savePreferences', 'POST', data);
-    console.warn('submit', apiResponse);
+    console.log('@@ action', JSON.stringify(apiResponse, undefined, 2));
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'SUBMIT_PREFERENCES', value: apiResponse});
     }
@@ -61,6 +61,7 @@ export function getPreferencesAnswers() {
       `userPrefrences?userId=${getState().AuthReducer.userId}`,
       'GET',
     );
+
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'PREFERENCES_ANSWERS', value: apiResponse.prefrences});
     }
