@@ -163,14 +163,18 @@ const CategoryScreen = props => {
       data.priceFilter.map(item => {
         if (item.isChecked) {
           priceFilters.push(item.min);
-          priceFilters.push(item.max);
+          if (item.max === 'and above') {
+            priceFilters.push(10000);
+          } else {
+            priceFilters.push(item.max);
+          }
         }
       });
       priceFilters = [...new Set(priceFilters)];
       priceFilters = [priceFilters[0], priceFilters[priceFilters.length - 1]];
       data1.price = priceFilters;
     }
-    console.log('@@', JSON.stringify({data1}, undefined, 2));
+    console.log('@@ data', JSON.stringify({data1}, undefined, 2));
     dispatch(getFilteredProducts(data1));
   };
 
