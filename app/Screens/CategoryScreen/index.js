@@ -19,7 +19,11 @@ import {
 } from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import Toast from 'react-native-simple-toast';
-import {addDataInCloset, getClosetData} from '../../redux/actions/closetAction';
+import {
+  addDataInCloset,
+  getClosetData,
+  deleteClosetData,
+} from '../../redux/actions/closetAction';
 import {
   getFilteredProducts,
   getProductDetailsApi,
@@ -62,23 +66,40 @@ const CategoryScreen = props => {
   const addClosetResponse = useSelector(
     state => state.ClosetReducer.addClosetResponse,
   );
+  const deleteClosetResponse = useSelector(
+    state => state.ClosetReducer.deleteClosetResponse,
+  );
   const userId = useSelector(state => state.AuthReducer.userId);
+  const [filterParams, setFilterParametrs] = useState({});
+
+  useEffect(() => {
+    if (Object.keys(deleteClosetResponse).length) {
+      if (deleteClosetResponse.statusCode === 200) {
+        dispatch({type: 'DELETE_CLOSET', value: {}});
+        Toast.show('Cloth successfully removed from closet');
+        dispatch(getFilteredProducts(filterParams));
+        dispatch(getClosetData());
+      }
+    }
+  }, [deleteClosetResponse, dispatch]);
 
   useEffect(() => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
         dispatch(getClosetData());
+        dispatch(getFilteredProducts(filterParams));
         Toast.show('Cloth successfully added in closet');
       }
     }
-  }, [addClosetResponse, dispatch, props.navigation]);
+  }, [addClosetResponse, dispatch]);
 
   useEffect(() => {
     if (props.route.params.data) {
       const data = {
         categoryId: props.route.params.data.categoryId,
       };
+      setFilterParametrs(data);
       dispatch(getFilteredProducts(data));
     }
   }, []);
@@ -132,11 +153,14 @@ const CategoryScreen = props => {
       colorCode: [item.productColorCode],
       itemImageUrl: item.imageUrls[0],
       isImageBase64: false,
+      productId: item.productId,
     };
+    console.log('@@ add data', JSON.stringify(data, undefined, 2));
     dispatch(addDataInCloset(data));
   };
 
   const setFilter = data => {
+    console.log('data.selectedBrands', data.selectedBrands);
     setModal(false);
     setLoader(true);
     let data1 = {};
@@ -144,7 +168,7 @@ const CategoryScreen = props => {
       data1.categoryIds = data.selectedCategory;
     }
     if (data.selectedBrands.length) {
-      data1.brandIds = data.selectedCategory;
+      data1.brandIds = data.selectedBrands;
     }
     if (data.selectedSubCategory.length) {
       data1.subCategoryIds = data.selectedSubCategory;
@@ -174,8 +198,17 @@ const CategoryScreen = props => {
       priceFilters = [priceFilters[0], priceFilters[priceFilters.length - 1]];
       data1.price = priceFilters;
     }
+    setFilterParametrs(data);
     console.log('@@ data', JSON.stringify({data1}, undefined, 2));
     dispatch(getFilteredProducts(data1));
+  };
+
+  const deletFromClost = item => {
+    const data = {
+      userId: userId,
+      closetItemId: item?.closetItemId,
+    };
+    dispatch(deleteClosetData(data));
   };
 
   return (
@@ -189,6 +222,13 @@ const CategoryScreen = props => {
         handleSorting={handleSortingModal}
         {...props}
       />
+      {productList?.length > 0 && (
+        <Text
+          style={{
+            padding: 16,
+            color: Colors.black60,
+          }}>{`${productList?.length} results found`}</Text>
+      )}
       {productList.length > 0 ? (
         <FlatList
           data={productList}
@@ -200,6 +240,7 @@ const CategoryScreen = props => {
               item={item}
               getProductDetails={() => getProductDetails(item.productId)}
               addToCloset={() => addToCloset(item)}
+              deletFromClost={() => deletFromClost(item)}
             />
           )}
           contentContainerStyle={{

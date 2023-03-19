@@ -19,6 +19,7 @@ import Outfits from '../screens/Outfits';
 import {getPreferencesQs, getUserProfile} from '../redux/actions/profileAction';
 import {
   getBrandData,
+  getBrandData2,
   getCategoryData,
   getClosetData,
   getColorData,
@@ -162,6 +163,7 @@ function AppNavigation() {
       dispatch(getHomePageData());
       dispatch(getUserProfile());
       dispatch(getBrandData());
+      dispatch(getBrandData2());
       dispatch(getCategoryData());
       dispatch(getClosetData());
       dispatch(getOutfitsList());
@@ -171,6 +173,7 @@ function AppNavigation() {
         dispatch(getPreferencesQs());
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userId]);
   return !userId ? (
     <Stack.Navigator screenOptions={{headerShown: false}}>

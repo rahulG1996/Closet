@@ -14,10 +14,15 @@ import {VText, VView, Buttons, Header} from '../../components';
 import {FONTS_SIZES} from '../../fonts';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {InAppBrowser} from 'react-native-inappbrowser-reborn';
-import {addDataInCloset, getClosetData} from '../../redux/actions/closetAction';
+import {
+  addDataInCloset,
+  deleteClosetData,
+  getClosetData,
+} from '../../redux/actions/closetAction';
 import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 import Share from 'react-native-share';
+import {getProductDetailsApi} from '../../redux/actions/homeActions';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = SLIDER_WIDTH;
@@ -31,16 +36,41 @@ const ViewProduct = props => {
     state => state.ClosetReducer.addClosetResponse,
   );
   const userId = useSelector(state => state.AuthReducer.userId);
+  const deleteClosetResponse = useSelector(
+    state => state.ClosetReducer.deleteClosetResponse,
+  );
+
+  const productDetailResponse = useSelector(
+    state => state.HomeReducer.productDetailResponse,
+  );
+
+  useEffect(() => {
+    if (Object.keys(productDetailResponse).length) {
+      setProductData(productDetailResponse.productDetails);
+    }
+  }, [productDetailResponse]);
+
+  useEffect(() => {
+    if (Object.keys(deleteClosetResponse).length) {
+      if (deleteClosetResponse.statusCode === 200) {
+        dispatch({type: 'DELETE_CLOSET', value: {}});
+        Toast.show('Cloth successfully removed from closet');
+        dispatch(getProductDetailsApi(productData.productId));
+        dispatch(getClosetData());
+      }
+    }
+  }, [deleteClosetResponse, dispatch]);
 
   useEffect(() => {
     if (Object.keys(addClosetResponse).length) {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
+        dispatch(getProductDetailsApi(productData.productId));
         dispatch(getClosetData());
         Toast.show('Cloth successfully added in closet');
       }
     }
-  }, [addClosetResponse, dispatch, props.navigation]);
+  }, [addClosetResponse, dispatch]);
 
   useEffect(() => {
     if (props?.route?.params?.data) {
@@ -103,6 +133,14 @@ const ViewProduct = props => {
   };
 
   const addToCloset = () => {
+    if (productData.addedToCloset) {
+      const data = {
+        userId: userId,
+        closetItemId: productData?.closetItemId,
+      };
+      dispatch(deleteClosetData(data));
+      return;
+    }
     let data = {
       userId: userId,
       categoryId: productData.categoryId,
@@ -112,6 +150,7 @@ const ViewProduct = props => {
       colorCode: [productData.productColorCode],
       itemImageUrl: productData.imageUrls[0],
       isImageBase64: false,
+      productId: productData.productId,
     };
     console.log('data', JSON.stringify(data, undefined, 2));
     dispatch(addDataInCloset(data));
@@ -144,6 +183,11 @@ const ViewProduct = props => {
           {...props}
           showBack
           addToCloset={addToCloset}
+          imageSrc={
+            productData.addedToCloset
+              ? require('../../assets/addedCloset.png')
+              : require('../../assets/iAdd.webp')
+          }
         />
       </VView>
       <ScrollView>

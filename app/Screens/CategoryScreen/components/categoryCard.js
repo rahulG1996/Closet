@@ -4,7 +4,13 @@ import {Colors} from '../../../colors';
 import {VView, VText} from '../../../components';
 import {FONTS_SIZES} from '../../../fonts';
 
-export default ({item, index, getProductDetails, addToCloset}) => {
+export default ({
+  item,
+  index,
+  getProductDetails,
+  addToCloset,
+  deletFromClost,
+}) => {
   return (
     <>
       <VView
@@ -23,16 +29,29 @@ export default ({item, index, getProductDetails, addToCloset}) => {
             width: '100%',
             alignSelf: 'center',
           }}>
-          <TouchableOpacity onPress={addToCloset}>
-            <Image
-              source={require('../../../assets/iAdd.webp')}
-              style={{
-                height: 24,
-                width: 24,
-                alignSelf: 'flex-end',
-              }}
-              resizeMode="contain"
-            />
+          <TouchableOpacity
+            onPress={item.addedToCloset ? deletFromClost : addToCloset}>
+            {item.addedToCloset ? (
+              <Image
+                source={require('../../../assets/addedCloset.png')}
+                style={{
+                  height: 24,
+                  width: 24,
+                  alignSelf: 'flex-end',
+                }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Image
+                source={require('../../../assets/iAdd.webp')}
+                style={{
+                  height: 24,
+                  width: 24,
+                  alignSelf: 'flex-end',
+                }}
+                resizeMode="contain"
+              />
+            )}
           </TouchableOpacity>
           <Image
             source={{uri: item?.imageUrls[0]}}

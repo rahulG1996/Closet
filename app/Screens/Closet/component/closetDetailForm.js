@@ -193,7 +193,7 @@ const ClosetDetailsFrom = props => {
       brandId: state.brandSelected?.id,
       season: selectedSeason,
       colorCode: colorsFilter,
-      isImageBase64: true,
+      isImageBase64: isImageEdit,
       itemImageUrl: isImageEdit
         ? `data:image/jpeg;base64,${newImage?.data}`
         : props?.route?.params?.editCloset
@@ -202,10 +202,11 @@ const ClosetDetailsFrom = props => {
     };
     if (props?.route?.params?.editCloset) {
       data.closetItemId = props.route?.params.editClosetData?.closetItemId;
+      console.log('@@ edit data', JSON.stringify(data, undefined, 2));
       dispatch(editDataInCloset(data));
       return;
     }
-    console.log('@@ data', data);
+    console.log('@@ update data', data);
     dispatch(addDataInCloset(data));
   };
 

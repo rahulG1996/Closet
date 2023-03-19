@@ -10,9 +10,11 @@ export function getHomePageData() {
 }
 
 export function getProductDetailsApi(productId) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     const apiResponse = await NoAuthAPI(
-      `get/productDetails?productId=${productId}`,
+      `get/productDetails?productId=${productId}&userId=${
+        getState().AuthReducer.userId
+      }`,
       'GET',
     );
     if (Object.keys(apiResponse).length) {
@@ -22,10 +24,12 @@ export function getProductDetailsApi(productId) {
 }
 
 export function getFilteredProducts(data) {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     console.log('@@ data', data);
+    const data1 = data;
+    data1.userId = getState().AuthReducer.userId;
     let url = 'get/allProducts/v1';
-    const apiResponse = await NoAuthAPI(url, 'POST', data);
+    const apiResponse = await NoAuthAPI(url, 'POST', data1);
     console.log('@@ filter res', JSON.stringify(apiResponse, undefined, 2));
     if (Object.keys(apiResponse).length) {
       dispatch({type: 'FILTERED_PRODUCTS', value: apiResponse});

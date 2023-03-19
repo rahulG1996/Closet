@@ -10,6 +10,7 @@ const initialState = {
   getFilterClosetResponse: [],
   getColorsResponse: [],
   getSizeResponse: [],
+  brandData2: [],
 };
 
 const ClosetReducer = (state = initialState, action) => {
@@ -18,6 +19,12 @@ const ClosetReducer = (state = initialState, action) => {
       return {
         ...state,
         brandData: action.value,
+      };
+    }
+    case 'GET_ADMIN_BRANDS': {
+      return {
+        ...state,
+        brandData2: action.value,
       };
     }
     case 'GET_CATEGORY': {

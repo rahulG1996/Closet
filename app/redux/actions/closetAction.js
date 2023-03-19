@@ -8,6 +8,14 @@ export function getBrandData() {
     }
   };
 }
+export function getBrandData2() {
+  return async dispatch => {
+    const apiResponse = await NoAuthAPI('getAdminBrands', 'GET');
+    if (Object.keys(apiResponse).length) {
+      dispatch({type: 'GET_ADMIN_BRANDS', value: apiResponse.data});
+    }
+  };
+}
 
 export function getColorData() {
   return async dispatch => {
@@ -50,7 +58,6 @@ export function addDataInCloset(data) {
   return async dispatch => {
     const apiResponse = await NoAuthAPI('addToCloset', 'POST', data);
     if (Object.keys(apiResponse).length) {
-      console.log('Closet add', apiResponse);
       dispatch({type: 'ADD_TO_CLOSET', value: apiResponse});
     }
   };

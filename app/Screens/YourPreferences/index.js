@@ -31,6 +31,7 @@ const YourPreferences = props => {
   const [seventhQuestionData, setSeventhQuestions] = useState([]);
   const [preferencesObj, setPreferencesObj] = useState([]);
   const [brandSearchKey, setBrandSearchKey] = useState('');
+  const [colorCodes, setColorCodes] = useState([]);
   const preferencesQsResponse =
     useSelector(state => state.ProfileReducer.preferencesQsResponse) || [];
   const preferencesAnswersResp =
@@ -115,6 +116,9 @@ const YourPreferences = props => {
   }, [preferencesAnswersResp]);
 
   const setBrandsFilter = item => {
+    if (colorCodes.includes(item.colorCode)) {
+      return;
+    }
     if (currentActiveTab === 1) {
       let firstQuestionData1 = [...firstQuestionData];
       if (firstQuestionData1.includes(item.optionId)) {
@@ -181,6 +185,14 @@ const YourPreferences = props => {
       setFifthQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 6) {
+      let colorCodes1 = [...colorCodes];
+      if (colorCodes1.includes(item.colorCode)) {
+        colorCodes1 = colorCodes1.filter(i => i !== item.colorCode);
+      } else {
+        if (sixthQuestionData.length < 3) {
+          colorCodes1.push(item.colorCode);
+        }
+      }
       let firstQuestionData1 = [...sixthQuestionData];
       if (firstQuestionData1.includes(item.optionId)) {
         firstQuestionData1 = firstQuestionData1.filter(
@@ -191,6 +203,7 @@ const YourPreferences = props => {
           firstQuestionData1.push(item.optionId);
         }
       }
+      setColorCodes(colorCodes1);
       setSixthQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 7) {
@@ -321,6 +334,8 @@ const YourPreferences = props => {
     setBrandList(preferencesQsResponse[currentActiveTab - 2].options);
   };
 
+  console.log('@@ colorCodes', colorCodes);
+
   const renderList = (data, answers) => {
     return (
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
@@ -331,6 +346,10 @@ const YourPreferences = props => {
               onPress={() => setBrandsFilter(item)}
               style={{
                 borderWidth: 1,
+                opacity:
+                  currentActiveTab === 7 && colorCodes.includes(item.colorCode)
+                    ? 0.3
+                    : 1,
                 padding: 8,
                 marginRight: 8,
                 borderColor: Colors.greyBorder,
@@ -442,6 +461,8 @@ const YourPreferences = props => {
     );
   };
 
+  console.log('@@ sixth', sixthQuestionData);
+
   const getSixthPage = () => {
     const data = preferencesQsResponse[5];
     return (
@@ -483,6 +504,14 @@ const YourPreferences = props => {
   return (
     <View
       style={{padding: 16, flex: 1, backgroundColor: 'white', paddingTop: 20}}>
+      <TouchableOpacity
+        style={{position: 'absolute', top: 20, right: 16, zIndex: 999}}
+        onPress={() => props.navigation.goBack()}>
+        <Image
+          source={require('../../assets/cross.webp')}
+          style={{width: 44, height: 44}}
+        />
+      </TouchableOpacity>
       <View style={{flexDirection: 'row'}}>
         {preferencesQsResponse.length > 0 &&
           preferencesQsResponse.map((item, index) => {

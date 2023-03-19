@@ -132,6 +132,7 @@ const ClosetFilter = props => {
             setFilter={setFilter}
             filterValue={previousFilter}
             onResetFilter={onResetFilter}
+            from="closet"
           />
         }
       </View>

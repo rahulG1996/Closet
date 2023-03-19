@@ -23,6 +23,7 @@ const Header = ({
   addToCloset = () => {},
   showAdd = false,
   onShare = () => {},
+  imageSrc = null,
 }) => {
   const [switchIcon, setSwitch] = useState(false);
   const toggleSwitch = () => {
@@ -66,7 +67,7 @@ const Header = ({
               paddingLeft: !showBack || 20,
               fontSize: FONTS_SIZES.s3,
               fontWeight: '700',
-              width: 200,
+              // width: 200,
             }}
           />
         )}
@@ -82,7 +83,7 @@ const Header = ({
             <TouchableOpacity style={{marginRight: 20}} onPress={addToCloset}>
               <Image
                 resizeMode="contain"
-                source={require('../../assets/iAdd.webp')}
+                source={imageSrc}
                 style={{width: 24, height: 24}}
               />
             </TouchableOpacity>
@@ -92,7 +93,7 @@ const Header = ({
           <VView style={{flexDirection: 'row'}}>
             <TouchableOpacity style={{marginRight: 20}} onPress={onShare}>
               <Image
-                resizeMode="stretch"
+                resizeMode="contain"
                 source={require('../../assets/iShare.webp')}
                 style={{width: 24, height: 24}}
               />

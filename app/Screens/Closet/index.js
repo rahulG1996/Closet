@@ -11,7 +11,15 @@ import {
   Dimensions,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import {Buttons, Header, Input, VText, VView} from '../../components';
+import {
+  Buttons,
+  Header,
+  Input,
+  OverlayModal,
+  SortComponent,
+  VText,
+  VView,
+} from '../../components';
 import {Images} from '../../assets';
 import {Colors} from '../../colors';
 import {useDispatch, useSelector} from 'react-redux';
@@ -25,9 +33,22 @@ import RNFS from 'react-native-fs';
 import Modal from 'react-native-modal';
 import {FONTS_SIZES} from '../../fonts';
 import CheckBox from '@react-native-community/checkbox';
+import moment from 'moment';
 
 const {height} = Dimensions.get('screen');
 export default props => {
+  const sortingData = [
+    {
+      type: 'desc',
+      title: 'Latest First',
+      isSelected: false,
+    },
+    {
+      type: 'asc',
+      title: 'Last First',
+      isSelected: true,
+    },
+  ];
   const dispatch = useDispatch();
   const captureViewRef = useRef();
   const [showModal, setModal] = useState(false);
@@ -36,10 +57,15 @@ export default props => {
   const [activeTab, setActiveTab] = useState('All');
   const getcloset = useSelector(state => state.ClosetReducer.getcloset);
   const [gridClosetData, setGridClosetData] = useState([]);
-
+  const [showSortModal, setSortModal] = useState(false);
   const userId = useSelector(state => state.AuthReducer.userId);
   const [filterClosetData, setFilterClosetData] = useState(getcloset);
-
+  const [selectedSort, setSelectedSort] = useState({
+    type: 'asc',
+    title: 'Price Low to High',
+    isSelected: false,
+  });
+  const [selectedSortIndex, setSelectedSortIndex] = useState(null);
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
 
   const singleClosetReponse = useSelector(
@@ -350,6 +376,28 @@ export default props => {
     });
   };
 
+  const handleSortingOption = (item, index) => {
+    setSelectedSort(item);
+    setSelectedSortIndex(index);
+  };
+
+  const handleSorting = () => {
+    setSortModal(false);
+    let data = filterClosetData;
+    data = data.sort((a, b) => {
+      if (selectedSort.type === 'desc') {
+        return moment(a.createdOn) < moment(b.createdOn) ? 1 : -1;
+      } else if (selectedSort.type === 'asc') {
+        return moment(a.createdOn) > moment(b.createdOn) ? 1 : -1;
+      }
+    });
+    setFilterClosetData(data);
+  };
+
+  const handleSortingModal = () => {
+    setSortModal(true);
+  };
+
   return (
     <VView style={styles.container}>
       <Header
@@ -358,8 +406,10 @@ export default props => {
         navigation={props.navigation}
         showSwitch={getcloset.length > 0}
         showFilter={gridType}
+        showSort={gridType}
         switchValue={switchValue}
         showFilterFunction={showFilterFunction}
+        handleSorting={handleSortingModal}
       />
       {getcloset.length === 0 ? (
         emptyScreen()
@@ -468,6 +518,18 @@ export default props => {
           }}
         />
       }
+      <OverlayModal
+        showModal={showSortModal}
+        component={
+          <SortComponent
+            sortingData={sortingData}
+            setSortModal={setSortModal}
+            handleSortingOption={handleSortingOption}
+            handleSorting={handleSorting}
+            selectedSortIndex={selectedSortIndex}
+          />
+        }
+      />
     </VView>
   );
 };
@@ -483,13 +545,17 @@ export const FilterModal = ({
   const [selectedFilter, setSelectedFilter] = useState('Category');
   const categoryData = useSelector(state => state.ClosetReducer.categoryData);
   const brandData = useSelector(state => state.ClosetReducer.brandData);
+  const brandData2 = useSelector(state => state.ClosetReducer.brandData2);
+  console.log('@@ brandData2', JSON.stringify(brandData2, undefined, 2));
   const getColorsResponse = useSelector(
     state => state.ClosetReducer.getColorsResponse,
   );
   const getSizeResponse = useSelector(
     state => state.ClosetReducer.getSizeResponse,
   );
-  const [brandList, setBrandList] = useState(brandData);
+  const [brandList, setBrandList] = useState(
+    from === 'home' ? brandData2 : brandData,
+  );
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState([]);
@@ -518,6 +584,8 @@ export const FilterModal = ({
     priceFilter1[index].isChecked = !priceFilter1[index].isChecked;
     setPriceFilter(priceFilter1);
   };
+
+  console.log('@@ selectedBrands', selectedBrands);
 
   useEffect(() => {
     if (Object.keys(filterValue).length) {

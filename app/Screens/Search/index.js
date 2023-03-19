@@ -13,12 +13,14 @@ import Toast from 'react-native-simple-toast';
 import {useDispatch, useSelector} from 'react-redux';
 import {Colors} from '../../colors';
 import {Header, OverlayModal, SortComponent} from '../../components';
-import {FONTS_SIZES} from '../../fonts';
-import {addDataInCloset, getClosetData} from '../../redux/actions/closetAction';
+import {
+  addDataInCloset,
+  deleteClosetData,
+  getClosetData,
+} from '../../redux/actions/closetAction';
 import {
   getFilteredProducts,
   getProductDetailsApi,
-  getSearchResult,
 } from '../../redux/actions/homeActions';
 import CategoryCard from '../CategoryScreen/components/categoryCard';
 import {FilterModal} from '../Closet';
@@ -64,7 +66,22 @@ const Search = props => {
   const addClosetResponse = useSelector(
     state => state.ClosetReducer.addClosetResponse,
   );
+  const deleteClosetResponse = useSelector(
+    state => state.ClosetReducer.deleteClosetResponse,
+  );
   const userId = useSelector(state => state.AuthReducer.userId);
+  const [filterParams, setFilterParametrs] = useState({});
+
+  useEffect(() => {
+    if (Object.keys(deleteClosetResponse).length) {
+      if (deleteClosetResponse.statusCode === 200) {
+        dispatch({type: 'DELETE_CLOSET', value: {}});
+        Toast.show('Cloth successfully removed from closet');
+        dispatch(getFilteredProducts(filterParams));
+        dispatch(getClosetData());
+      }
+    }
+  }, [deleteClosetResponse, dispatch]);
 
   const showFilterFunction = value => {
     setModal(true);
@@ -121,6 +138,7 @@ const Search = props => {
       const data = {
         key: searchKey,
       };
+      setFilterParametrs(data);
       dispatch(getFilteredProducts(data));
     }
   };
@@ -130,10 +148,11 @@ const Search = props => {
       if (addClosetResponse.statusCode == 200) {
         dispatch({type: 'ADD_TO_CLOSET', value: {}});
         dispatch(getClosetData());
+        dispatch(getFilteredProducts(filterParams));
         Toast.show('Cloth successfully added in closet');
       }
     }
-  }, [addClosetResponse, dispatch, props.navigation]);
+  }, [addClosetResponse, dispatch]);
 
   const addToCloset = item => {
     let data = {
@@ -145,8 +164,17 @@ const Search = props => {
       colorCode: [item.productColorCode],
       itemImageUrl: item.imageUrls[0],
       isImageBase64: false,
+      productId: item.productId,
     };
     dispatch(addDataInCloset(data));
+  };
+
+  const deletFromClost = item => {
+    const data = {
+      userId: userId,
+      closetItemId: item?.closetItemId,
+    };
+    dispatch(deleteClosetData(data));
   };
 
   const setFilter = data => {
@@ -156,7 +184,7 @@ const Search = props => {
       data1.categoryIds = data.selectedCategory;
     }
     if (data.selectedBrands.length) {
-      data1.brandIds = data.selectedCategory;
+      data1.brandIds = data.selectedBrands;
     }
     if (data.selectedSubCategory.length) {
       data1.subCategoryIds = data.selectedSubCategory;
@@ -183,6 +211,7 @@ const Search = props => {
       data1.price = priceFilters;
     }
     data1.key = searchKey;
+    setFilterParametrs(data);
     dispatch(getFilteredProducts(data1));
     console.log('@@ data', JSON.stringify(data1, undefined, 2));
   };
@@ -275,6 +304,7 @@ const Search = props => {
                   item={item}
                   getProductDetails={() => getProductDetails(item.productId)}
                   addToCloset={() => addToCloset(item)}
+                  deletFromClost={() => deletFromClost(item)}
                 />
               )}
               contentContainerStyle={{
