@@ -16,7 +16,11 @@ import ClosetScreen from '../screens/Closet';
 import ClosetDetailsFrom from '../screens/Closet/component/closetDetailForm';
 import Menu from '../screens/Menu';
 import Outfits from '../screens/Outfits';
-import {getPreferencesQs, getUserProfile} from '../redux/actions/profileAction';
+import {
+  getPreferencesAnswers,
+  getPreferencesQs,
+  getUserProfile,
+} from '../redux/actions/profileAction';
 import {
   getBrandData,
   getBrandData2,
@@ -73,11 +77,14 @@ const ClosetStack = () => {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="ClosetScreen" component={ClosetScreen} />
       <Stack.Screen name="ClosetDetailsFrom" component={ClosetDetailsFrom} />
-      <Stack.Screen name="ViewProduct" component={ViewProduct} />
       <Stack.Screen name="ClosetCategory" component={ClosetCategory} />
       <Stack.Screen name="ClosetInfo" component={ClosetInfo} />
       <Stack.Screen name="EditCloset" component={EditCloset} />
       <Stack.Screen name="ClosetFilter" component={ClosetFilter} />
+
+      <Stack.Screen name="AddOutfit" component={AddOutfit} />
+      <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
+      <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
     </Stack.Navigator>
   );
 };
@@ -88,6 +95,11 @@ const OutfitStack = () => {
       <Stack.Screen name="AddOutfit" component={AddOutfit} />
       <Stack.Screen name="SubmitOutfit" component={SubmitOutfit} />
       <Stack.Screen name="OutfitDetail" component={OutfitDetail} />
+
+      <Stack.Screen name="ClosetCategory" component={ClosetCategory} />
+      <Stack.Screen name="ClosetInfo" component={ClosetInfo} />
+      <Stack.Screen name="EditCloset" component={EditCloset} />
+      <Stack.Screen name="ClosetFilter" component={ClosetFilter} />
     </Stack.Navigator>
   );
 };
@@ -117,7 +129,8 @@ function TabData() {
         },
         tabBarShowLabel: false,
         headerShown: false,
-      })}>
+      })}
+      backBehavior="order">
       <Tab.Screen name="Shop" component={ShopStack} />
       <Tab.Screen name="Closet" component={ClosetStack} />
       <Tab.Screen name="Outfits" component={OutfitStack} />
@@ -169,6 +182,7 @@ function AppNavigation() {
       dispatch(getOutfitsList());
       dispatch(getColorData());
       dispatch(getSizesData());
+      dispatch(getPreferencesAnswers());
       if (!isPreferences) {
         dispatch(getPreferencesQs());
       }

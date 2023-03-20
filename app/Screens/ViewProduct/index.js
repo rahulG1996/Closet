@@ -178,7 +178,7 @@ const ViewProduct = props => {
       <VView>
         <Header
           showAdd
-          showshare
+          // showshare
           onShare={onShare}
           {...props}
           showBack

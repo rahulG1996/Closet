@@ -10,16 +10,21 @@ import {
   Animated,
   View,
   Text,
+  RefreshControl,
 } from 'react-native';
 import {Colors} from '../../colors';
 import Categories from './components/Categories';
 import {useDispatch, useSelector} from 'react-redux';
 import {WebView} from 'react-native-webview';
 import Lottie from 'lottie-react-native';
-import {getProductDetailsApi} from '../../redux/actions/homeActions';
+import {
+  getHomePageData,
+  getProductDetailsApi,
+} from '../../redux/actions/homeActions';
 
 const Home = props => {
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
   const [showBambuser, setShowBambuser] = useState(false);
   const [searchIcon, showSearchIcon] = useState(false);
   const _scrollY = useRef(new Animated.Value(0)).current;
@@ -28,6 +33,7 @@ const Home = props => {
   const productDetailResponse = useSelector(
     state => state.HomeReducer.productDetailResponse,
   );
+  const refreshHome = useSelector(state => state.HomeReducer.refreshHome);
 
   const isPreferences =
     useSelector(
@@ -74,6 +80,12 @@ const Home = props => {
   const getProductDetails = productId => {
     dispatch(getProductDetailsApi(productId));
   };
+
+  const _onRefresh = () => {
+    dispatch({type: 'REFRESH_HOME', value: true});
+    dispatch(getHomePageData());
+  };
+
   return (
     <VView style={styles.conatiner}>
       <VView style={styles.headingContainer}>
@@ -98,7 +110,12 @@ const Home = props => {
           </TouchableOpacity>
         </VView>
       </VView>
-      <ScrollView showsVerticalScrollIndicator={false} onScroll={onScroll}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={onScroll}
+        refreshControl={
+          <RefreshControl refreshing={refreshHome} onRefresh={_onRefresh} />
+        }>
         <Lottie
           source={require('../../assets/ripple.json')}
           autoPlay

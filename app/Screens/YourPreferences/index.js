@@ -41,9 +41,9 @@ const YourPreferences = props => {
   const [brandList, setBrandList] = useState(preferencesQsResponse[0].options);
   const userId = useSelector(state => state.AuthReducer.userId);
 
-  useEffect(() => {
-    dispatch(getPreferencesAnswers());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getPreferencesAnswers());
+  // }, [dispatch]);
 
   console.log('@@ cmp', JSON.stringify(submitPrefResp, undefined, 2));
 
@@ -116,7 +116,7 @@ const YourPreferences = props => {
   }, [preferencesAnswersResp]);
 
   const setBrandsFilter = item => {
-    if (colorCodes.includes(item.colorCode)) {
+    if (currentActiveTab === 7 && colorCodes.includes(item.colorCode)) {
       return;
     }
     if (currentActiveTab === 1) {
@@ -316,7 +316,7 @@ const YourPreferences = props => {
           },
         ],
       };
-      console.log('@@', JSON.stringify(data, undefined, 2));
+      console.log('@@ submit pref', JSON.stringify(data, undefined, 2));
       dispatch(submitPrefernces(data));
       return;
     }

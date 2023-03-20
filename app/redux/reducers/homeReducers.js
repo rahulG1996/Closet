@@ -3,6 +3,7 @@ const initialState = {
   productDetailResponse: {},
   filteredProducts: [],
   searchAPiResponse: [],
+  refreshHome: false,
 };
 
 const HomeReducer = (state = initialState, action) => {
@@ -32,6 +33,13 @@ const HomeReducer = (state = initialState, action) => {
       return {
         ...state,
         searchAPiResponse: action.value,
+      };
+    }
+
+    case 'REFRESH_HOME': {
+      return {
+        ...state,
+        refreshHome: action.value,
       };
     }
 

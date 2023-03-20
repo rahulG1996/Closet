@@ -97,8 +97,9 @@ const CategoryScreen = props => {
   useEffect(() => {
     if (props.route.params.data) {
       const data = {
-        categoryId: props.route.params.data.categoryId,
+        optionId: props.route.params.data.optionId,
       };
+      console.log('@@ home @@', data);
       setFilterParametrs(data);
       dispatch(getFilteredProducts(data));
     }
