@@ -109,6 +109,7 @@ const CategoryScreen = props => {
     if (Object.keys(filteredProducts).length) {
       setLoader(false);
       setProducts(filteredProducts?.productDetails);
+      dispatch({type: 'FILTERED_PRODUCTS', value: {}});
     }
   }, [filteredProducts]);
 
