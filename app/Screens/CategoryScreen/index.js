@@ -132,7 +132,7 @@ const CategoryScreen = props => {
 
   const handleSorting = () => {
     setSortModal(false);
-    let data = filteredProducts?.productDetails;
+    let data = productList;
     data = data.sort((a, b) => {
       if (selectedSort.type === 'asc') {
         return a.productPrice > b.productPrice ? 1 : -1;

@@ -30,6 +30,7 @@ const YourPreferences = props => {
   const [sixthQuestionData, setSixthQuestions] = useState([]);
   const [seventhQuestionData, setSeventhQuestions] = useState([]);
   const [preferencesObj, setPreferencesObj] = useState([]);
+  const [colorCodes7, setColorCodes7] = useState([]);
   const [brandSearchKey, setBrandSearchKey] = useState('');
   const [colorCodes, setColorCodes] = useState([]);
   const preferencesQsResponse =
@@ -45,8 +46,6 @@ const YourPreferences = props => {
   //   dispatch(getPreferencesAnswers());
   // }, [dispatch]);
 
-  console.log('@@ cmp', JSON.stringify(submitPrefResp, undefined, 2));
-
   useEffect(() => {
     if (
       submitPrefResp?.prefrences?.length ||
@@ -56,6 +55,7 @@ const YourPreferences = props => {
       dispatch(getUserProfile());
       Toast.show('Your preferences added successfully');
       props.navigation.navigate('Home');
+      dispatch(getPreferencesAnswers());
     }
   }, [submitPrefResp]);
 
@@ -68,6 +68,8 @@ const YourPreferences = props => {
       let fifthQuestionData1 = [];
       let sixthQuestionData1 = [];
       let seventhQuestionData1 = [];
+      let setColorCodes1 = [];
+      let colorCode8 = [];
       preferencesAnswersResp.map(item => {
         if (item.questionId === 1) {
           item.options.forEach(i => {
@@ -97,11 +99,13 @@ const YourPreferences = props => {
         if (item.questionId === 6) {
           item.options.forEach(i => {
             sixthQuestionData1.push(i.optionId);
+            setColorCodes1.push(i.colorCode);
           });
         }
         if (item.questionId === 7) {
           item.options.forEach(i => {
             seventhQuestionData1.push(i.optionId);
+            colorCode8.push(i.colorCode);
           });
         }
       });
@@ -112,8 +116,25 @@ const YourPreferences = props => {
       setFifthQuestions(fifthQuestionData1);
       setSixthQuestions(sixthQuestionData1);
       setSeventhQuestions(seventhQuestionData1);
+      setColorCodes(setColorCodes1);
+      setColorCodes7(colorCode8);
     }
   }, [preferencesAnswersResp]);
+
+  useEffect(() => {
+    if (colorCodes.length === 3) {
+      let index = -1;
+      let colorCodes8 = [...colorCodes7];
+      const found = colorCodes.some(r => {
+        index = colorCodes7.indexOf(r);
+      });
+      if (index !== -1) {
+        colorCodes8.splice(index, 1);
+        setColorCodes7(colorCodes8);
+        setSeventhQuestions([]);
+      }
+    }
+  }, [colorCodes, colorCodes7]);
 
   const setBrandsFilter = item => {
     if (currentActiveTab === 7 && colorCodes.includes(item.colorCode)) {
@@ -207,6 +228,14 @@ const YourPreferences = props => {
       setSixthQuestions(firstQuestionData1);
     }
     if (currentActiveTab === 7) {
+      let colorCodes1 = [...colorCodes7];
+      if (colorCodes1.includes(item.colorCode)) {
+        colorCodes1 = colorCodes1.filter(i => i !== item.colorCode);
+      } else {
+        if (sixthQuestionData.length < 3) {
+          colorCodes1.push(item.colorCode);
+        }
+      }
       let firstQuestionData1 = [...seventhQuestionData];
       if (firstQuestionData1.includes(item.optionId)) {
         firstQuestionData1 = firstQuestionData1.filter(
@@ -217,6 +246,7 @@ const YourPreferences = props => {
           firstQuestionData1.push(item.optionId);
         }
       }
+      setColorCodes7(colorCodes1);
       setSeventhQuestions(firstQuestionData1);
     }
   };

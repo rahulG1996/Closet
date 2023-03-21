@@ -49,6 +49,15 @@ const Home = props => {
     }
   }, [productDetailResponse]);
 
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      dispatch(getHomePageData());
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [props.navigation, dispatch]);
+
   const onScroll = ({
     nativeEvent: {
       contentOffset: {y},
